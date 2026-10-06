@@ -952,19 +952,44 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             ClassLoader userCodeClassloader,
             StreamTask<?, ?> containingTask) {
         if (!containingTask.getExecutionConfig().isObjectReuseEnabled()) {
+            LOG.debug(
+                    "[CustomOptimizer] Skipping fusion check for operator {}: object reuse is "
+                            + "disabled",
+                    mapConfig.getOperatorID());
             return false;
         }
-        if (!(getWrappedOperator(mapConfig, userCodeClassloader) instanceof StreamMap)) {
+        StreamOperator<?> candidate = getWrappedOperator(mapConfig, userCodeClassloader);
+        if (!(candidate instanceof StreamMap)) {
+            LOG.debug(
+                    "[CustomOptimizer] Skipping fusion check for operator {}: not a StreamMap"
+                            + " (actual={})",
+                    mapConfig.getOperatorID(),
+                    candidate == null ? "null" : candidate.getClass().getName());
             return false;
         }
         List<StreamEdge> mapOutputs = mapConfig.getChainedOutputs(userCodeClassloader);
         if (mapOutputs.size() != 1) {
+            LOG.debug(
+                    "[CustomOptimizer] Not fusing Map ({}): expected exactly 1 chained output,"
+                            + " found {}",
+                    mapConfig.getOperatorID(),
+                    mapOutputs.size());
             return false;
         }
 
         StreamConfig filterConfig = chainedConfigs.get(mapOutputs.get(0).getTargetId());
-        return filterConfig != null
-                && getWrappedOperator(filterConfig, userCodeClassloader) instanceof StreamFilter;
+        StreamOperator<?> downstream =
+                filterConfig == null ? null : getWrappedOperator(filterConfig, userCodeClassloader);
+        boolean fusable = downstream instanceof StreamFilter;
+        if (!fusable) {
+            LOG.debug(
+                    "[CustomOptimizer] Not fusing Map ({}): chained output {} is not a"
+                            + " StreamFilter (actual={})",
+                    mapConfig.getOperatorID(),
+                    mapOutputs.get(0).getTargetId(),
+                    downstream == null ? "null" : downstream.getClass().getName());
+        }
+        return fusable;
     }
 
     @Nullable
@@ -1026,9 +1051,13 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                                 .getUserFunction();
 
         LOG.info(
-                "[CustomOptimizer] Fusing chained Map ({}) -> Filter ({}) into a single operator",
+                "[CustomOptimizer] Fusing chained Map ({}, function={}) -> Filter ({},"
+                        + " function={}) into a single MapFilterFusedOperator for task '{}'",
                 mapConfig.getOperatorID(),
-                filterConfig.getOperatorID());
+                mapFunction.getClass().getName(),
+                filterConfig.getOperatorID(),
+                filterFunction.getClass().getName(),
+                containingTask.getName());
 
         StreamOperatorFactory<OUT> fusedFactory =
                 SimpleOperatorFactory.of(new MapFilterFusedOperator<>(mapFunction, filterFunction));

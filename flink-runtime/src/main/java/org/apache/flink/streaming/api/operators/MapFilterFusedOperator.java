@@ -24,6 +24,9 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.util.FunctionUtils;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Prototype fusion target for a chained {@link StreamMap} immediately followed by a {@link
  * StreamFilter}: runs both user functions inside one {@code processElement} call instead of routing
@@ -37,8 +40,13 @@ public class MapFilterFusedOperator<IN, OUT> extends AbstractStreamOperator<OUT>
 
     private static final long serialVersionUID = 1L;
 
+    private static final Logger LOG = LoggerFactory.getLogger(MapFilterFusedOperator.class);
+
     private final MapFunction<IN, OUT> mapFunction;
     private final FilterFunction<OUT> filterFunction;
+
+    private long processedCount = 0L;
+    private long passedCount = 0L;
 
     public MapFilterFusedOperator(
             MapFunction<IN, OUT> mapFunction, FilterFunction<OUT> filterFunction) {
@@ -53,10 +61,20 @@ public class MapFilterFusedOperator<IN, OUT> extends AbstractStreamOperator<OUT>
         FunctionUtils.setFunctionRuntimeContext(filterFunction, getRuntimeContext());
         FunctionUtils.openFunction(mapFunction, DefaultOpenContext.INSTANCE);
         FunctionUtils.openFunction(filterFunction, DefaultOpenContext.INSTANCE);
+        LOG.info(
+                "[CustomOptimizer] MapFilterFusedOperator opened: map={} filter={}",
+                mapFunction.getClass().getName(),
+                filterFunction.getClass().getName());
     }
 
     @Override
     public void close() throws Exception {
+        LOG.info(
+                "[CustomOptimizer] MapFilterFusedOperator closing: processed={} passed={}"
+                        + " filteredOut={}",
+                processedCount,
+                passedCount,
+                processedCount - passedCount);
         try {
             FunctionUtils.closeFunction(mapFunction);
         } finally {
@@ -67,8 +85,10 @@ public class MapFilterFusedOperator<IN, OUT> extends AbstractStreamOperator<OUT>
 
     @Override
     public void processElement(StreamRecord<IN> element) throws Exception {
+        processedCount++;
         OUT mapped = mapFunction.map(element.getValue());
         if (filterFunction.filter(mapped)) {
+            passedCount++;
             output.collect(element.replace(mapped));
         }
     }
