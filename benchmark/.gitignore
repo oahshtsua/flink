@@ -1,4 +1,5 @@
 benchmark.jar
-build-classes/
 build/
 results/
+__pycache__/
+*.pyc
