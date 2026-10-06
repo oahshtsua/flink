@@ -19,6 +19,8 @@
 package org.apache.flink.streaming.runtime.tasks;
 
 import org.apache.flink.annotation.VisibleForTesting;
+import org.apache.flink.api.common.functions.FilterFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.metrics.Counter;
@@ -54,11 +56,15 @@ import org.apache.flink.streaming.api.graph.StreamEdge;
 import org.apache.flink.streaming.api.operators.BoundedMultiInput;
 import org.apache.flink.streaming.api.operators.CountingOutput;
 import org.apache.flink.streaming.api.operators.Input;
+import org.apache.flink.streaming.api.operators.MapFilterFusedOperator;
 import org.apache.flink.streaming.api.operators.MultipleInputStreamOperator;
 import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
 import org.apache.flink.streaming.api.operators.OperatorSnapshotFutures;
 import org.apache.flink.streaming.api.operators.Output;
+import org.apache.flink.streaming.api.operators.SimpleOperatorFactory;
 import org.apache.flink.streaming.api.operators.SourceOperator;
+import org.apache.flink.streaming.api.operators.StreamFilter;
+import org.apache.flink.streaming.api.operators.StreamMap;
 import org.apache.flink.streaming.api.operators.StreamOperator;
 import org.apache.flink.streaming.api.operators.StreamOperatorFactory;
 import org.apache.flink.streaming.api.operators.StreamOperatorFactoryUtil;
@@ -766,18 +772,35 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             StreamConfig chainedOpConfig = chainedConfigs.get(outputId);
 
             WatermarkGaugeExposingOutput<StreamRecord<T>> output =
-                    createOperatorChain(
-                            containingTask,
-                            operatorConfig,
-                            chainedOpConfig,
-                            chainedConfigs,
-                            userCodeClassloader,
-                            recordWriterOutputs,
-                            allOperatorWrappers,
-                            outputEdge.getOutputTag(),
-                            mailboxExecutorFactory,
-                            shouldAddMetric,
-                            downstreamAvailProviders);
+                    isMapFilterFusable(
+                                    chainedOpConfig,
+                                    chainedConfigs,
+                                    userCodeClassloader,
+                                    containingTask)
+                            ? createFusedMapFilterOutput(
+                                    containingTask,
+                                    operatorConfig,
+                                    chainedOpConfig,
+                                    chainedConfigs,
+                                    userCodeClassloader,
+                                    recordWriterOutputs,
+                                    allOperatorWrappers,
+                                    outputEdge.getOutputTag(),
+                                    mailboxExecutorFactory,
+                                    shouldAddMetric,
+                                    downstreamAvailProviders)
+                            : createOperatorChain(
+                                    containingTask,
+                                    operatorConfig,
+                                    chainedOpConfig,
+                                    chainedConfigs,
+                                    userCodeClassloader,
+                                    recordWriterOutputs,
+                                    allOperatorWrappers,
+                                    outputEdge.getOutputTag(),
+                                    mailboxExecutorFactory,
+                                    shouldAddMetric,
+                                    downstreamAvailProviders);
             checkState(output instanceof OutputWithChainingCheck);
             allOutputs.add((OutputWithChainingCheck) output);
             // If the operator has multiple downstream chained operators, only one of them should
@@ -904,6 +927,144 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                 containingTask,
                 prevOperatorConfig,
                 operatorConfig,
+                userCodeClassloader,
+                outputTag,
+                shouldAddMetricForPrevOperator);
+    }
+
+    // ------------------------------------------------------------------------
+    //  prototype custom optimizer: Map -> Filter fusion
+    // ------------------------------------------------------------------------
+
+    /**
+     * Checks whether {@code mapConfig} is a {@link StreamMap} with exactly one chained output,
+     * which goes straight into a {@link StreamFilter}. This is the detection step of a small
+     * prototype optimizer: when it matches, {@link #createFusedMapFilterOutput} replaces both
+     * operators with one, instead of {@link #createOperatorChain} building them as two operators
+     * linked by a {@link ChainingOutput}.
+     *
+     * <p>Only applies with object reuse enabled, since the fused operator is wired in via the
+     * copy-free {@link ChainingOutput}; see {@link #wrapOperatorIntoOutput}.
+     */
+    private boolean isMapFilterFusable(
+            StreamConfig mapConfig,
+            Map<Integer, StreamConfig> chainedConfigs,
+            ClassLoader userCodeClassloader,
+            StreamTask<?, ?> containingTask) {
+        if (!containingTask.getExecutionConfig().isObjectReuseEnabled()) {
+            return false;
+        }
+        if (!(getWrappedOperator(mapConfig, userCodeClassloader) instanceof StreamMap)) {
+            return false;
+        }
+        List<StreamEdge> mapOutputs = mapConfig.getChainedOutputs(userCodeClassloader);
+        if (mapOutputs.size() != 1) {
+            return false;
+        }
+
+        StreamConfig filterConfig = chainedConfigs.get(mapOutputs.get(0).getTargetId());
+        return filterConfig != null
+                && getWrappedOperator(filterConfig, userCodeClassloader) instanceof StreamFilter;
+    }
+
+    @Nullable
+    private StreamOperator<?> getWrappedOperator(
+            StreamConfig config, ClassLoader userCodeClassloader) {
+        StreamOperatorFactory<?> factory = config.getStreamOperatorFactory(userCodeClassloader);
+        return factory instanceof SimpleOperatorFactory
+                ? ((SimpleOperatorFactory<?>) factory).getOperator()
+                : null;
+    }
+
+    /**
+     * Replaces a {@link StreamMap} chained directly into a {@link StreamFilter} with a single
+     * {@link MapFilterFusedOperator}, instead of letting {@link #createOperatorChain} build them as
+     * two operators linked by a {@link ChainingOutput}. {@code mapConfig}'s own (single) chained
+     * output is resolved to find the Filter; whatever comes after the Filter is built exactly as
+     * {@link #createOperatorChain} would.
+     */
+    private <IN, OUT> WatermarkGaugeExposingOutput<StreamRecord<IN>> createFusedMapFilterOutput(
+            StreamTask<OUT, ?> containingTask,
+            StreamConfig prevOperatorConfig,
+            StreamConfig mapConfig,
+            Map<Integer, StreamConfig> chainedConfigs,
+            ClassLoader userCodeClassloader,
+            Map<IntermediateDataSetID, RecordWriterOutput<?>> recordWriterOutputs,
+            List<StreamOperatorWrapper<?, ?>> allOperatorWrappers,
+            OutputTag<IN> outputTag,
+            MailboxExecutorFactory mailboxExecutorFactory,
+            boolean shouldAddMetricForPrevOperator,
+            @Nullable List<AvailabilityProvider> parentDownstreamAvailProviders) {
+        List<AvailabilityProvider> myDownstreamAvailProviders = new ArrayList<>();
+
+        StreamConfig filterConfig =
+                chainedConfigs.get(
+                        mapConfig.getChainedOutputs(userCodeClassloader).get(0).getTargetId());
+
+        // whatever comes after the Filter is built exactly as normal.
+        WatermarkGaugeExposingOutput<StreamRecord<OUT>> downstreamOutput =
+                createOutputCollector(
+                        containingTask,
+                        filterConfig,
+                        chainedConfigs,
+                        userCodeClassloader,
+                        recordWriterOutputs,
+                        allOperatorWrappers,
+                        mailboxExecutorFactory,
+                        true,
+                        myDownstreamAvailProviders);
+
+        @SuppressWarnings("unchecked")
+        MapFunction<IN, OUT> mapFunction =
+                (MapFunction<IN, OUT>)
+                        ((StreamMap<?, ?>) getWrappedOperator(mapConfig, userCodeClassloader))
+                                .getUserFunction();
+        @SuppressWarnings("unchecked")
+        FilterFunction<OUT> filterFunction =
+                (FilterFunction<OUT>)
+                        ((StreamFilter<?>) getWrappedOperator(filterConfig, userCodeClassloader))
+                                .getUserFunction();
+
+        LOG.info(
+                "[CustomOptimizer] Fusing chained Map ({}) -> Filter ({}) into a single operator",
+                mapConfig.getOperatorID(),
+                filterConfig.getOperatorID());
+
+        StreamOperatorFactory<OUT> fusedFactory =
+                SimpleOperatorFactory.of(new MapFilterFusedOperator<>(mapFunction, filterFunction));
+
+        Tuple2<OneInputStreamOperator<IN, OUT>, Optional<ProcessingTimeService>>
+                fusedOperatorAndTimeService =
+                        StreamOperatorFactoryUtil.createOperator(
+                                fusedFactory,
+                                containingTask,
+                                mapConfig,
+                                downstreamOutput,
+                                operatorEventDispatcher);
+
+        OneInputStreamOperator<IN, OUT> fusedOperator = fusedOperatorAndTimeService.f0;
+        allOperatorWrappers.add(
+                createOperatorWrapper(
+                        fusedOperator,
+                        containingTask,
+                        mapConfig,
+                        fusedOperatorAndTimeService.f1,
+                        false));
+        fusedOperator
+                .getMetricGroup()
+                .gauge(
+                        MetricNames.IO_CURRENT_OUTPUT_WATERMARK,
+                        downstreamOutput.getWatermarkGauge()::getValue);
+
+        if (parentDownstreamAvailProviders != null) {
+            parentDownstreamAvailProviders.addAll(myDownstreamAvailProviders);
+        }
+
+        return wrapOperatorIntoOutput(
+                fusedOperator,
+                containingTask,
+                prevOperatorConfig,
+                mapConfig,
                 userCodeClassloader,
                 outputTag,
                 shouldAddMetricForPrevOperator);
