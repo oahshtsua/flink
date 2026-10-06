@@ -1,7 +1,9 @@
 # Generic image for benchmarking a Flink distribution (stock or the Map-Filter fusion
 # prototype). The build context is expected to contain:
 #   flink/           - a full Flink distribution (bin/, lib/, conf/, ...)
-#   benchmark.jar    - the benchmark job (org.apache.flink.demo.MapFilterFusionBenchmarkJob)
+#   benchmark.jar    - every benchmark job class under
+#                      benchmark/job/org/apache/flink/demo/ (entrypoint.sh is told which
+#                      one to run via the JOB_CLASS env var)
 #   entrypoint.sh    - starts a local cluster, runs the job N times, prints results
 #
 # See benchmark/run_benchmark.sh, which stages this context for both variants.

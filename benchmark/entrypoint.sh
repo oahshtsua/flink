@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 # Runs inside the benchmark container: starts a one-node standalone Flink cluster,
-# submits the benchmark job ITERATIONS times, and prints one machine-readable
+# submits one benchmark job ITERATIONS times, and prints one machine-readable
 # "RESULT ..." line per run plus a summary line, then tears the cluster down.
 #
-# Per iteration, this also slices out the new lines written to the jobmanager log,
-# taskexecutor log, and taskexecutor stdout since the previous iteration (so each
-# iteration gets its own self-contained log file instead of one log shared across the
-# whole variant run), and appends a row to a metrics.csv - both under OUTPUT_DIR, which
-# the caller should bind-mount so the files land on the host. The benchmark job's sink
-# prints a CHECKSUM line via plain System.out when it closes - that runs on the
-# TaskManager, so it's parsed out of the taskexecutor's stdout (.out) file, not out of
-# the client's own `bin/flink run` output or either log4j-based .log file.
+# This only measures wall-clock runtime and how many times the fusion engaged - it does
+# not check the job's output. Correctness is a separate concern, proven once per job
+# transform by org.apache.flink.streaming.runtime.tasks.MapFilterFusionDemoITCase
+# (flink-runtime's test sources), not by this harness; whatever job JOB_CLASS names is
+# trusted to already be correct.
+#
+# Per iteration, this also slices out the new lines written to the jobmanager and
+# taskexecutor logs since the previous iteration (so each iteration gets its own
+# self-contained log file instead of one log shared across the whole variant run), and
+# appends a row to a metrics.csv - both under OUTPUT_DIR, which the caller should
+# bind-mount so the files land on the host.
 #
 # Env vars:
 #   VARIANT     - label for this run, e.g. "vanilla" or "fused" (default: unknown)
+#   JOB_CLASS   - fully-qualified benchmark job class to submit (required)
+#   JOB_LABEL   - short name for this job, used in metrics.csv and log file names
+#                 (default: JOB_CLASS's simple name)
 #   COUNT       - number of records the benchmark job processes (default: 200000000)
 #   ITERATIONS  - how many times to submit the job (default: 5)
 #   OUTPUT_DIR  - directory (inside the container) to write per-iteration logs and
@@ -21,6 +27,8 @@
 set -uo pipefail
 
 VARIANT="${VARIANT:-unknown}"
+JOB_CLASS="${JOB_CLASS:?JOB_CLASS env var is required, e.g. org.apache.flink.demo.SimpleMapFilterBenchmarkJob}"
+JOB_LABEL="${JOB_LABEL:-${JOB_CLASS##*.}}"
 COUNT="${COUNT:-200000000}"
 ITERATIONS="${ITERATIONS:-5}"
 OUTPUT_DIR="${OUTPUT_DIR:-/opt/flink/results}"
@@ -28,10 +36,10 @@ OUTPUT_DIR="${OUTPUT_DIR:-/opt/flink/results}"
 mkdir -p "$OUTPUT_DIR"
 METRICS_FILE="$OUTPUT_DIR/metrics.csv"
 if [ ! -f "$METRICS_FILE" ]; then
-    echo "variant,iter,count,runtime_ms,fusion_events,checksum_count,checksum_sum,log_file" > "$METRICS_FILE"
+    echo "variant,job,iter,count,runtime_ms,fusion_events,log_file" > "$METRICS_FILE"
 fi
 
-echo "=== starting cluster (variant=${VARIANT}) ==="
+echo "=== starting cluster (variant=${VARIANT}, job=${JOB_LABEL}) ==="
 "${FLINK_HOME}/bin/start-cluster.sh"
 
 echo "=== waiting for cluster to come up ==="
@@ -44,20 +52,15 @@ for _ in $(seq 1 30); do
     sleep 1
 done
 if [ "$ready" -ne 1 ]; then
-    echo "RESULT variant=${VARIANT} error=cluster_not_ready"
+    echo "RESULT variant=${VARIANT} job=${JOB_LABEL} error=cluster_not_ready"
     cat "${FLINK_HOME}"/log/*.log 2>/dev/null
     exit 1
 fi
 
 tm_log=$(ls "${FLINK_HOME}"/log/*taskexecutor*.log 2>/dev/null | head -n1)
 jm_log=$(ls "${FLINK_HOME}"/log/*standalonesession*.log 2>/dev/null | head -n1)
-# The job's sink prints its CHECKSUM line via plain System.out, which runs on the
-# TaskManager - it lands in the TaskManager process's stdout (.out), not in the
-# log4j-based .log file, and nowhere in the client's own `bin/flink run` output.
-tm_out=$(ls "${FLINK_HOME}"/log/*taskexecutor*.out 2>/dev/null | head -n1)
 prev_tm_lines=0
 prev_jm_lines=0
-prev_tm_out_lines=0
 
 log_delta() {
     # log_delta <file> <from-line-exclusive> <to-line-inclusive>
@@ -68,7 +71,7 @@ log_delta() {
 }
 
 for i in $(seq 1 "$ITERATIONS"); do
-    output=$("${FLINK_HOME}/bin/flink" run -c org.apache.flink.demo.MapFilterFusionBenchmarkJob \
+    output=$("${FLINK_HOME}/bin/flink" run -c "$JOB_CLASS" \
         "${FLINK_HOME}/benchmark.jar" "$COUNT" 2>&1)
     runtime_ms=$(echo "$output" | grep -oE "Job Runtime: [0-9]+ ms" | grep -oE "[0-9]+")
 
@@ -76,18 +79,11 @@ for i in $(seq 1 "$ITERATIONS"); do
     [ -n "$tm_log" ] && [ -f "$tm_log" ] && cur_tm_lines=$(wc -l < "$tm_log")
     cur_jm_lines=0
     [ -n "$jm_log" ] && [ -f "$jm_log" ] && cur_jm_lines=$(wc -l < "$jm_log")
-    cur_tm_out_lines=0
-    [ -n "$tm_out" ] && [ -f "$tm_out" ] && cur_tm_out_lines=$(wc -l < "$tm_out")
 
-    tm_out_delta=$(log_delta "$tm_out" "$prev_tm_out_lines" "$cur_tm_out_lines")
-    checksum_line=$(echo "$tm_out_delta" | grep -E "^CHECKSUM count=" | tail -n1)
-    checksum_count=$(echo "$checksum_line" | grep -oE "count=[0-9]+" | grep -oE "[0-9]+")
-    checksum_sum=$(echo "$checksum_line" | grep -oE "sum=-?[0-9]+" | grep -oE -- "-?[0-9]+")
-
-    log_name="${VARIANT}-iter${i}.log"
+    log_name="${VARIANT}-${JOB_LABEL}-iter${i}.log"
     iter_log="$OUTPUT_DIR/${log_name}"
     {
-        echo "=== flink run CLI output (variant=${VARIANT} iter=${i} count=${COUNT}) ==="
+        echo "=== flink run CLI output (variant=${VARIANT} job=${JOB_LABEL} iter=${i} count=${COUNT}) ==="
         echo "$output"
         echo
         echo "=== jobmanager (standalonesession) log, new lines this iteration ==="
@@ -95,9 +91,6 @@ for i in $(seq 1 "$ITERATIONS"); do
         echo
         echo "=== taskexecutor log, new lines this iteration ==="
         log_delta "$tm_log" "$prev_tm_lines" "$cur_tm_lines"
-        echo
-        echo "=== taskexecutor stdout (.out), new lines this iteration ==="
-        echo "$tm_out_delta"
     } > "$iter_log"
 
     # Count actual fusion decisions only - the "[CustomOptimizer] Fusing chained ..." line -
@@ -106,25 +99,29 @@ for i in $(seq 1 "$ITERATIONS"); do
     iter_fusion_events=$(grep -c "\[CustomOptimizer\] Fusing chained" "$iter_log" 2>/dev/null || true)
     iter_fusion_events="${iter_fusion_events:-0}"
 
-    if [ -z "$runtime_ms" ] || [ -z "$checksum_count" ]; then
-        echo "RESULT variant=${VARIANT} iter=${i} error=no_runtime_parsed log=${log_name}"
+    if [ -z "$runtime_ms" ]; then
+        echo "RESULT variant=${VARIANT} job=${JOB_LABEL} iter=${i} error=no_runtime_parsed log=${log_name}"
         echo "$output"
-        echo "${VARIANT},${i},${COUNT},,${iter_fusion_events},,,${log_name}" >> "$METRICS_FILE"
+        echo "${VARIANT},${JOB_LABEL},${i},${COUNT},,${iter_fusion_events},${log_name}" >> "$METRICS_FILE"
     else
-        echo "RESULT variant=${VARIANT} iter=${i} count=${COUNT} runtime_ms=${runtime_ms} fusion_events=${iter_fusion_events} checksum_count=${checksum_count} checksum_sum=${checksum_sum} log=${log_name}"
-        echo "${VARIANT},${i},${COUNT},${runtime_ms},${iter_fusion_events},${checksum_count},${checksum_sum},${log_name}" >> "$METRICS_FILE"
+        echo "RESULT variant=${VARIANT} job=${JOB_LABEL} iter=${i} count=${COUNT} runtime_ms=${runtime_ms} fusion_events=${iter_fusion_events} log=${log_name}"
+        echo "${VARIANT},${JOB_LABEL},${i},${COUNT},${runtime_ms},${iter_fusion_events},${log_name}" >> "$METRICS_FILE"
     fi
 
     prev_tm_lines=$cur_tm_lines
     prev_jm_lines=$cur_jm_lines
-    prev_tm_out_lines=$cur_tm_out_lines
 done
 
 fusion_events=$(cat "${FLINK_HOME}"/log/*taskexecutor*.log 2>/dev/null | grep -c "\[CustomOptimizer\] Fusing chained")
-echo "RESULT variant=${VARIANT} fusion_events=${fusion_events}"
+echo "RESULT variant=${VARIANT} job=${JOB_LABEL} fusion_events=${fusion_events}"
 
-cp "${FLINK_HOME}"/log/*.log "$OUTPUT_DIR/" 2>/dev/null || true
-cp "${FLINK_HOME}"/log/*.out "$OUTPUT_DIR/" 2>/dev/null || true
+# Raw, unsliced logs for this (variant, job) run's whole lifetime (all iterations) -
+# their own subdirectory, since this entrypoint may run more than once against the same
+# bind-mounted OUTPUT_DIR (once per job), and a flat copy would let a later job's run
+# overwrite an earlier job's full logs.
+RAW_LOG_DIR="$OUTPUT_DIR/raw-logs-${VARIANT}-${JOB_LABEL}"
+mkdir -p "$RAW_LOG_DIR"
+cp "${FLINK_HOME}"/log/*.log "$RAW_LOG_DIR/" 2>/dev/null || true
 
 echo "=== stopping cluster ==="
 "${FLINK_HOME}/bin/stop-cluster.sh"
