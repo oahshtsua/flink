@@ -49,21 +49,26 @@ sources):
 ./mvnw test -pl flink-runtime -Dtest=MapFilterFusionDemoITCase
 ```
 
-That test covers the same transforms these benchmark jobs run at scale - a trivial
-map/filter, a map/filter over a non-trivial type with a compound predicate, and a chain
-with other operators mixed in around the one adjacent map/filter pair - asserting both
-exact output and the exact fusion-event count for each.
+That test (5 scenarios) covers the same transforms these benchmark jobs run at scale - a
+trivial map/filter, a map/filter over a non-trivial type with a compound predicate, a
+chain with a non-Map/Filter operator mixed in (proving it's left out of the fused run), a
+long uninterrupted run of 5 Map/Filter operators (proving the fusion isn't limited to a
+fixed length), and a non-Map/Filter operator splitting one run into two - asserting both
+exact output and the exact fusion-event count/run-length for each.
 
 ## Benchmark jobs
 
-Registered in `benchlib/jobs.py`; each is a plain class with a `main(String[] args)`
-under `job/org/apache/flink/demo/`, taking an optional record-count argument:
+Registered in `benchmark.py`'s `JOBS` dict; each is a plain class with a
+`main(String[] args)` under `job/org/apache/flink/demo/`, taking an optional
+record-count argument:
 
 - **`simple`** - `SimpleMapFilterBenchmarkJob`: a single, long, tight chain of nothing but
   `map -> filter`. Measures the fusion's effect in isolation.
-- **`mixed`** - `MixedOperatorsBenchmarkJob`: `flatMap -> map -> filter -> map`, mirroring
-  the ITCase's mixed-operator scenario at benchmark scale. Measures whether the fusion
-  still pays off once it's one step of a longer chain instead of the whole job.
+- **`mixed`** - `MixedOperatorsBenchmarkJob`: `flatMap -> map -> filter -> map`. The
+  `flatMap` stays a separate operator (it's not a Map or a Filter); the trailing
+  `map -> filter -> map` fuses into one 3-step operator, not just the adjacent pair.
+  Measures whether the fusion still pays off once the fused run is only one part of a
+  longer pipeline instead of the whole job.
 
 To benchmark a new job, add a class next to these two (parallelism 1, object reuse
 enabled - the condition the fusion requires to engage) and register it in
@@ -96,7 +101,7 @@ run - `<run-id>` is a UTC timestamp, e.g. `20261006T093222Z-simple`):
 | `REPORT.md` | The job's description (pulled from its own Javadoc), a per-run metrics table, the summary, and an index of every other file in this directory |
 | `metrics.csv` | The same per-run metrics as `REPORT.md`'s table, as CSV: `variant,job,iter,count,runtime_ms,fusion_events,log_file` |
 | `<variant>-<job>-iter<N>.log` | That iteration's `bin/flink run` CLI output, plus the jobmanager/taskexecutor log lines written during that specific iteration (including any `[CustomOptimizer]` fusion messages) |
-| `raw-logs-<variant>-<job>/` | That variant's full, unsliced logs Flink itself writes to `log/`, covering its whole run (all iterations, not just one) |
+| `raw-logs-<variant>-<job>/` | That (variant, job) combination's full, unsliced logs Flink itself writes to `log/`, covering its whole run (all iterations, not just one) |
 
 `fusion_events` counts actual `[CustomOptimizer] Fusing chained ...` decisions - not
 every log line tagged `[CustomOptimizer]`, since `MapFilterFusedOperator`'s own
@@ -106,10 +111,11 @@ open/close logs (see below) share that tag but aren't themselves fusion events.
 
 With this prototype in the classpath:
 
-- `OperatorChain` logs every Map->Filter fusion decision at INFO, including the fused
-  functions' class names and the task name, and every near-miss at DEBUG (why a
-  candidate Map wasn't fused - object reuse disabled, not a `StreamMap`, wrong fan-out,
-  or the downstream operator isn't a `StreamFilter`).
-- `MapFilterFusedOperator` logs at INFO on `open()` (the fused functions' class names)
-  and `close()` (processed / passed / filtered-out record counts for that operator
-  instance).
+- `OperatorChain` logs every fusion decision at INFO - how many operators got fused,
+  each step's kind and function class name, and the task name - and every near-miss at
+  DEBUG (why a run didn't extend further: object reuse disabled, not a
+  `StreamMap`/`StreamFilter`, wrong fan-out, or the next operator isn't a
+  `StreamMap`/`StreamFilter` either).
+- `MapFilterFusedOperator` logs at INFO on `open()` (the step count and each step's kind
+  and function class name) and `close()` (processed / passed / filtered-out record
+  counts for that operator instance).

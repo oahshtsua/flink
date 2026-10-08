@@ -771,16 +771,16 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             int outputId = outputEdge.getTargetId();
             StreamConfig chainedOpConfig = chainedConfigs.get(outputId);
 
+            List<StreamConfig> fusableRun =
+                    findFusableRun(
+                            chainedOpConfig, chainedConfigs, userCodeClassloader, containingTask);
+
             WatermarkGaugeExposingOutput<StreamRecord<T>> output =
-                    isMapFilterFusable(
-                                    chainedOpConfig,
-                                    chainedConfigs,
-                                    userCodeClassloader,
-                                    containingTask)
-                            ? createFusedMapFilterOutput(
+                    fusableRun != null
+                            ? createFusedOperatorChainOutput(
                                     containingTask,
                                     operatorConfig,
-                                    chainedOpConfig,
+                                    fusableRun,
                                     chainedConfigs,
                                     userCodeClassloader,
                                     recordWriterOutputs,
@@ -933,21 +933,28 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
     }
 
     // ------------------------------------------------------------------------
-    //  prototype custom optimizer: Map -> Filter fusion
+    //  prototype custom optimizer: fusion of chained Map/Filter runs
     // ------------------------------------------------------------------------
 
     /**
-     * Checks whether {@code mapConfig} is a {@link StreamMap} with exactly one chained output,
-     * which goes straight into a {@link StreamFilter}. This is the detection step of a small
-     * prototype optimizer: when it matches, {@link #createFusedMapFilterOutput} replaces both
-     * operators with one, instead of {@link #createOperatorChain} building them as two operators
-     * linked by a {@link ChainingOutput}.
+     * Walks forward from {@code headConfig} collecting a maximal run of chained operators that are
+     * each a {@link StreamMap} or a {@link StreamFilter}, in any order (e.g. {@code map -> filter
+     * -> map -> filter}), stopping as soon as an operator has anything other than exactly one
+     * chained output, or that output isn't itself a {@link StreamMap}/{@link StreamFilter}. This is
+     * the detection step of a small prototype optimizer: when the run is 2 or more operators long,
+     * {@link #createFusedOperatorChainOutput} replaces the whole run with one {@link
+     * MapFilterFusedOperator}, instead of {@link #createOperatorChain} building each one as a
+     * separate operator linked by a {@link ChainingOutput}.
      *
      * <p>Only applies with object reuse enabled, since the fused operator is wired in via the
      * copy-free {@link ChainingOutput}; see {@link #wrapOperatorIntoOutput}.
+     *
+     * @return the run (head-to-tail order), or {@code null} if {@code headConfig} doesn't start a
+     *     run of at least 2 fusable operators.
      */
-    private boolean isMapFilterFusable(
-            StreamConfig mapConfig,
+    @Nullable
+    private List<StreamConfig> findFusableRun(
+            StreamConfig headConfig,
             Map<Integer, StreamConfig> chainedConfigs,
             ClassLoader userCodeClassloader,
             StreamTask<?, ?> containingTask) {
@@ -955,41 +962,56 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             LOG.debug(
                     "[CustomOptimizer] Skipping fusion check for operator {}: object reuse is "
                             + "disabled",
-                    mapConfig.getOperatorID());
-            return false;
-        }
-        StreamOperator<?> candidate = getWrappedOperator(mapConfig, userCodeClassloader);
-        if (!(candidate instanceof StreamMap)) {
-            LOG.debug(
-                    "[CustomOptimizer] Skipping fusion check for operator {}: not a StreamMap"
-                            + " (actual={})",
-                    mapConfig.getOperatorID(),
-                    candidate == null ? "null" : candidate.getClass().getName());
-            return false;
-        }
-        List<StreamEdge> mapOutputs = mapConfig.getChainedOutputs(userCodeClassloader);
-        if (mapOutputs.size() != 1) {
-            LOG.debug(
-                    "[CustomOptimizer] Not fusing Map ({}): expected exactly 1 chained output,"
-                            + " found {}",
-                    mapConfig.getOperatorID(),
-                    mapOutputs.size());
-            return false;
+                    headConfig.getOperatorID());
+            return null;
         }
 
-        StreamConfig filterConfig = chainedConfigs.get(mapOutputs.get(0).getTargetId());
-        StreamOperator<?> downstream =
-                filterConfig == null ? null : getWrappedOperator(filterConfig, userCodeClassloader);
-        boolean fusable = downstream instanceof StreamFilter;
-        if (!fusable) {
-            LOG.debug(
-                    "[CustomOptimizer] Not fusing Map ({}): chained output {} is not a"
-                            + " StreamFilter (actual={})",
-                    mapConfig.getOperatorID(),
-                    mapOutputs.get(0).getTargetId(),
-                    downstream == null ? "null" : downstream.getClass().getName());
+        List<StreamConfig> run = new ArrayList<>();
+        StreamConfig current = headConfig;
+        while (true) {
+            StreamOperator<?> op = getWrappedOperator(current, userCodeClassloader);
+            if (!isMapOrFilter(op)) {
+                if (run.isEmpty()) {
+                    LOG.debug(
+                            "[CustomOptimizer] Skipping fusion check for operator {}: not a"
+                                    + " StreamMap/StreamFilter (actual={})",
+                            current.getOperatorID(),
+                            op == null ? "null" : op.getClass().getName());
+                }
+                break;
+            }
+            run.add(current);
+
+            List<StreamEdge> outputs = current.getChainedOutputs(userCodeClassloader);
+            if (outputs.size() != 1) {
+                LOG.debug(
+                        "[CustomOptimizer] Fusable run ends at operator {}: expected exactly 1"
+                                + " chained output to continue, found {}",
+                        current.getOperatorID(),
+                        outputs.size());
+                break;
+            }
+
+            StreamConfig next = chainedConfigs.get(outputs.get(0).getTargetId());
+            StreamOperator<?> nextOp =
+                    next == null ? null : getWrappedOperator(next, userCodeClassloader);
+            if (!isMapOrFilter(nextOp)) {
+                LOG.debug(
+                        "[CustomOptimizer] Fusable run ends at operator {}: chained output {} is"
+                                + " not a StreamMap/StreamFilter (actual={})",
+                        current.getOperatorID(),
+                        outputs.get(0).getTargetId(),
+                        nextOp == null ? "null" : nextOp.getClass().getName());
+                break;
+            }
+            current = next;
         }
-        return fusable;
+
+        return run.size() >= 2 ? run : null;
+    }
+
+    private static boolean isMapOrFilter(@Nullable StreamOperator<?> op) {
+        return op instanceof StreamMap || op instanceof StreamFilter;
     }
 
     @Nullable
@@ -1002,16 +1024,16 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
     }
 
     /**
-     * Replaces a {@link StreamMap} chained directly into a {@link StreamFilter} with a single
-     * {@link MapFilterFusedOperator}, instead of letting {@link #createOperatorChain} build them as
-     * two operators linked by a {@link ChainingOutput}. {@code mapConfig}'s own (single) chained
-     * output is resolved to find the Filter; whatever comes after the Filter is built exactly as
-     * {@link #createOperatorChain} would.
+     * Replaces a {@code run} of chained {@link StreamMap}/{@link StreamFilter} operators (as found
+     * by {@link #findFusableRun}) with a single {@link MapFilterFusedOperator}, instead of letting
+     * {@link #createOperatorChain} build each one as a separate operator linked by a {@link
+     * ChainingOutput}. Whatever comes after the run's last operator is built exactly as {@link
+     * #createOperatorChain} would.
      */
-    private <IN, OUT> WatermarkGaugeExposingOutput<StreamRecord<IN>> createFusedMapFilterOutput(
+    private <IN, OUT> WatermarkGaugeExposingOutput<StreamRecord<IN>> createFusedOperatorChainOutput(
             StreamTask<OUT, ?> containingTask,
             StreamConfig prevOperatorConfig,
-            StreamConfig mapConfig,
+            List<StreamConfig> run,
             Map<Integer, StreamConfig> chainedConfigs,
             ClassLoader userCodeClassloader,
             Map<IntermediateDataSetID, RecordWriterOutput<?>> recordWriterOutputs,
@@ -1022,15 +1044,14 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             @Nullable List<AvailabilityProvider> parentDownstreamAvailProviders) {
         List<AvailabilityProvider> myDownstreamAvailProviders = new ArrayList<>();
 
-        StreamConfig filterConfig =
-                chainedConfigs.get(
-                        mapConfig.getChainedOutputs(userCodeClassloader).get(0).getTargetId());
+        StreamConfig headConfig = run.get(0);
+        StreamConfig tailConfig = run.get(run.size() - 1);
 
-        // whatever comes after the Filter is built exactly as normal.
+        // whatever comes after the run's tail is built exactly as normal.
         WatermarkGaugeExposingOutput<StreamRecord<OUT>> downstreamOutput =
                 createOutputCollector(
                         containingTask,
-                        filterConfig,
+                        tailConfig,
                         chainedConfigs,
                         userCodeClassloader,
                         recordWriterOutputs,
@@ -1039,35 +1060,40 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                         true,
                         myDownstreamAvailProviders);
 
-        @SuppressWarnings("unchecked")
-        MapFunction<IN, OUT> mapFunction =
-                (MapFunction<IN, OUT>)
-                        ((StreamMap<?, ?>) getWrappedOperator(mapConfig, userCodeClassloader))
-                                .getUserFunction();
-        @SuppressWarnings("unchecked")
-        FilterFunction<OUT> filterFunction =
-                (FilterFunction<OUT>)
-                        ((StreamFilter<?>) getWrappedOperator(filterConfig, userCodeClassloader))
-                                .getUserFunction();
+        List<MapFilterFusedOperator.Step> steps = new ArrayList<>(run.size());
+        for (StreamConfig stepConfig : run) {
+            StreamOperator<?> wrapped = getWrappedOperator(stepConfig, userCodeClassloader);
+            if (wrapped instanceof StreamMap) {
+                MapFunction<?, ?> mapFunction = ((StreamMap<?, ?>) wrapped).getUserFunction();
+                steps.add(
+                        new MapFilterFusedOperator.Step(
+                                MapFilterFusedOperator.StepKind.MAP, mapFunction));
+            } else {
+                FilterFunction<?> filterFunction = ((StreamFilter<?>) wrapped).getUserFunction();
+                steps.add(
+                        new MapFilterFusedOperator.Step(
+                                MapFilterFusedOperator.StepKind.FILTER, filterFunction));
+            }
+        }
 
         LOG.info(
-                "[CustomOptimizer] Fusing chained Map ({}, function={}) -> Filter ({},"
-                        + " function={}) into a single MapFilterFusedOperator for task '{}'",
-                mapConfig.getOperatorID(),
-                mapFunction.getClass().getName(),
-                filterConfig.getOperatorID(),
-                filterFunction.getClass().getName(),
+                "[CustomOptimizer] Fusing chained run of {} operators ({}, from {} to {}) into a"
+                        + " single MapFilterFusedOperator for task '{}'",
+                run.size(),
+                describeSteps(steps),
+                headConfig.getOperatorID(),
+                tailConfig.getOperatorID(),
                 containingTask.getName());
 
         StreamOperatorFactory<OUT> fusedFactory =
-                SimpleOperatorFactory.of(new MapFilterFusedOperator<>(mapFunction, filterFunction));
+                SimpleOperatorFactory.of(new MapFilterFusedOperator<>(steps));
 
         Tuple2<OneInputStreamOperator<IN, OUT>, Optional<ProcessingTimeService>>
                 fusedOperatorAndTimeService =
                         StreamOperatorFactoryUtil.createOperator(
                                 fusedFactory,
                                 containingTask,
-                                mapConfig,
+                                headConfig,
                                 downstreamOutput,
                                 operatorEventDispatcher);
 
@@ -1076,7 +1102,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                 createOperatorWrapper(
                         fusedOperator,
                         containingTask,
-                        mapConfig,
+                        headConfig,
                         fusedOperatorAndTimeService.f1,
                         false));
         fusedOperator
@@ -1093,10 +1119,25 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                 fusedOperator,
                 containingTask,
                 prevOperatorConfig,
-                mapConfig,
+                headConfig,
                 userCodeClassloader,
                 outputTag,
                 shouldAddMetricForPrevOperator);
+    }
+
+    private static String describeSteps(List<MapFilterFusedOperator.Step> steps) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < steps.size(); i++) {
+            if (i > 0) {
+                sb.append(" -> ");
+            }
+            MapFilterFusedOperator.Step step = steps.get(i);
+            sb.append(step.getKind())
+                    .append('(')
+                    .append(step.getFunction().getClass().getName())
+                    .append(')');
+        }
+        return sb.toString();
     }
 
     /**
