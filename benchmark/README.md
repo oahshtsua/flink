@@ -69,6 +69,12 @@ record-count argument:
   `map -> filter -> map` fuses into one 3-step operator, not just the adjacent pair.
   Measures whether the fusion still pays off once the fused run is only one part of a
   longer pipeline instead of the whole job.
+- **`sensor`** - `SensorScoringJob`: sensor window scoring, `map -> filter -> map ->
+  filter` with real floating-point work per stage, over records generated inside the
+  source (so exactly those four stages fuse). The baseline for the micro-batching +
+  native-kernel experiment (`docs/microbatch-native-experiment.md`). Unlike the other
+  jobs it carries its own correctness check: run it with args `<count> <k> checksum` and
+  compare its `CHECKSUM` line with `SensorScoringReference <count> <k>`.
 
 To benchmark a new job, add a class next to these two (parallelism 1, object reuse
 enabled - the condition the fusion requires to engage) and register it in

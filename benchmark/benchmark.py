@@ -34,6 +34,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 JOBS = {
     "simple": "org.apache.flink.demo.SimpleMapFilterBenchmarkJob",
     "mixed": "org.apache.flink.demo.MixedOperatorsBenchmarkJob",
+    "sensor": "org.apache.flink.demo.SensorScoringJob",
 }
 
 
@@ -71,8 +72,14 @@ def compile_job_jar(dist_lib_dir: Path, build_dir: Path) -> Path:
             "javac",
             "--release",
             "17",
+            "-proc:none",
             "-cp",
             classpath,
+            # NativeBridge (imported by the native-kernel jobs) is compiled from source only
+            # to type-check against; it is deliberately not packaged below, because it must
+            # be deployed in flink/lib/ - see native-kernel/bridge/.../NativeBridge.java.
+            "--source-path",
+            str(SCRIPT_DIR / "native-kernel" / "bridge"),
             "-d",
             str(classes_dir),
             *(str(s) for s in sources),
