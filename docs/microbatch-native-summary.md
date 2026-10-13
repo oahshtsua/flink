@@ -4,8 +4,9 @@ A plain-language summary of the experiment so far: what we built, which versions
 and what we measured. Written to be turned into a presentation; each section is roughly one
 slide.
 
-Detailed records: `microbatch-native-experiment.md` (full log) and
-`microbatch-native-step1-java-job.md` (how the Java job was built).
+How everything is built and why, with a worked example of the job:
+`microbatch-native-implementation.md`.
+How to run the benchmarks and reproduce every number here: `benchmark/sensor-bench/README.md`.
 
 ---
 
