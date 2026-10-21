@@ -103,6 +103,80 @@ public final class SensorScoring {
     }
 
     // ------------------------------------------------------------------------------------------
+    // All four stages as one hand-tuned function
+    // ------------------------------------------------------------------------------------------
+
+    /**
+     * All four stages in one method, restructured the way the C kernel's compiler restructures
+     * them - the Java a person or an agent could write instead of C. Returns whether the reading
+     * survives; fills in the same fields as the separate stages.
+     *
+     * <p>Two changes, neither of which changes a single bit of the result: the 8 samples, their
+     * differences from the mean and the normalized values are locals (registers) instead of
+     * array reads and a scratch array, and normalization reuses the differences already computed
+     * for the standard deviation ({@code s[i] - mean} is the same operation on the same inputs).
+     * Every sum is still accumulated left to right from {@code 0.0}, so the output is bit-identical
+     * to {@link #computeStats} + {@link #isNotFlat} + {@link #computeScore} + {@link #passesScore}.
+     */
+    public static boolean scoreFused(SensorReading r, double[] profiles, int k) {
+        final double[] s = r.samples;
+        final double s0 = s[0], s1 = s[1], s2 = s[2], s3 = s[3];
+        final double s4 = s[4], s5 = s[5], s6 = s[6], s7 = s[7];
+
+        double max = s0;
+        if (s1 > max) {
+            max = s1;
+        }
+        if (s2 > max) {
+            max = s2;
+        }
+        if (s3 > max) {
+            max = s3;
+        }
+        if (s4 > max) {
+            max = s4;
+        }
+        if (s5 > max) {
+            max = s5;
+        }
+        if (s6 > max) {
+            max = s6;
+        }
+        if (s7 > max) {
+            max = s7;
+        }
+        final double mean = (0.0 + s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7) / WINDOW;
+        final double d0 = s0 - mean, d1 = s1 - mean, d2 = s2 - mean, d3 = s3 - mean;
+        final double d4 = s4 - mean, d5 = s5 - mean, d6 = s6 - mean, d7 = s7 - mean;
+        final double sq =
+                0.0 + d0 * d0 + d1 * d1 + d2 * d2 + d3 * d3 + d4 * d4 + d5 * d5 + d6 * d6
+                        + d7 * d7;
+        final double stddev = Math.sqrt(sq / WINDOW);
+        r.mean = mean;
+        r.stddev = stddev;
+        r.max = max;
+        if (!(stddev >= FLAT_THRESHOLD)) {
+            return false;
+        }
+
+        final double inv = 1.0 / stddev;
+        final double z0 = d0 * inv, z1 = d1 * inv, z2 = d2 * inv, z3 = d3 * inv;
+        final double z4 = d4 * inv, z5 = d5 * inv, z6 = d6 * inv, z7 = d7 * inv;
+        double best = Double.NEGATIVE_INFINITY;
+        for (int b = 0, end = k * WINDOW; b < end; b += WINDOW) {
+            final double dot =
+                    0.0 + z0 * profiles[b] + z1 * profiles[b + 1] + z2 * profiles[b + 2]
+                            + z3 * profiles[b + 3] + z4 * profiles[b + 4] + z5 * profiles[b + 5]
+                            + z6 * profiles[b + 6] + z7 * profiles[b + 7];
+            if (dot > best) {
+                best = dot;
+            }
+        }
+        r.score = best / WINDOW;
+        return r.score >= SCORE_THRESHOLD;
+    }
+
+    // ------------------------------------------------------------------------------------------
     // Inputs: reference profiles and the synthetic data generator
     // ------------------------------------------------------------------------------------------
 

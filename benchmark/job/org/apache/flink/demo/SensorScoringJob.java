@@ -40,14 +40,19 @@ import org.apache.flink.streaming.api.functions.sink.v2.DiscardingSink;
  * {@code CHECKSUM} line instead of being discarded; it must match {@code SensorScoringReference}'s
  * for the same record count and {@code k}.
  *
- * <p>Usage: {@code SensorScoringJob [recordCount] [k] [discard|checksum]} (defaults 50,000,000, 1,
- * discard).
+ * <p>In {@code tuned} mode the four stages are replaced by one filter calling {@code
+ * SensorScoring.scoreFused}: the same work as one hand-tuned Java function - the Java counterpart of
+ * the native job's single C function. Same output, bit for bit.
+ *
+ * <p>Usage: {@code SensorScoringJob [recordCount] [k] [discard|checksum] [chain|tuned]} (defaults
+ * 50,000,000, 1, discard, chain).
  */
 public class SensorScoringJob {
     public static void main(String[] args) throws Exception {
         long count = args.length > 0 ? Long.parseLong(args[0]) : 50_000_000L;
         int k = args.length > 1 ? Integer.parseInt(args[1]) : 1;
         boolean checksum = args.length > 2 && args[2].equals("checksum");
+        boolean tuned = args.length > 3 && args[3].equals("tuned");
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -60,12 +65,15 @@ public class SensorScoringJob {
                         count,
                         TypeInformation.of(SensorReading.class));
 
+        DataStream<SensorReading> readings =
+                env.fromSource(source, WatermarkStrategy.noWatermarks(), "sensor-readings");
         DataStream<SensorReading> scored =
-                env.fromSource(source, WatermarkStrategy.noWatermarks(), "sensor-readings")
-                        .map(new ComputeStats())
-                        .filter(new DropFlat())
-                        .map(new ScoreAgainstProfiles(profiles, k))
-                        .filter(new KeepHighScore());
+                tuned
+                        ? readings.filter(new ScoreFused(profiles, k))
+                        : readings.map(new ComputeStats())
+                                .filter(new DropFlat())
+                                .map(new ScoreAgainstProfiles(profiles, k))
+                                .filter(new KeepHighScore());
 
         if (checksum) {
             scored.sinkTo(new ChecksumSink());
@@ -76,7 +84,13 @@ public class SensorScoringJob {
         // Net runtime (excludes JVM and cluster startup), for local MiniCluster timing runs; the
         // Docker harness parses the CLI's own "Job Runtime" line instead.
         JobExecutionResult result =
-                env.execute("Sensor Scoring Benchmark (" + count + " records, k=" + k + ")");
+                env.execute(
+                        "Sensor Scoring Benchmark ("
+                                + count
+                                + " records, k="
+                                + k
+                                + (tuned ? ", tuned" : "")
+                                + ")");
         System.out.println("NET_RUNTIME_MS=" + result.getNetRuntime());
     }
 
@@ -155,6 +169,27 @@ public class SensorScoringJob {
         @Override
         public boolean filter(SensorReading r) {
             return SensorScoring.passesScore(r);
+        }
+    }
+
+    /**
+     * All four stages as one hand-tuned function. A filter that also fills in the reading's
+     * fields, which is fine here: with object reuse the same reading object flows on.
+     */
+    static class ScoreFused implements FilterFunction<SensorReading> {
+        private static final long serialVersionUID = 1L;
+
+        private final double[] profiles;
+        private final int k;
+
+        ScoreFused(double[] profiles, int k) {
+            this.profiles = profiles;
+            this.k = k;
+        }
+
+        @Override
+        public boolean filter(SensorReading r) {
+            return SensorScoring.scoreFused(r, profiles, k);
         }
     }
 

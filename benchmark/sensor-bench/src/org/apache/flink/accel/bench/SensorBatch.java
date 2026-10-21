@@ -34,6 +34,11 @@ import java.util.concurrent.TimeUnit;
  * <ul>
  *   <li>{@code generate}: generation alone, the floor every path pays
  *   <li>{@code java}: generate, then the four stages in plain Java - an ideally fused Java chain
+ *   <li>{@code javaTuned}: the same, but through {@code SensorScoring.scoreFused}: the four stages
+ *       as one hand-tuned Java function (values in locals, as the C compiler arranges them)
+ *   <li>{@code javaBatched} / {@code javaTunedBatched}: those two arranged like the C path -
+ *       generate {@code batch} readings first, then process them in one loop - separating the
+ *       effect of the loop arrangement from the effect of the language
  *   <li>{@code encode}: generate, then pack into the kernel's input buffer
  *   <li>{@code encodeKernel}: + one JNI call into {@code sensor_score} per {@code batch} records
  *   <li>{@code nativePath}: + rebuilding every survivor - what the native operator does per record
@@ -62,6 +67,7 @@ public class SensorBatch {
     private double[] profiles;
     private double[] z;
     private SensorReading reading;
+    private SensorReading[] readings;
     private SensorReading decoded;
     private long seq;
 
@@ -84,6 +90,10 @@ public class SensorBatch {
         profiles = SensorScoring.profiles(k);
         z = new double[SensorScoring.WINDOW];
         reading = new SensorReading();
+        readings = new SensorReading[batch];
+        for (int i = 0; i < batch; i++) {
+            readings[i] = new SensorReading();
+        }
         decoded = new SensorReading();
 
         params = allocate(SensorLayout.paramsBytes(k));
@@ -133,6 +143,62 @@ public class SensorBatch {
             }
         }
         return survivors;
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(RECORDS)
+    public int javaTuned() {
+        int survivors = 0;
+        for (int i = 0; i < RECORDS; i++) {
+            SensorScoring.generate(seq++, profiles, k, reading);
+            if (SensorScoring.scoreFused(reading, profiles, k)) {
+                survivors++;
+            }
+        }
+        return survivors;
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(RECORDS)
+    public int javaBatched() {
+        int survivors = 0;
+        for (int base = 0; base < RECORDS; base += batch) {
+            generateBatch();
+            for (int i = 0; i < batch; i++) {
+                final SensorReading r = readings[i];
+                SensorScoring.computeStats(r);
+                if (!SensorScoring.isNotFlat(r)) {
+                    continue;
+                }
+                SensorScoring.computeScore(r, profiles, k, z);
+                if (SensorScoring.passesScore(r)) {
+                    survivors++;
+                }
+            }
+        }
+        return survivors;
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(RECORDS)
+    public int javaTunedBatched() {
+        int survivors = 0;
+        for (int base = 0; base < RECORDS; base += batch) {
+            generateBatch();
+            for (int i = 0; i < batch; i++) {
+                if (SensorScoring.scoreFused(readings[i], profiles, k)) {
+                    survivors++;
+                }
+            }
+        }
+        return survivors;
+    }
+
+    /** Generates one batch of fresh readings into distinct objects, as a buffer would hold them. */
+    private void generateBatch() {
+        for (int i = 0; i < batch; i++) {
+            SensorScoring.generate(seq++, profiles, k, readings[i]);
+        }
     }
 
     @Benchmark

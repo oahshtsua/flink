@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Inside-Flink sweep: the sensor job at several work levels (k) on stock Flink, the fusion
-# prototype, and the native operator at several batch sizes, in Flink's local (MiniCluster) mode.
+# prototype, the hand-tuned Java filter (scoreFused, on stock Flink), and the native operator at
+# several batch sizes, in Flink's local (MiniCluster) mode.
 #
 #   ./benchmark/sensor-bench/minicluster-sweep.sh
 #
@@ -53,6 +54,9 @@ for run in $(seq 1 "$RUNS"); do
                 org.apache.flink.demo.SensorScoringJob "$COUNT" "$k")
             echo "$label,$k,,$run,$COUNT,$ms" | tee -a "$OUT"
         done
+        ms=$(timed -cp "$CLASSES:$BENCH/build/vanilla/flink/lib/*" \
+            org.apache.flink.demo.SensorScoringJob "$COUNT" "$k" discard tuned)
+        echo "tuned,$k,,$run,$COUNT,$ms" | tee -a "$OUT"
         for b in $BATCHES; do
             ms=$(timed -Dflink.accel.bridge.lib="$NK/libflinkaccel_bridge.so" \
                 -Dsensor.kernel.lib="$NK/libsensor_kernel.so" \

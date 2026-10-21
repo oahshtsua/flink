@@ -41,6 +41,16 @@ the native version, the batch size (records per call into C).
   `../build/vanilla/flink` (stock) and `../build/fused/flink` (with the fusion prototype).
   `../benchmark.py` stages them there on any run; see `../README.md` for building them.
 
+- **A machine at full speed**: on AC power, the `performance` power profile, and the CPU's frequency
+  ceiling at its maximum. The ceiling can stay capped after running on battery even once the
+  profile is switched, which slows every number ~1.8× (seen on this laptop):
+
+  ```bash
+  cat /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq   # must equal cpuinfo_max_freq (4500000 here)
+  # if it doesn't, lift the cap on every core:
+  for c in /sys/devices/system/cpu/cpu*/cpufreq; do cat $c/cpuinfo_max_freq | sudo tee $c/scaling_max_freq >/dev/null; done
+  ```
+
 Commands below are run from the repository root unless noted.
 
 ## 1. Check correctness first (~1 min)
@@ -79,7 +89,7 @@ java -Dflink.accel.bridge.lib=$PWD/native-kernel/build/libflinkaccel_bridge.so \
      org.apache.flink.demo.SensorScoringNativeJob 2000000 16 checksum
 ```
 
-Job arguments: `SensorScoringJob [records] [k] [discard|checksum]` and
+Job arguments: `SensorScoringJob [records] [k] [discard|checksum] [chain|tuned]` and
 `SensorScoringNativeJob [records] [k] [discard|checksum] [batchSize]`. Without `bin/flink`, both run
 in an in-process local cluster. Expected for 2,000,000 records:
 
@@ -89,12 +99,21 @@ in an in-process local cluster. Expected for 2,000,000 records:
 | 16 | 617961 | `83dda26b980dfdf6` |
 | 64 | 621176 | `a3f1c1b1dad62df3` |
 
-## 2. Stage 1 — Java vs C, on their own (~15 min)
+## 2. Stage 1 — Java vs C, on their own (~35 min)
 
 ```bash
-RESULT_NAME=sweep-java   ./benchmark/sensor-bench/run.sh 'SensorBatch.(generate|java)$' -p batch=1024
-RESULT_NAME=sweep-native ./benchmark/sensor-bench/run.sh 'SensorBatch.nativePath$'
+# Java one record at a time (as Flink calls it): plain and hand-tuned. Batch size is irrelevant.
+RESULT_NAME=sweep-java    ./benchmark/sensor-bench/run.sh 'SensorBatch.(generate|java|javaTuned)$' -p batch=1024
+# Java batch-first (generate a batch, then process it), plain and hand-tuned, at every batch size
+RESULT_NAME=sweep-batched ./benchmark/sensor-bench/run.sh 'SensorBatch.(javaBatched|javaTunedBatched)$'
+# The C path: copy in, one call per batch, copy survivors out, at every batch size
+RESULT_NAME=sweep-native  ./benchmark/sensor-bench/run.sh 'SensorBatch.nativePath$'
 ```
+
+The two batch-first Java versions arrange the work exactly like the C path, so comparing them with
+C separates what C itself buys from what the loop arrangement buys. "Hand-tuned" is
+`SensorScoring.scoreFused`: the four steps as one Java function with the values in local variables,
+bit-identical results.
 
 Any extra arguments go straight to JMH, e.g. `-p k=1,64 -p batch=1,1024` for a smaller grid, or
 `-f 1 -wi 2 -i 3` for a quicker, noisier run. The Java work per record alone (by `k`):
@@ -107,13 +126,14 @@ Any extra arguments go straight to JMH, e.g. `-p k=1,64 -p batch=1,1024` for a s
 suits the i5-12500H this was written on, where CPUs 0–7 are the fast P-cores and 8–15 the slower
 E-cores — check `lscpu --extended` and adjust on another machine.
 
-## 3. Stage 2 — plugged into Flink (~25 min)
+## 3. Stage 2 — plugged into Flink (~30 min)
 
 ```bash
 ./benchmark/sensor-bench/minicluster-sweep.sh
 ```
 
-Runs stock, fusion, and native at every batch size, for every `k`: 50M records per run, 3 runs per
+Runs stock, fusion, tuned (the hand-tuned Java function as a single filter, on stock Flink), and
+native at every batch size, for every `k`: 50M records per run, 3 runs per
 combination, interleaved (run 1 of everything, then run 2, …) so machine drift spreads evenly.
 Each run reports the job's net runtime, excluding JVM and cluster startup. Tune with environment
 variables:
@@ -143,7 +163,7 @@ Everything lands in `results/` (gitignored):
 
 | file | from |
 |---|---|
-| `sweep-java.json`, `sweep-native.json` (+ `.txt`) | stage 1 JMH runs (named by `RESULT_NAME`; default `sensor-bench`) |
+| `sweep-java.json`, `sweep-batched.json`, `sweep-native.json` (+ `.txt`) | stage 1 JMH runs (named by `RESULT_NAME`; default `sensor-bench`) |
 | `minicluster-sweep.csv` | stage 2: `variant,k,batch,run,count,net_ms` |
 | `sweep-report.md` | `report.py` |
 

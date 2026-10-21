@@ -6,12 +6,15 @@ package org.apache.flink.demo;
  * per-stage selectivity and the {@link SensorChecksum} line. A Flink run of the job in {@code
  * checksum} mode, on any distribution or variant, must print the identical {@code CHECKSUM} line.
  *
- * <p>Usage: {@code SensorScoringReference [recordCount] [k]} (defaults 1,000,000 and 1).
+ * <p>Usage: {@code SensorScoringReference [recordCount] [k] [chain|tuned]} (defaults 1,000,000, 1,
+ * chain). {@code tuned} computes the same thing with {@link SensorScoring#scoreFused}, and must print
+ * the identical {@code CHECKSUM} line.
  */
 public class SensorScoringReference {
     public static void main(String[] args) {
         long count = args.length > 0 ? Long.parseLong(args[0]) : 1_000_000L;
         int k = args.length > 1 ? Integer.parseInt(args[1]) : 1;
+        boolean tuned = args.length > 2 && args[2].equals("tuned");
 
         double[] profiles = SensorScoring.profiles(k);
         double[] z = new double[SensorScoring.WINDOW];
@@ -21,6 +24,16 @@ public class SensorScoringReference {
 
         for (long seq = 0; seq < count; seq++) {
             SensorScoring.generate(seq, profiles, k, r);
+            if (tuned) {
+                if (SensorScoring.scoreFused(r, profiles, k)) {
+                    checksum.add(r);
+                }
+                // scoreFused has filled in stddev either way
+                if (SensorScoring.isNotFlat(r)) {
+                    notFlat++;
+                }
+                continue;
+            }
             SensorScoring.computeStats(r);
             if (!SensorScoring.isNotFlat(r)) {
                 continue;
@@ -33,10 +46,11 @@ public class SensorScoringReference {
         }
 
         System.out.printf(
-                "records=%d k=%d passedFlatFilter=%d (%.1f%%) passedScoreFilter=%d (%.1f%% of"
+                "records=%d k=%d mode=%s passedFlatFilter=%d (%.1f%%) passedScoreFilter=%d (%.1f%% of"
                         + " those, %.1f%% overall)%n",
                 count,
                 k,
+                tuned ? "tuned" : "chain",
                 notFlat,
                 100.0 * notFlat / count,
                 checksum.survivors(),
