@@ -38,7 +38,7 @@ through Flink's plumbing. A few nanoseconds per hop, paid for every record, at e
 An earlier change in this repo, the **fusion prototype**, spots a run of map/filter steps when
 Flink wires up the job and merges them into **one** operator that calls the user's functions
 back to back in a loop. It's still Java and still calls the same functions — it just removes the
-hops. It made trivial jobs 16–23% faster.
+hops. It cut trivial jobs' runtime by 13–25%.
 
 ### This experiment: one C function
 
@@ -96,7 +96,7 @@ class SensorReading {
 
 **Why 8 numbers?** 8 doubles are exactly 64 bytes — one "cache line", the chunk of memory the
 CPU fetches in one go — and plain numbers are the cheapest thing to copy into C (measured earlier:
-~1.8 ns per record, vs ~25 ns for records containing text). It gives C its best fair chance.
+~3.4 ns per record, vs ~25 ns for records containing text). It gives C its best fair chance.
 
 ### What the source produces
 
@@ -159,10 +159,10 @@ arithmetic for one record:
 
 | `k` | operations per record (roughly) | Java time per record (measured) |
 |---|---|---|
-| 1 | ~65 | 35 ns |
-| 4 | ~110 | 46 ns |
-| 16 | ~300 | 77 ns |
-| 64 | ~1,070 | 157 ns |
+| 1 | ~65 | 34 ns |
+| 4 | ~110 | 45 ns |
+| 16 | ~300 | 76 ns |
+| 64 | ~1,070 | 153 ns |
 
 At `k=1`, step 1 is most of the work; at `k=64`, step 3's comparisons dominate.
 
@@ -172,7 +172,7 @@ the previous one, so it costs more time than its operation count suggests.
 
 **Why `k` exists:** the question is about "real work", and with a fixed job "real enough" would
 be one guessed point. (The original guess for this job was 80–150 ns per record; at `k=1` it's
-really 35 ns.) `k` turns it into a curve. Changing `k` changes neither the record nor the share
+really 34 ns.) `k` turns it into a curve. Changing `k` changes neither the record nor the share
 of survivors (30.1% at `k=1`, 31.1% at `k=64`), so only the work changes.
 
 Not to be confused with the **batch size** — how many records the native version hands to C in
@@ -273,9 +273,33 @@ env.fromSource(new DataGeneratorSource<>(new GenerateReading(profiles, k), count
   names show up in logs, which makes "which steps got fused" readable.
 - **One thread, object reuse on** — same as the other benchmark jobs, and the condition the
   fusion prototype needs.
-- **Arguments:** `SensorScoringJob [records] [k] [discard|checksum]`, default 50 million records,
-  `k=1`. After the job ends it prints `NET_RUNTIME_MS=…` — the job's own runtime, excluding Java
-  and Flink start-up — which the local speed tests read.
+- **Arguments:** `SensorScoringJob [records] [k] [discard|checksum] [chain|tuned]`, default 50
+  million records, `k=1`, `chain`. After the job ends it prints `NET_RUNTIME_MS=…` — the job's own
+  runtime, excluding Java and Flink start-up — which the local speed tests read.
+
+### A hand-tuned Java version (`scoreFused`)
+
+`SensorScoring.scoreFused` does all four steps in **one Java function**, written the way the C
+compiler arranges the C version:
+
+- the 8 readings are read once into local variables (`s0`…`s7`), so the processor keeps them in
+  registers instead of re-reading the array;
+- the differences from the average (`d0`…`d7`) are computed once and reused for both the spread
+  and the normalization, instead of being computed twice;
+- the normalized values (`z0`…`z7`) are locals too, so there's no scratch array;
+- it returns whether the record survives, and fills in the same fields as the four steps.
+
+Every sum is still added left to right from 0, so its answers are **bit-identical** to the four
+separate steps (checked with the fingerprint).
+
+**Why:** the first comparison showed C ~1.4× faster than Java, but the C compiler had applied
+exactly these rearrangements. This is the Java a person — or an agent — could write instead of C,
+so it's the fair opponent: if it matched C, the language wouldn't be what made the difference.
+
+With `tuned` as the job's fourth argument, the four steps are replaced by **one filter**
+(`ScoreFused`) that calls `scoreFused`. A Flink filter may fill in the record it is handed, so one
+filter can do all four steps — no special operator, no Flink change, runs on stock Flink.
+`SensorScoringReference` takes the same `tuned` argument.
 
 ---
 
@@ -447,12 +471,13 @@ line.**
 
 | `k` | survivors | fingerprint | matched by |
 |---|---|---|---|
-| 1 | 602,267 | `3d0044a86f2e5afb` | native (batch 1024, 7, 1) |
-| 16 | 617,961 | `83dda26b980dfdf6` | stock Flink, fusion, native (batch 1024, 7, 1) |
-| 64 | 621,176 | `a3f1c1b1dad62df3` | native (batch 1024, 7, 1) |
+| 1 | 602,267 | `3d0044a86f2e5afb` | tuned reference, stock Flink, fusion, tuned Java in Flink, native (batch 1024, 7, 1) |
+| 16 | 617,961 | `83dda26b980dfdf6` | tuned reference, stock Flink, fusion, tuned Java in Flink, native (batch 1024, 7, 1) |
+| 64 | 621,176 | `a3f1c1b1dad62df3` | tuned reference, stock Flink, fusion, tuned Java in Flink, native (batch 1024, 7, 1) |
 
 Batch 7 means the last batch is only partly full (2,000,000 isn't divisible by 7) — that tests the
-end-of-input flush. Batch 1 means a call into C for every record.
+end-of-input flush. Batch 1 means a call into C for every record. The final run (2026-10-21)
+re-checked every version, with native at batch 1024 and 1, before measuring anything.
 
 ---
 
@@ -468,10 +493,22 @@ Two stages, from simple to realistic:
 ### Stage 1 — on their own
 
 - **`SensorWork`** measures the Java work per record at each `k`.
-- **`SensorBatch`** compares Java with the full C path — copy in, call, copy out — at every `k`
-  and every batch size (1 to 4096). It's shaped like the real operators: Java handles one record at
-  a time (make it, process it, next), the C path makes and copies records one by one and calls C
-  each time a batch fills.
+- **`SensorBatch`** compares the Java versions with the full C path — copy in, call, copy out —
+  at every `k` and every batch size (1 to 4096). Every invocation processes 4,096 fresh records:
+
+  | method | what it times | how records flow |
+  |---|---|---|
+  | `generate` | making the test data only | — |
+  | `java` | the four separate steps | one record at a time: make it, process it, next |
+  | `javaTuned` | `scoreFused` | one record at a time |
+  | `javaBatched` | the four separate steps | make a batch of records first, then process them |
+  | `javaTunedBatched` | `scoreFused` | batch-first |
+  | `nativePath` | copy each record in, call C once per batch, copy survivors back | batch-first |
+  | `encode`, `encodeKernel` | parts of `nativePath` (copy only; copy + call) | batch-first |
+
+  **Why both arrangements:** the C path has to work batch-first (copy a batch in, one call), and
+  arrangement alone makes Java much faster at light work (62 vs 82 ns at `k=1` in the final run).
+  Measuring Java both ways separates "C is faster" from "the loop is arranged better".
 
 Choices and why:
 
@@ -485,9 +522,9 @@ Choices and why:
 
 ### Stage 2 — plugged into Flink
 
-`minicluster-sweep.sh` runs stock Flink, the fusion prototype, and the native version at every
-batch size, for every `k`: 50 million records per run, 3 runs each, in Flink's built-in local
-mode.
+`minicluster-sweep.sh` runs stock Flink, the fusion prototype, the tuned Java filter (on stock
+Flink) and the native version at every batch size, for every `k`: 50 million records per run, 3
+runs each, in Flink's built-in local mode.
 
 - **Runs are interleaved** — run 1 of every combination, then run 2, … — so a slow patch on the
   machine spreads across all combinations instead of hurting whichever ran last.
@@ -495,7 +532,15 @@ mode.
   start-up.
 - Pinned to the fast cores.
 
-`report.py` turns both stages' results into tables.
+`report.py` turns both stages' results into tables. `benchmark/run-all.sh` runs the correctness
+check, both stages and `report.py` in one go, together with the other two experiments.
+
+### Before trusting a number: the machine
+
+A laptop changes speed with its power settings. Before a sweep, check: AC power connected, the
+`performance` power profile, and — easy to miss — the CPU's frequency ceiling
+(`/sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq`) at its maximum (4.5 GHz here). The
+final sweep logs the ceiling at every stage, so a capped run is visible afterwards.
 
 ---
 
@@ -515,6 +560,7 @@ mode.
 | Fields ride along in the input block | copy everything back from C | C writes back only what it computed |
 | No SIMD | vectorized C | out of scope: the idea is one function, not hand-vectorizing |
 | Exact fingerprint over every field | compare with a tolerance | proves the C version does exactly Java's arithmetic |
+| Hand-tuned Java as an opponent | compare C only with the plain Java | C's first lead came partly from tricks Java can use too; without this control, "C is faster" can't be separated from "the code is arranged better" |
 
 ---
 
@@ -535,6 +581,14 @@ mode.
 - **Running a job locally with Flink's console logging config** creates stray files literally
   named `${sys:log.file}` in the current directory. Leave that flag out, or also set
   `-Dlog.file=…`.
+- **The laptop's power settings silently changed every number.** On battery the CPU ran at
+  0.4–1.4 GHz; later, on AC with the `performance` profile, a frequency ceiling left over from
+  battery mode still capped it at 2.5 GHz — every number came out ~1.8× slower. The ratios between
+  versions were the same as at full speed, so comparisons inside one interleaved run survive it,
+  but absolute numbers don't. Check the ceiling, not just the profile.
+- **A plausible explanation can be wrong — measure it.** The C machine code picks the best match
+  without a branch (`vmaxsd`), which looked like the reason C beats tuned Java. A branch-free Java
+  version (`Math.max`) measured exactly the same, so that's not it.
 - **Adding the native job broke the old benchmark's build** (it imports the doorway class, which
   isn't in the job). Fixed by compiling against the doorway's source without packaging it.
 
@@ -561,8 +615,8 @@ mode.
 
 ## 10. Not done yet
 
-- **Java arranged like the C path** (batch first, then process) and **hand-tuned Java** (the same
-  tricks the C compiler used) — the fair tests of whether C itself is what helps.
+- **Why the JIT's comparison loop is slower than C's** (~9–10 vs ~7 cycles per comparison, same
+  scalar operations): needs the JVM's disassembler plug-in (`hsdis`) to read the generated code.
 - **Real cluster runs**: the Docker benchmark can't run the native version yet (the doorway and
   C library need installing in the image's Flink, built for the image's system libraries).
 - **The time-based flush** in the batching operator.

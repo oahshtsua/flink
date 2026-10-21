@@ -6,7 +6,7 @@
 #                      one to run via the JOB_CLASS env var)
 #   entrypoint.sh    - starts a local cluster, runs the job N times, prints results
 #
-# See benchmark/run_benchmark.sh, which stages this context for both variants.
+# See benchmark/benchmark.py, which stages this context for both variants.
 FROM eclipse-temurin:17-jre
 
 ENV FLINK_HOME=/opt/flink

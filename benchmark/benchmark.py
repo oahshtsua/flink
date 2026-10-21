@@ -259,7 +259,7 @@ def generate_report(
     p()
     p(
         "Runs with parallelism 1 and object reuse enabled - the condition the fusion "
-        "requires to engage (see `isMapFilterFusable` in `OperatorChain`)."
+        "requires to engage (see `findFusableRun` in `OperatorChain`)."
     )
     p()
     p("## Per-run metrics")

@@ -1,6 +1,6 @@
 # Moving a Flink map/filter chain into C — summary
 
-A plain-language summary of the experiment so far: what we built, which versions we compared,
+A plain-language summary of the experiment: what we built, which versions we compared,
 and what we measured. Written to be turned into a presentation; each section is roughly one
 slide.
 
@@ -121,12 +121,24 @@ Stage 1 isolates the work; stage 2 adds everything a real job has around it.
 
 ## 4. Stage 1 — Java vs C, on their own
 
-### The two versions
+### The versions
 
-| version | what it is |
-|---|---|
-| **Java** | the four steps written as one plain Java loop: for each record, stats → filter → score → filter |
-| **C** | the same four steps written as one plain C function, one loop over a batch of records |
+The first sweep compared plain Java with C, and C won by ~1.4×. But the two were not arranged the
+same way, so we added three Java versions to separate "C is faster" from "the code is arranged
+better":
+
+| version | how the four steps are written | how records flow |
+|---|---|---|
+| **Java** | four separate functions, as the Flink steps call them | one record at a time: make it, process it, next |
+| **tuned Java** | one hand-written function doing all four steps (`scoreFused`) | one record at a time |
+| **Java, batch-first** | four separate functions | make a whole batch of records first, then process them in one loop |
+| **tuned Java, batch-first** | the one hand-written function | batch-first |
+| **C** | one C function doing all four steps (`sensor_score`) | batch-first (it has to be: copy a batch in, one call) |
+
+**Tuned Java** is the Java a person or an agent could write instead of C. It uses the same tricks
+the C compiler uses: the 8 readings and the intermediate values live in local variables (the
+processor's registers) instead of being re-read from memory, and the differences from the average
+are computed once and reused. It gives bit-for-bit the same answers as the other versions.
 
 The C function (`sensor_score`) is written by hand for now; it is the function an AI agent would
 generate later. It does the arithmetic in exactly the same order as Java, so it gives exactly the
@@ -166,61 +178,85 @@ writes back the four numbers it actually computed.
 
 ### Results
 
-Measured with JMH (a Java micro-benchmark tool), each number accurate to about ±1 ns. Every
+Measured with JMH (a Java micro-benchmark tool). Most numbers are accurate to within ±1 ns, but
+about a third have error bars of ±2–7 ns (one ±14 ns), so differences of a few ns are noise. Every
 version pays ~37 ns per record for making up the test data; it's included in all numbers.
 
-**Time per record (ns)** — Java vs C at every work level and batch size:
+**Time per record (ns)** — batch-first versions and C at batch 1024:
 
-| shapes (`k`) | Java | C, batch 1 | C, batch 16 | C, batch 64 | C, batch 256 | C, batch 1024 | C, batch 4096 |
+| shapes (`k`) | Java | tuned Java | Java, batch-first | tuned Java, batch-first | C |
+|---|---|---|---|---|---|
+| 1 (light) | 82 | 73 | 62 | 61 | **60** |
+| 4 | 94 | 88 | 86 | 82 | **65** |
+| 16 | 127 | 116 | 119 | 115 | **84** |
+| 64 (heavy) | 204 | 186 | 200 | 183 | **140** |
+
+**C speed-up** (above 1 = C faster):
+
+| shapes (`k`) | over plain Java | over the best Java (tuned, batch-first) |
+|---|---|---|
+| 1 | 1.37× | **1.01× — a tie** |
+| 4 | 1.45× | **1.26×** |
+| 16 | 1.50× | **1.37×** |
+| 64 | 1.46× | **1.31×** |
+
+**By batch size (ns per record)** — "batch" = how many records are made before processing them
+(Java) or handed to C in one call (C). Batch 1 means one call into C per record.
+
+| shapes (`k`) | version | batch 1 | 16 | 64 | 256 | 1024 | 4096 |
 |---|---|---|---|---|---|---|---|
-| 1 (light) | 83 | 62 | 61 | 60 | 60 | 59 | 65 |
-| 4 | 94 | 66 | 66 | 65 | 65 | 65 | 71 |
-| 16 | 124 | 82 | 84 | 84 | 83 | 83 | 90 |
-| 64 (heavy) | 203 | 140 | 142 | 141 | 139 | 140 | 147 |
-
-**C speed-up over Java** (above 1 = C faster):
-
-| shapes (`k`) | batch 1 | batch 16 | batch 64 | batch 256 | batch 1024 | batch 4096 |
-|---|---|---|---|---|---|---|
-| 1 | 1.35× | 1.37× | 1.39× | 1.40× | 1.40× | 1.27× |
-| 4 | 1.42× | 1.42× | 1.44× | 1.45× | 1.45× | 1.32× |
-| 16 | 1.51× | 1.47× | 1.47× | 1.49× | 1.49× | 1.38× |
-| 64 | 1.45× | 1.43× | 1.44× | 1.46× | 1.45× | 1.38× |
-
-"Batch" = how many records are handed to C in one call. Batch 1 means one call into C per record.
+| 1 | Java, batch-first | 80 | 60 | 60 | 61 | 62 | 62 |
+| 1 | tuned Java, batch-first | 74 | 61 | 62 | 65 | 61 | 63 |
+| 1 | C | 62 | 61 | 63 | 60 | 60 | 66 |
+| 4 | Java, batch-first | 91 | 82 | 83 | 84 | 86 | 83 |
+| 4 | tuned Java, batch-first | 91 | 80 | 84 | 84 | 82 | 80 |
+| 4 | C | 66 | 66 | 67 | 65 | 65 | 71 |
+| 16 | Java, batch-first | 124 | 115 | 120 | 116 | 119 | 119 |
+| 16 | tuned Java, batch-first | 117 | 110 | 115 | 113 | 115 | 111 |
+| 16 | C | 83 | 84 | 84 | 84 | 84 | 89 |
+| 64 | Java, batch-first | 214 | 205 | 208 | 205 | 200 | 199 |
+| 64 | tuned Java, batch-first | 188 | 190 | 184 | 182 | 183 | 185 |
+| 64 | C | 139 | 142 | 140 | 139 | 140 | 146 |
 
 ### Stage 1 takeaway
 
-- **C is about 1.4× faster at every work level**, including the copying in and out.
-- **Batch size barely matters.** Even one call into C per record (batch 1) is nearly as fast as
-  batch 1024: here, a call into C costs only ~3 ns, small next to 60–200 ns of work. Very large
-  batches (4096) get a little slower, probably because the batch no longer fits in the
-  processor's fastest memory.
-- **Careful: part of this is not "C vs Java", it's "how the loop is arranged".** The Java version
-  handles one record at a time: make it, process it, next. The C path makes a batch of records
-  first, then processes them all in one tight loop. An earlier Java version that also made the
-  batch first took **60 ns instead of 83 ns** at `k=1` — the same as C. So at light work, C's
-  lead comes mostly from batching, which Java could do too.
-- At heavy work there is a second, real code effect: the C compiler kept the 8 normalized
-  readings in the processor's registers while comparing them to all 64 shapes; Java fetches them
-  from memory again for every shape. Java written the same way could likely do the same.
+- **Light work: C's lead was entirely how the loop is arranged.** Java that makes a batch first
+  and then processes it ties with C (61 vs 60 ns at `k=1`). Nothing about C itself helps here.
+- **Heavier work: C really is faster at the work — about 1.3× over the best Java we wrote**,
+  even with the copying in and out. The lead grows from `k=1` to `k=16` and then holds.
+- **Hand-tuning Java helps less than hoped:** 6–11% one record at a time, 2–9% batch-first.
+- **Where C's lead comes from: the comparison loop in step 3.** Each extra comparison against a
+  known shape costs C ~1.5 ns (~7 processor cycles) and batch-first Java 2.0–2.2 ns (9–10 cycles;
+  tuned to plain). Derived from the `k=4` → `k=64` slope, per record that reaches step 3 (~85%).
+  - It is **not** vector instructions: the C machine code is plain one-number-at-a-time
+    (scalar) arithmetic, the same operations Java does.
+  - It is **not** branches: C picks the best match without a branch, but a branch-free Java
+    version (`Math.max`) measured the same as the original.
+  - What's left is in the machine code the Java JIT compiler generates for that loop (likely
+    array bounds checks and instruction scheduling). Confirming it needs a disassembler plug-in
+    for the JVM (`hsdis`) — an open question.
+- **Batch size barely matters.** C is as fast with one call per record as with 1024 (one call
+  per record adds only ~2–3 ns per record here, small next to 60–200 ns of work). Batch-first Java needs batches of at least 16.
+  Very large batches (4096) make C a little slower, probably because the batch no longer fits in
+  the processor's fastest memory.
 
 ---
 
 ## 5. Stage 2 — plugged into Flink
 
-### The three versions
+### The four versions
 
-All three run the whole job: the same source, the same data, the same output.
+All four run the whole job: the same source, the same data, the same output.
 
 | version | how the four steps run | hops between steps |
 |---|---|---|
 | **A. Stock Flink** | four separate Flink operators, one per step | 3 per record |
 | **B. Flink + fusion prototype** | same job, unchanged; our modified Flink build spots the four steps and merges them into one operator that calls the four Java functions in a loop | none |
 | **C. Flink + native operator** | the four steps replaced by one operator that collects records and hands them to the C function from stage 1, one call per batch | none |
+| **D. Flink + tuned Java** | the four steps replaced by one filter that calls the tuned Java function from stage 1; stock Flink | none |
 
-A and B run the **exact same job code**; only the Flink build differs. C is the same job with
-the four steps swapped for the native operator. Everything else is the same Java.
+A and B run the **exact same job code**; only the Flink build differs. C and D are the same job
+with the four steps swapped out. Everything else is the same Java.
 
 ### How the C function fits into Flink: the batching operator
 
@@ -252,50 +288,55 @@ already loaded". Installed with Flink, it's loaded once and shared by every job.
 from the Java rule; it will actually be tested in the multi-run cluster benchmark, which hasn't
 run yet.)
 
+Version D needs nothing like this: a Flink filter may also fill in the record it is given, so one
+filter can do all four steps in Java.
+
 ### Results
 
 50 million records per run, 3 runs per number (median), runs interleaved so machine drift
-spreads evenly. Runs typically agree within ~3%. Every version pays ~40 ns per record for making
+spreads evenly. Runs typically agree within ~4% (worst cell 9.3%). Every version pays ~40 ns per record for making
 up the test data.
 
 **Time per record (ns):**
 
-| shapes (`k`) | A. stock Flink | B. Flink + fusion | C, batch 1 | C, batch 16 | C, batch 64 | C, batch 256 | C, batch 1024 | C, batch 4096 |
-|---|---|---|---|---|---|---|---|---|
-| 1 (light) | 128 | 127 | 129 | 127 | 127 | 128 | 129 | 130 |
-| 4 | 139 | 136 | 132 | 131 | 132 | 135 | 138 | 132 |
-| 16 | 169 | 161 | 144 | 149 | 151 | 157 | 150 | 157 |
-| 64 (heavy) | 256 | 244 | 201 | 204 | 204 | 210 | 209 | 207 |
+| shapes (`k`) | A. stock | B. fusion | D. tuned Java | C, batch 1 | C, 16 | C, 64 | C, 256 | C, 1024 | C, 4096 |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 (light) | 124 | 128 | **120** | 130 | 125 | 124 | 133 | 132 | 127 |
+| 4 | 141 | 136 | 133 | 134 | **130** | 136 | 134 | 137 | 134 |
+| 16 | 169 | 161 | 159 | **148** | 150 | 155 | 160 | 152 | 158 |
+| 64 (heavy) | 263 | 247 | 232 | **203** | **203** | 213 | 211 | 211 | 214 |
 
 ("C" = C. Flink + native operator, at each batch size.)
 
-**Native speed-up over the fusion prototype** (above 1 = native faster):
+**Speed-up over the fusion prototype** (above 1 = faster than fusion):
 
-| shapes (`k`) | batch 1 | batch 16 | batch 64 | batch 256 | batch 1024 | batch 4096 |
-|---|---|---|---|---|---|---|
-| 1 | 0.99× | 1.00× | 1.00× | 0.99× | 0.98× | 0.98× |
-| 4 | 1.03× | 1.05× | 1.04× | 1.01× | 0.99× | 1.03× |
-| 16 | 1.12× | 1.08× | 1.07× | 1.03× | 1.08× | 1.03× |
-| 64 | 1.21× | 1.20× | 1.20× | 1.17× | 1.17× | 1.18× |
+| shapes (`k`) | D. tuned Java | C, batch 1 | C, 16 | C, 64 | C, 256 | C, 1024 | C, 4096 |
+|---|---|---|---|---|---|---|---|
+| 1 | **1.07×** | 0.98× | 1.02× | 1.03× | 0.96× | 0.97× | 1.01× |
+| 4 | 1.03× | 1.02× | **1.05×** | 1.00× | 1.02× | 0.99× | 1.01× |
+| 16 | 1.01× | **1.09×** | 1.07× | 1.04× | 1.01× | 1.06× | 1.02× |
+| 64 | 1.07× | **1.22×** | **1.22×** | 1.16× | 1.17× | 1.17× | 1.16× |
 
-Differences under ~3% (light-work rows) are within run-to-run noise.
-
+Differences under ~4% are within run-to-run noise.
 
 ### Stage 2 takeaway: how stage 1 translates
 
-| shapes (`k`) | stage 1: C vs Java | stage 2: native vs fusion (batch 1024) |
-|---|---|---|
-| 1 (light) | 1.40× | 0.98× — no difference |
-| 4 | 1.45× | 0.99× — no difference |
-| 16 | 1.49× | 1.08× |
-| 64 (heavy) | 1.45× | 1.17× |
+| shapes (`k`) | stage 1: C vs best Java | stage 2: C (batch 1) vs tuned Java | fastest in Flink |
+|---|---|---|---|
+| 1 (light) | 1.01× | 0.92× | **tuned Java** |
+| 4 | 1.26× | 0.99× | all within noise |
+| 16 | 1.37× | 1.07× | **C** |
+| 64 (heavy) | 1.31× | 1.14× | **C** |
 
-- **Light work: the stage 1 lead disappears inside Flink.** Consistent with stage 1's caveat:
-  at light work C's lead came mostly from loop arrangement, and inside Flink the Java version
-  (fusion) is already arranged well enough.
-- **Heavy work: a real but smaller win, ~1.2×.** The saving per record is similar in both stages
-  (~40–60 ns at `k=64`), but inside Flink it's a smaller share of a bigger total — Flink's own
-  work and the test-data generation are paid by every version.
+- **Light work: tuned Java is the fastest version of all** — 120 ns vs 124–133 ns for everything
+  else, 1.07× over fusion. The native operator only ties with fusion: copying records in and out
+  eats whatever C saves.
+- **Heavy work: C wins — 1.16–1.22× over fusion, 1.09–1.14× over tuned Java.** The crossover is
+  somewhere between `k=4` and `k=16`.
+- **Stage 1 predicts tuned Java closely.** Tuning saved 9 ns per record at `k=1` and 18 ns at
+  `k=64` on its own, and 8 and 16 ns inside Flink.
+- **C's stage 1 lead shrinks inside Flink** (1.3× → ~1.1× over the best Java): Flink's own work
+  and the test-data generation are paid by every version and dilute the difference.
 - **Batch size doesn't matter inside Flink either** — batch 1 is as good as any.
 
 ---
@@ -309,55 +350,67 @@ A faster number means nothing if the answers are wrong.
   exact to the last bit.
 - Every version must print the **identical** fingerprint.
 
-| shapes (`k`) | survivors (of 2,000,000) | fingerprint | A. stock | B. fusion | C. native |
-|---|---|---|---|---|---|
-| 1 | 602,267 | `3d0044a86f2e5afb` | — | — | ✓ |
-| 16 | 617,961 | `83dda26b980dfdf6` | ✓ | ✓ | ✓ |
-| 64 | 621,176 | `a3f1c1b1dad62df3` | — | — | ✓ |
+Checked on 2,000,000 records in the final run (2026-10-21, `benchmark/run-all.sh`):
 
-The native version was also checked with batches of 1024, 7 (so the last batch is only half
-full) and 1 (a call into C for every record): identical every time.
+| shapes (`k`) | survivors | fingerprint | reference, tuned | A. stock | B. fusion | C. native | D. tuned Java |
+|---|---|---|---|---|---|---|---|
+| 1 | 602,267 | `3d0044a86f2e5afb` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 16 | 617,961 | `83dda26b980dfdf6` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 64 | 621,176 | `a3f1c1b1dad62df3` | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-The C function gives **bit-for-bit the same answers as Java** because it does the arithmetic in
-exactly the same order.
+The native version was checked with batches of 1024 and 1 (a call into C for every record), and
+earlier also with 7 (so the last batch is only half full): identical every time.
+
+The C function and the tuned Java function give **bit-for-bit the same answers** as the plain
+Java because they do the arithmetic in exactly the same order.
 
 ---
 
 ## 7. What it means
 
 - **Correctness was never the problem:** every version gives identical answers, bit for bit.
-- **Light work: moving the chain into C doesn't help** inside Flink.
-- **Heavier work: it helps, up to ~1.2× for the whole job** (vs the fusion prototype; ~1.25× vs
-  stock Flink) — and the benefit grows with the amount of work per record.
+- **"Is it C, or how the code is arranged?" — both, depending on the work.**
+  - Light work: only arrangement. Java written the right way matches C, and inside Flink the
+    tuned Java version is the fastest of all.
+  - Heavier work: C is genuinely ~1.3× faster at the work itself, which becomes ~1.1–1.2× for
+    the whole Flink job.
+- **Native pays off only when each record does a lot of work.** Here that means 16 or more
+  comparisons per record (~80+ ns of Java work). Below that, a single well-written Java function
+  is as good or better — with none of native's costs (a C toolchain, per-platform builds, a crash
+  in C taking down the whole TaskManager).
+- **Hand-tuned Java captures part of the gain,** not all: at `k=64` it gets 1.07× over fusion,
+  where C gets 1.16–1.22×.
 - **Batching isn't what makes it work here.** The cost of calling C is small for this job, so even
   one call per record performs as well as large batches.
-- **Is it C, or how the code is arranged?** Both effects we found — processing a batch in one
-  tight loop, and keeping values in registers — are things Java code could also do. The fair next
-  test is Java written the same way.
 
 ---
 
 ## 8. Caveats
 
-- All timings are from **one laptop** (Intel i5-12500H, Java 17), pinned to its fast cores.
+- All timings are from **one final run on one laptop** (2026-10-21, `benchmark/run-all.sh`; Intel
+  i5-12500H, Java 17), pinned to its fast cores, on AC power at full clock speed. The 4.5 GHz
+  ceiling was logged before every step; AC power and the performance profile were set but the
+  script's check for them printed `?` (fixed since). An earlier run with the clock accidentally capped at
+  2.5 GHz was ~1.8× slower everywhere but gave the same ratios, so the comparisons are robust.
 - Stage 2 uses Flink's built-in local mode, not a real cluster.
-- 3 runs per number in stage 2; runs typically agree within ~3%, worst case 7.5%.
+- 3 runs per number in stage 2; runs typically agree within ~4%. The worst cell spread 9.3%
+  (stock at `k=1`); medians are unaffected.
 - About 40 ns of every record's time is spent making up the test data, which shrinks the visible
   differences between versions.
-- Stage 1's Java number depends on how its loop is arranged (60 vs 83 ns at `k=1`); the table
-  uses the one-record-at-a-time arrangement, which is how the Flink job works.
-- The C function is hand-written, and the arithmetic is deliberately kept in Java's order so the
-  answers can be compared exactly.
+- The tuned Java and the C function are both hand-written, by us. A better Java version may exist
+  — the comparison loop is where to look (section 4).
+- The arithmetic is deliberately kept in Java's order in every version, so the answers can be
+  compared exactly. C compiled with `-O3 -march=native`, but no fused multiply-add and no
+  "fast-math" reordering.
 
 ---
 
 ## 9. Next steps
 
-1. **Java arranged like the C path**: batch the records first, then process them in one loop —
-   tells us how much of stage 1's lead is batching rather than C.
-2. **Hand-tuned Java**: write the four steps as one Java function, using the same tricks the C
-   compiler used (values kept in local variables). If it matches C, the language isn't what made
-   the difference.
-3. **Real cluster runs** with the Docker benchmark setup.
-4. **Agent-generated C**: have an AI agent write the C function from the Java job, and check its
-   answers with the same fingerprint.
+1. **Find out what the Java compiler does differently in the comparison loop** (install `hsdis`,
+   read the generated machine code). This tells us whether Java can close the remaining 1.3×.
+2. **Real cluster runs** with the Docker benchmark setup.
+3. **Agent-generated code**: have an AI agent write the C function *and* an optimized Java
+   function from the Java job, check both with the same fingerprint, and compare them — the
+   results here say the Java route is enough for light work.
+4. **The time-based flush** in the batching operator, so a quiet stream doesn't hold records.

@@ -90,9 +90,9 @@ record-count argument:
   jobs it carries its own correctness check: run it with args `<count> <k> checksum` and
   compare its `CHECKSUM` line with `SensorScoringReference <count> <k>`. Its native
   counterpart (`SensorScoringNativeJob`) and the Java-vs-C sweeps aren't run by this
-  harness yet; see `sensor-bench/README.md`.
+  harness; `run-all.sh` runs them through `sensor-bench/` (see its README).
 
-To benchmark a new job, add a class next to these two (parallelism 1, object reuse
+To benchmark a new job, add a class next to these (parallelism 1, object reuse
 enabled - the condition the fusion requires to engage) and register it in
 `benchmark.py`'s `JOBS` dict; it picks it up automatically (it shows up in
 `--list-jobs` and is valid as the `<job>` argument), no other changes needed.
@@ -110,7 +110,7 @@ enabled - the condition the fusion requires to engage) and register it in
   JRE-only image): starts a one-node standalone Flink cluster, submits the job named by
   the `JOB_CLASS` env var `ITERATIONS` times via `bin/flink run`, and tears the cluster
   down afterwards. Each iteration prints a machine-readable `RESULT variant=... job=...
-  iter=... runtime_ms=... fusion_events=... log=...` line and appends a row to
+  iter=... count=... runtime_ms=... fusion_events=... log=...` line and appends a row to
   `metrics.csv`.
 
 ## Where logs and metrics go

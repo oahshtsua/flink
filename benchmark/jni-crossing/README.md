@@ -11,7 +11,7 @@ Everything needed is in this directory. One command runs it — no build system,
 
 Flink pipelines are chains of small operations: transform each record, drop the ones that don't
 match, transform again. We already merge chained stages into one operator, which removed the
-per-record hand-off between them and bought **16–23%**.
+per-record hand-off between them and saved **13–25%** of runtime.
 
 The next idea under evaluation: **rewrite the user's operations in C ahead of time, compile them
 to a binary, and have the operator call into that instead.**
@@ -45,7 +45,7 @@ and JVMs differ by more than the effect we are looking for.
 ./benchmark/jni-crossing/run.sh
 ```
 
-Takes about 9 minutes. On first run it downloads JMH into `deps/`. Then it compiles the C,
+Takes about 12 minutes. On first run it downloads JMH into `deps/`. Then it compiles the C,
 compiles the Java, runs everything, and writes `results/jni-crossing.{txt,json}`.
 
 ```bash
@@ -63,9 +63,9 @@ JAVA_HOME=/path/to/jdk ./benchmark/jni-crossing/run.sh
 ```
 
 **Requirements:** `gcc`, `curl`, a JDK. `run.sh` picks one in this order: an explicit
-`JAVA_HOME`, then a Homebrew or system OpenJDK 21, then whatever `javac` is on `PATH`. It prints
-which one it used. Prefer 21 — Flink 2.x targets Java 17, so 21 is closer to a real TaskManager
-than a bleeding-edge JDK, and **numbers from different JDKs are not comparable.**
+`JAVA_HOME`, then a Homebrew or system OpenJDK 17, then whatever `javac` is on `PATH`. It prints
+which one it used. Use 17: it is what the Flink jobs, the Docker image (`eclipse-temurin:17`) and
+the sensor benchmark run on, and **numbers from different JDKs are not comparable.**
 
 What `run.sh` does:
 
@@ -84,20 +84,20 @@ java org.openjdk.jmh.Main                   →  results/
 
 ```
 Benchmark                        Mode  Cnt   Score   Error  Units
-JniCrossing.baselineEmpty        avgt   10   0.324 ± 0.009  ns/op
-JniCrossing.javaMonomorphicCall  avgt   10   0.468 ± 0.001  ns/op
-JniCrossing.javaMegamorphicCall  avgt   10   7.339 ± 0.088  ns/op
-JniCrossing.jniVoid              avgt   10   6.512 ± 0.032  ns/op
+JniCrossing.baselineEmpty        avgt   10   0.308 ± 0.010  ns/op
+JniCrossing.javaMonomorphicCall  avgt   10   0.449 ± 0.003  ns/op
+JniCrossing.javaMegamorphicCall  avgt   10   6.910 ± 0.269  ns/op
+JniCrossing.jniVoid              avgt   10   6.698 ± 0.002  ns/op
 ```
 
 Each line ran one small piece of code billions of times and reports the **average cost of one
 repetition in nanoseconds**, plus a confidence interval.
 
 **`baselineEmpty` is the measuring instrument's own thickness** — it benchmarks a method that does
-nothing, and even nothing costs 0.32 ns to measure. **Subtract it from every other number.**
+nothing, and even nothing costs 0.31 ns to measure. **Subtract it from every other number.**
 
-So the two headline figures are **`jniVoid` ≈ 6.2 ns** (one call into an empty C function) and
-**`javaMegamorphicCall` ≈ 7.0 ns** (three Java function calls).
+So the two headline figures are **`jniVoid` ≈ 6.4 ns** (one call into an empty C function) and
+**`javaMegamorphicCall` ≈ 6.6 ns** (three Java function calls).
 
 ### The three names worth understanding
 
@@ -113,10 +113,10 @@ bodies are trivial (`v + 1`), so nearly everything measured is call overhead. Th
 asking: **can the runtime predict which function is about to be called?**
 
 - *Monomorphic* — yes, always the same one. After a few thousand executions the runtime copies the
-  function body straight into the calling code, so no call remains. **0.47 ns.** Effectively free.
+  function body straight into the calling code, so no call remains. **0.45 ns.** Effectively free.
 - *Megamorphic* — no, a different one each time. The runtime can't predict, can't paste anything
-  in, and must do a real lookup-and-jump every time. **7.34 ns for three such calls ≈ 2.3 ns
-  each** — roughly **14×** the predictable kind.
+  in, and must do a real lookup-and-jump every time. **6.91 ns for three such calls ≈ 2.2 ns
+  each** (net) — roughly **15×** the predictable kind.
 
 Megamorphic is the one that matters, because the current fused operator has exactly that shape:
 
@@ -131,8 +131,8 @@ different class at each step, so the call site is megamorphic.
 > **Caveat before quoting it.** This is a *proxy*, not a measurement of the real operator. It
 > reproduces the dispatch shape (3 steps, one shared call site, multiple types) but omits the
 > `kind` branch, the record plumbing (`getValue()` / `replace()` / `collect()`), and uses trivial
-> bodies. The defensible claim is *"~7 ns is what the current operator's dispatch pattern costs"*,
-> not *"the operator costs 7 ns per record."* The omissions make the Java side look **better** than
+> bodies. The defensible claim is *"~6.6 ns is what the current operator's dispatch pattern
+> costs"*, not *"the operator costs 6.6 ns per record."* The omissions make the Java side look **better** than
 > it is, so the comparison errs in native's favour — the safe direction. To remove the asterisk,
 > benchmark `MapFilterFusedOperator` directly; it is a plain object constructible outside Flink.
 
@@ -140,110 +140,124 @@ different class at each step, so the call site is megamorphic.
 
 ## 4. Results
 
-Measured on JDK 21, `gcc -O2`, 2 forks × 5 iterations. Raw output in `results/`.
+Final run 2026-10-21 (by `../run-all.sh`): JDK 17.0.20.1, `gcc -O2`, 2 forks × 5 iterations; raw
+output in `results/jni-crossing.txt`, allocation figures from a separate `-prof gc Marshalling`
+run (`results/marshalling-gc.txt`). The original run (2026-10-08, JDK 21.0.12.1) is kept in
+`results/archive/` and shown alongside for comparison.
 
 ### The crossing (`JniCrossing`, ns per call)
 
-| benchmark | score | what it isolates |
-|---|---|---|
-| `baselineEmpty` | 0.324 ± 0.009 | measurement floor — subtract from everything |
-| `javaMonomorphicCall` | 0.468 ± 0.001 | a Java call the runtime can predict and inline |
-| `javaMegamorphicCall` | 7.339 ± 0.088 | three it cannot — the cost a native call must beat |
-| `jniVoid` | 6.512 ± 0.032 | the pure crossing: no args, no return, empty body |
-| `jniLong` | 6.705 ± 0.005 | crossing with one number argument |
-| `jniLong3` | 6.802 ± 0.177 | crossing with three |
-| `jniPojo` | 7.824 ± 0.015 | crossing plus reading two fields off a Java object |
-| `jniString` | 51.671 ± 0.188 | crossing plus converting text between encodings |
-| `jniDirectBufAddr` | 23.589 ± 0.036 | crossing plus looking up a flat buffer's address |
+| benchmark | score | JDK 21 original | what it isolates |
+|---|---|---|---|
+| `baselineEmpty` | 0.308 ± 0.010 | 0.324 | measurement floor — subtract from everything |
+| `javaMonomorphicCall` | 0.449 ± 0.003 | 0.468 | a Java call the runtime can predict and inline |
+| `javaMegamorphicCall` | 6.910 ± 0.269 | 7.339 | three it cannot — the cost a native call must beat |
+| `jniVoid` | 6.698 ± 0.002 | 6.512 | the pure crossing: no args, no return, empty body |
+| `jniLong` | 6.694 ± 0.004 | 6.705 | crossing with one number argument |
+| `jniLong3` | 6.718 ± 0.048 | 6.802 | crossing with three |
+| `jniPojo` | 7.958 ± 0.592 | 7.824 | crossing plus reading two fields off a Java object |
+| `jniString` | 52.464 ± 0.151 | 51.671 | crossing plus converting text between encodings |
+| `jniDirectBufAddr` | 23.512 ± 0.027 | 23.589 | crossing plus looking up a flat buffer's address |
 
 ### Batching (`JniBatchCrossing`, ns per call, carrying N records)
 
 | N | `jniBatchNoop` | `jniArrayCritical` | `jniArrayRegion` |
 |---|---|---|---|
-| 1 | 6.930 | 34.791 | 27.939 |
-| 16 | 6.931 | 34.303 | 29.237 |
-| 64 | 6.953 | 34.222 | 34.631 |
-| 256 | 6.933 | 34.621 | 56.946 |
-| 1024 | 6.932 | 34.129 | 143.326 |
-| 4096 | 6.937 ± 0.022 | 34.167 | 772.292 |
+| 1 | 6.919 | 39.827 | 28.302 |
+| 16 | 6.938 | 39.660 | 29.380 |
+| 64 | 6.937 | 39.791 | 34.618 |
+| 256 | 6.918 | 39.611 | 57.062 |
+| 1024 | 6.917 | 39.626 | 143.078 |
+| 4096 | 6.923 ± 0.006 | 39.637 | 739.927 |
 
 `jniBatchNoop` passes a direct buffer and a record count and returns without touching the data.
 **It is perfectly flat from 1 to 4096 records** — the toll does not care how much you carry.
 `jniArrayCritical` reaches a Java array by pinning it (also flat, but freezes the memory
-manager); `jniArrayRegion` copies it out, and the cost grows linearly at ~0.18 ns/element.
+manager); `jniArrayRegion` copies it out, and the cost grows linearly at ~0.19 ns/element.
 
 ### Repacking (`Marshalling`, ns per record, batches of 1024)
 
-| benchmark | score | allocated |
-|---|---|---|
-| `baselineTouch` / `baselineTouchString` | 1.095 / 1.500 | ≈0 |
-| `encodeLongArray` / `encodeLongDirect` | 0.076 / 0.127 | ≈0 |
-| `encodeFixedDirect` / `encodeFixedLongArray` | 1.129 / 1.141 | ≈0 |
-| `encodeStringGetBytes` | 8.523 | 56 B |
-| `encodeStringGetBytesUnicode` | 28.165 | 144 B |
-| `encodeStringEncoder` | 85.415 | 56 B |
-| `encodeStringPojo` | 10.477 | 56 B |
-| `decodeFixedReuse` / `decodeFixedConsume` | 0.237 / 0.472 | ≈0 |
-| `decodeFixedAlloc` | 7.000 | 32 B |
-| `decodeStringAlloc` | 14.908 | 136 B |
-| **`roundTripFixed`** | **1.785 ± 0.176** | ≈0 |
-| **`roundTripStringPojo`** | **25.622 ± 0.854** | 192 B |
+| benchmark | score | JDK 21 original | allocated |
+|---|---|---|---|
+| `baselineTouch` / `baselineTouchString` | 1.072 / 1.453 | 1.095 / 1.500 | ≈0 |
+| `encodeLongArray` / `encodeLongDirect` | 0.073 / 0.122 | 0.076 / 0.127 | ≈0 |
+| `encodeFixedDirect` / `encodeFixedLongArray` | 1.893 / 1.462 | 1.129 / 1.141 | ≈0 |
+| `encodeStringGetBytes` | 8.109 | 8.523 | 56 B |
+| `encodeStringGetBytesUnicode` | 28.196 | 28.165 | 144 B |
+| `encodeStringEncoder` | 50.009 | 85.415 | 56 B |
+| `encodeStringPojo` | 10.004 | 10.477 | 56 B |
+| `decodeFixedReuse` / `decodeFixedConsume` | 1.270 / 1.012 | 0.237 / 0.472 | ≈0 |
+| `decodeFixedAlloc` | 7.253 | 7.000 | 32 B |
+| `decodeStringAlloc` | 14.786 | 14.908 | 136 B |
+| **`roundTripFixed`** | **3.409 ± 0.023** | 1.785 | ≈0 |
+| **`roundTripStringPojo`** | **25.210 ± 0.670** | 25.622 | 192 B |
 
 The two round trips are encode + a real C call + decode — the honest end-to-end repacking cost.
-Internal consistency check: each round trip ≈ the sum of its parts (1.38 vs 1.79; 25.39 vs 25.62).
+Internal consistency check: each round trip ≈ the sum of its parts (3.16 vs 3.41; 24.79 vs 25.21).
+
+### What changed from the original run
+
+Almost everything agrees within ~0.5 ns. The exceptions are the fixed-width encode and decode
+steps (`encodeFixedDirect` 1.13 → 1.89, `decodeFixedReuse` 0.24 → 1.27, so `roundTripFixed` 1.8 →
+3.4 ns), `encodeStringEncoder` (85 → 50) and `jniArrayCritical` (34 → 40). The original run was on
+JDK 21, this one on JDK 17, so these shifts may be the JDK; whether the original 0.24 ns (about one
+CPU cycle for four fields) also involved the JIT removing work, as happened once before (§6), is
+not established. No conclusion below changes, and the sensor experiment (`../sensor-bench/`)
+times the real copy-in, call and copy-out end to end, so it does not depend on these figures.
 
 ---
 
 ## 5. Observations
 
-**1. Per-record native offload is dead.** One empty crossing (6.2 ns net) costs about as much as
-the entire 3-step Java dispatch chain it would replace (7.0 ns net). Writing out the per-record
+**1. Per-record native offload is dead.** One empty crossing (6.4 ns net) costs about as much as
+the entire 3-step Java dispatch chain it would replace (6.6 ns net). Writing out the per-record
 budget, where `W` is the user's actual work:
 
 ```
-today:            7.0 + W_java       dispatch, then the work in Java
-per-record C:     6.3 + 1.8 + W_c    toll + repacking, then the work in C   =  8.1 + W_c
+today:            6.6 + W_java       dispatch, then the work in Java
+per-record C:     6.4 + 3.4 + W_c    toll + repacking, then the work in C   =  9.8 + W_c
 ```
 
-Paying 8.1 to avoid paying 7.0 — behind before the work even starts. Even infinitely fast C
-barely breaks even.
+Paying 9.8 to avoid paying 6.6 — behind before the work even starts. Even infinitely fast C
+does not break even.
 
 **2. Batching is mandatory, not an optimisation.** Because the toll is perfectly flat in batch
 size, batching divides it away entirely:
 
 ```
-batch of 1000:    0.006 + 1.8 + W_c  =  1.8 + W_c
+batch of 1000:    0.007 + 3.4 + W_c  =  3.4 + W_c
 ```
 
-1.8 instead of 7.0 — **5.2 ns ahead per record** before the work starts, enough to win even if C
-is somewhat *slower* at the work. This is the difference between losing and winning.
+3.4 instead of 6.6 — **3.2 ns ahead per record** before the work starts, enough to win even if C
+is slightly *slower* at the work. This is the difference between losing and winning.
 
 **3. The shape of the data matters more than the complexity of the operation.** Numeric
-fixed-width records round-trip in 1.8 ns; records containing text cost 25.6 ns and 192 bytes of
-garbage — 14× worse, which drags the whole thing back underwater. Keep payloads flat and numeric.
+fixed-width records round-trip in 3.4 ns; records containing text cost 25.2 ns and 192 bytes of
+garbage — ~7× worse, which drags the whole thing back underwater. Keep payloads flat and numeric.
 
-**4. There is a Java-only alternative that gets the same plumbing cost.** Monomorphic calls are
-nearly free, so generating specialised code — one dedicated call site per step instead of one
-shared loop — would make the calls predictable and inlinable:
+**4. There is a Java-only alternative with cheaper plumbing.** Monomorphic calls are nearly free,
+so generating specialised code — one dedicated call site per step instead of one shared loop —
+would make the calls predictable and inlinable:
 
 ```
-generated Java:   1.4 + W_java       3 monomorphic calls at 0.47
-batched C:        1.8 + W_c
+generated Java:   1.4 + W_java       3 monomorphic calls at 0.45
+batched C:        3.4 + W_c
 ```
 
-**The plumbing costs are then the same** (1.4 vs 1.8 is a rounding error), and the entire
-comparison collapses to one question: **is `W_c` smaller than `W_java`?** Native gets no help from
-the plumbing and has to justify itself purely on the work — and `W` is the one thing this
-benchmark does not measure.
+**The plumbing then favours Java** (1.4 vs 3.4 ns), and the comparison comes down to one
+question: **is `W_c` enough smaller than `W_java`?** Native gets no help from the plumbing and has
+to justify itself purely on the work — and `W` is the one thing this benchmark does not measure
+(the sensor benchmark does).
 
 **Smaller findings**
 
 - `GetDirectBufferAddress` costs ~17 ns — resolve the address once at setup, never per call.
-- Per-record String marshalling (+45 ns) is disqualifying on its own.
-- Reusing one output object instead of allocating per record is worth **30×**.
-- A reused `CharsetEncoder` is **10× worse** than naive `getBytes(UTF_8)`, which is intrinsified.
-- Non-ASCII text costs **3.3×** more than ASCII — the fast path is Latin-1 only.
-- Direct `ByteBuffer` and heap `long[]` are equally fast to write.
+- Per-record String marshalling (+46 ns) is disqualifying on its own.
+- Reusing one output object instead of allocating per record is worth **~6×** (7.3 vs 1.3 ns).
+- A reused `CharsetEncoder` is **~6× worse** than naive `getBytes(UTF_8)`, which is intrinsified.
+- Non-ASCII text costs **3.5×** more than ASCII — the fast path is Latin-1 only.
+- A heap `long[]` is slightly faster to write than a direct `ByteBuffer` (1.46 vs 1.89 ns per
+  record).
 
 ---
 

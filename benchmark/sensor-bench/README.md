@@ -33,7 +33,8 @@ the native version, the batch size (records per call into C).
 ## Prerequisites
 
 - **JDK 17** with `javac` and `jni.h` (the Docker harness image runs 17; results from another JDK
-  aren't comparable). `JAVA_HOME` is honoured; otherwise the `javac` on `PATH` is used.
+  aren't comparable). `run.sh` honours `JAVA_HOME`, otherwise it uses the `javac` on `PATH`;
+  `minicluster-sweep.sh` always uses the `java`/`javac` on `PATH`.
 - **gcc** (the kernel is built with `-O3 -march=native -ffp-contract=off`, so it targets this
   machine's CPU).
 - **curl**, the first time only: `run.sh` downloads the JMH jars into `../jni-crossing/deps/`.
@@ -99,7 +100,7 @@ in an in-process local cluster. Expected for 2,000,000 records:
 | 16 | 617961 | `83dda26b980dfdf6` |
 | 64 | 621176 | `a3f1c1b1dad62df3` |
 
-## 2. Stage 1 — Java vs C, on their own (~35 min)
+## 2. Stage 1 — Java vs C, on their own (~30 min)
 
 ```bash
 # Java one record at a time (as Flink calls it): plain and hand-tuned. Batch size is irrelevant.
@@ -126,7 +127,7 @@ Any extra arguments go straight to JMH, e.g. `-p k=1,64 -p batch=1,1024` for a s
 suits the i5-12500H this was written on, where CPUs 0–7 are the fast P-cores and 8–15 the slower
 E-cores — check `lscpu --extended` and adjust on another machine.
 
-## 3. Stage 2 — plugged into Flink (~30 min)
+## 3. Stage 2 — plugged into Flink (~20 min)
 
 ```bash
 ./benchmark/sensor-bench/minicluster-sweep.sh
