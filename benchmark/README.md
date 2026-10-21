@@ -36,6 +36,20 @@ writes the result down. It does not check whether the job's output is correct - 
    Each invocation benchmarks exactly one job; run it again with a different job name to
    benchmark another.
 
+## Running every experiment at once
+
+```bash
+./benchmark/run-all.sh <vanilla-dist-dir> <fused-dist-dir>
+```
+
+Runs, in order and on one machine (about 70 minutes; keep it plugged in and idle):
+`MapFilterFusionDemoITCase`, this harness for the `simple` and `mixed` jobs (10 iterations each,
+`ITERATIONS` to change), the sensor job's checksum for every variant, the JNI crossing benchmark
+(`jni-crossing/`), both stages of the sensor sweep (`sensor-bench/`) and its report. Before each
+step it logs the CPU's frequency ceiling, power profile and AC state, since a capped ceiling slows
+everything without any error. Each step runs even if an earlier one failed; the log
+(`results/run-all.log`) ends with the list of failed steps.
+
 ## Correctness lives elsewhere
 
 A faster runtime doesn't prove the fusion is *correct* - it could just as easily be fast

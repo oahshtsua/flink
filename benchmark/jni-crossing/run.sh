@@ -3,9 +3,9 @@
 #
 #   ./benchmark/jni-crossing/run.sh [extra JMH args...]
 #
-# JDK: defaults to the JDK 21 installed via Homebrew, because that is representative of a real
-# Flink TaskManager (Flink 2.x targets Java 17 bytecode) and because JMH 1.37 is well-tested
-# there. Override with JAVA_HOME=... to measure on a different JVM.
+# JDK: defaults to OpenJDK 17 (Homebrew or system), the JDK the Flink jobs, the Docker image and
+# the sensor benchmark run on, so the numbers are comparable with theirs. Override with
+# JAVA_HOME=... to measure on a different JVM.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,10 +13,10 @@ DEPS="$HERE/deps"
 BUILD="$HERE/build"
 RESULTS="$HERE/results"
 
-# Pick a JDK: an explicit JAVA_HOME wins, then a Homebrew OpenJDK 21, then whatever javac is on
+# Pick a JDK: an explicit JAVA_HOME wins, then a Homebrew or system OpenJDK 17, then whatever javac is on
 # PATH. We need a JDK (not a JRE) for javac, and its include/ dir for jni.h.
 if [ -z "${JAVA_HOME:-}" ]; then
-    for cand in /home/linuxbrew/.linuxbrew/Cellar/openjdk@21/*/libexec /usr/lib/jvm/java-21-openjdk; do
+    for cand in /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/*/libexec /usr/lib/jvm/java-17-openjdk; do
         [ -x "$cand/bin/javac" ] && { JAVA_HOME="$cand"; break; }
     done
 fi

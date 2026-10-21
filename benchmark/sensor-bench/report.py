@@ -46,7 +46,9 @@ def inside_flink() -> None:
         if row["net_ms"]:
             ns = int(row["net_ms"]) * 1e6 / int(row["count"])
             runs[(row["variant"], int(row["k"]), row["batch"])].append(ns)
-    med = {key: statistics.median(v) for key, v in runs.items()}
+    if not runs:
+        return
+    med ={key: statistics.median(v) for key, v in runs.items()}
     spread = {key: (max(v) - min(v)) / statistics.median(v) for key, v in runs.items() if len(v) > 1}
     ks = sorted({k for _, k, _ in med})
     batches = sorted({int(b) for v, _, b in med if v == "native"})
