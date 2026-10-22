@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Turns the batch-size x k sweeps into Markdown tables (ns per input record).
 
-    ./benchmark/sensor-bench/report.py > benchmark/sensor-bench/results/sweep-report.md
+    ./benchmark/sensor-bench/report.py [results-dir] > benchmark/sensor-bench/results/sweep-report.md
 
-Reads, from results/ (whichever exist):
+Reads, from results-dir (default results/ next to this script; whichever exist):
   sweep-java.json         stage 1, Java one record at a time
                           (run.sh 'SensorBatch.(generate|java|javaTuned)$' -p batch=1024)
   sweep-batched.json      stage 1, Java batch-first (run.sh 'SensorBatch.(javaBatched|javaTunedBatched)$')
@@ -169,6 +169,9 @@ def outside_flink() -> None:
 
 
 def main() -> int:
+    global RESULTS
+    if len(sys.argv) > 1:
+        RESULTS = Path(sys.argv[1])
     outside_flink()
     inside_flink()
     return 0

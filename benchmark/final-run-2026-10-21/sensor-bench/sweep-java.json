@@ -1,0 +1,772 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.generate",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "1"
+        },
+        "primaryMetric" : {
+            "score" : 37.41450199280301,
+            "scoreError" : 0.11909557170072796,
+            "scoreConfidence" : [
+                37.295406421102285,
+                37.53359756450374
+            ],
+            "scorePercentiles" : {
+                "0.0" : 37.317354529053,
+                "50.0" : 37.40696023156207,
+                "90.0" : 37.57982490346989,
+                "95.0" : 37.590652864283314,
+                "99.0" : 37.590652864283314,
+                "99.9" : 37.590652864283314,
+                "99.99" : 37.590652864283314,
+                "99.999" : 37.590652864283314,
+                "99.9999" : 37.590652864283314,
+                "100.0" : 37.590652864283314
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    37.431727666115655,
+                    37.590652864283314,
+                    37.359813489412005,
+                    37.430675649088144,
+                    37.38469773343042
+                ],
+                [
+                    37.356437541842006,
+                    37.42922272969371,
+                    37.362064468962764,
+                    37.48237325614907,
+                    37.317354529053
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.generate",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "4"
+        },
+        "primaryMetric" : {
+            "score" : 37.44696900265859,
+            "scoreError" : 0.318084873070256,
+            "scoreConfidence" : [
+                37.128884129588336,
+                37.765053875728846
+            ],
+            "scorePercentiles" : {
+                "0.0" : 37.278569069385675,
+                "50.0" : 37.3705936774458,
+                "90.0" : 37.905332480002535,
+                "95.0" : 37.92792777624068,
+                "99.0" : 37.92792777624068,
+                "99.9" : 37.92792777624068,
+                "99.99" : 37.92792777624068,
+                "99.999" : 37.92792777624068,
+                "99.9999" : 37.92792777624068,
+                "100.0" : 37.92792777624068
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    37.360147651289495,
+                    37.452367293865684,
+                    37.3810397036021,
+                    37.45635556582202,
+                    37.31174922280906
+                ],
+                [
+                    37.92792777624068,
+                    37.701974813859216,
+                    37.30548076119653,
+                    37.29407816851538,
+                    37.278569069385675
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.generate",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "16"
+        },
+        "primaryMetric" : {
+            "score" : 37.26113523382423,
+            "scoreError" : 0.030362774875977806,
+            "scoreConfidence" : [
+                37.23077245894825,
+                37.2914980087002
+            ],
+            "scorePercentiles" : {
+                "0.0" : 37.2312665068547,
+                "50.0" : 37.258418669564,
+                "90.0" : 37.30483472524837,
+                "95.0" : 37.30880132347059,
+                "99.0" : 37.30880132347059,
+                "99.9" : 37.30880132347059,
+                "99.99" : 37.30880132347059,
+                "99.999" : 37.30880132347059,
+                "99.9999" : 37.30880132347059,
+                "100.0" : 37.30880132347059
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    37.26913534124838,
+                    37.30880132347059,
+                    37.26305345744554,
+                    37.25037215150648,
+                    37.26746117430561
+                ],
+                [
+                    37.253783881682466,
+                    37.25080459063118,
+                    37.2640733117823,
+                    37.252600599315066,
+                    37.2312665068547
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.generate",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "64"
+        },
+        "primaryMetric" : {
+            "score" : 37.23533887626797,
+            "scoreError" : 0.020488189982138225,
+            "scoreConfidence" : [
+                37.21485068628583,
+                37.255827066250106
+            ],
+            "scorePercentiles" : {
+                "0.0" : 37.216701912818166,
+                "50.0" : 37.235709821869136,
+                "90.0" : 37.26090543318432,
+                "95.0" : 37.26264989705335,
+                "99.0" : 37.26264989705335,
+                "99.9" : 37.26264989705335,
+                "99.99" : 37.26264989705335,
+                "99.999" : 37.26264989705335,
+                "99.9999" : 37.26264989705335,
+                "100.0" : 37.26264989705335
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    37.23939841549128,
+                    37.216701912818166,
+                    37.22237190936357,
+                    37.22994873566481,
+                    37.2225052624214
+                ],
+                [
+                    37.26264989705335,
+                    37.242284747801804,
+                    37.24030139545524,
+                    37.24520525836304,
+                    37.232021228246985
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.java",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "1"
+        },
+        "primaryMetric" : {
+            "score" : 81.68466040328052,
+            "scoreError" : 1.9852110305806452,
+            "scoreConfidence" : [
+                79.69944937269987,
+                83.66987143386116
+            ],
+            "scorePercentiles" : {
+                "0.0" : 80.41236951298568,
+                "50.0" : 81.67169159045605,
+                "90.0" : 82.9946014320064,
+                "95.0" : 82.99541121521307,
+                "99.0" : 82.99541121521307,
+                "99.9" : 82.99541121521307,
+                "99.99" : 82.99541121521307,
+                "99.999" : 82.99541121521307,
+                "99.9999" : 82.99541121521307,
+                "100.0" : 82.99541121521307
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    80.41948884662828,
+                    80.44012176383298,
+                    80.41236951298568,
+                    80.42893425058156,
+                    80.49845380281147
+                ],
+                [
+                    82.99541121521307,
+                    82.98731338314641,
+                    82.84492937810062,
+                    82.87327498744183,
+                    82.9463068920633
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.java",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "4"
+        },
+        "primaryMetric" : {
+            "score" : 94.2749716809017,
+            "scoreError" : 0.4086221733558878,
+            "scoreConfidence" : [
+                93.8663495075458,
+                94.6835938542576
+            ],
+            "scorePercentiles" : {
+                "0.0" : 93.98461520287299,
+                "50.0" : 94.28426866835648,
+                "90.0" : 94.59036857633494,
+                "95.0" : 94.59283082138292,
+                "99.0" : 94.59283082138292,
+                "99.9" : 94.59283082138292,
+                "99.99" : 94.59283082138292,
+                "99.999" : 94.59283082138292,
+                "99.9999" : 94.59283082138292,
+                "100.0" : 94.59283082138292
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    94.05335939757079,
+                    93.9926364067612,
+                    93.9907012880878,
+                    94.08990998314066,
+                    93.98461520287299
+                ],
+                [
+                    94.47862735357229,
+                    94.49650127921772,
+                    94.56820837090312,
+                    94.50232670550744,
+                    94.59283082138292
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.java",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "16"
+        },
+        "primaryMetric" : {
+            "score" : 126.54109231881539,
+            "scoreError" : 4.587887907099064,
+            "scoreConfidence" : [
+                121.95320441171633,
+                131.12898022591446
+            ],
+            "scorePercentiles" : {
+                "0.0" : 124.7779100015569,
+                "50.0" : 124.94916408363709,
+                "90.0" : 133.06575415463925,
+                "95.0" : 133.33608132344176,
+                "99.0" : 133.33608132344176,
+                "99.9" : 133.33608132344176,
+                "99.99" : 133.33608132344176,
+                "99.999" : 133.33608132344176,
+                "99.9999" : 133.33608132344176,
+                "100.0" : 133.33608132344176
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    130.63280963541666,
+                    133.33608132344176,
+                    127.28391353732412,
+                    125.07901851977465,
+                    125.02580165130568
+                ],
+                [
+                    124.78108432869188,
+                    124.778903613331,
+                    124.87252651596849,
+                    124.84287406134288,
+                    124.7779100015569
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.java",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "64"
+        },
+        "primaryMetric" : {
+            "score" : 203.6668341912643,
+            "scoreError" : 0.08989946305893108,
+            "scoreConfidence" : [
+                203.57693472820534,
+                203.75673365432323
+            ],
+            "scorePercentiles" : {
+                "0.0" : 203.57088684082032,
+                "50.0" : 203.68045946950946,
+                "90.0" : 203.7333229961296,
+                "95.0" : 203.73386615310937,
+                "99.0" : 203.73386615310937,
+                "99.9" : 203.73386615310937,
+                "99.99" : 203.73386615310937,
+                "99.999" : 203.73386615310937,
+                "99.9999" : 203.73386615310937,
+                "100.0" : 203.73386615310937
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    203.69568317940153,
+                    203.60730224203152,
+                    203.6050528971354,
+                    203.63046427408855,
+                    203.71165184490692
+                ],
+                [
+                    203.72843458331167,
+                    203.71976413822014,
+                    203.6652357596174,
+                    203.57088684082032,
+                    203.73386615310937
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.javaTuned",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "1"
+        },
+        "primaryMetric" : {
+            "score" : 73.35482277136434,
+            "scoreError" : 0.05890630138836834,
+            "scoreConfidence" : [
+                73.29591646997598,
+                73.4137290727527
+            ],
+            "scorePercentiles" : {
+                "0.0" : 73.31637942458158,
+                "50.0" : 73.33657024944867,
+                "90.0" : 73.4271202753885,
+                "95.0" : 73.43069239306128,
+                "99.0" : 73.43069239306128,
+                "99.9" : 73.43069239306128,
+                "99.99" : 73.43069239306128,
+                "99.999" : 73.43069239306128,
+                "99.9999" : 73.43069239306128,
+                "100.0" : 73.43069239306128
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    73.39497121633352,
+                    73.37940652617586,
+                    73.32889547262106,
+                    73.38056248884935,
+                    73.43069239306128
+                ],
+                [
+                    73.32246620041168,
+                    73.34241661094688,
+                    73.32171349271177,
+                    73.33072388795046,
+                    73.31637942458158
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.javaTuned",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "4"
+        },
+        "primaryMetric" : {
+            "score" : 88.33816825986057,
+            "scoreError" : 0.14979478207597718,
+            "scoreConfidence" : [
+                88.1883734777846,
+                88.48796304193654
+            ],
+            "scorePercentiles" : {
+                "0.0" : 88.20671028622313,
+                "50.0" : 88.39090591497832,
+                "90.0" : 88.44091049025094,
+                "95.0" : 88.44129089753235,
+                "99.0" : 88.44129089753235,
+                "99.9" : 88.44129089753235,
+                "99.99" : 88.44129089753235,
+                "99.999" : 88.44129089753235,
+                "99.9999" : 88.44129089753235,
+                "100.0" : 88.44129089753235
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    88.21683453686664,
+                    88.25921417511262,
+                    88.20671028622313,
+                    88.22038110281002,
+                    88.39535008864345
+                ],
+                [
+                    88.4164882607429,
+                    88.44129089753235,
+                    88.38646174131318,
+                    88.40146468464314,
+                    88.43748682471818
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.javaTuned",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "16"
+        },
+        "primaryMetric" : {
+            "score" : 115.87663305912679,
+            "scoreError" : 0.30238333539007406,
+            "scoreConfidence" : [
+                115.57424972373671,
+                116.17901639451686
+            ],
+            "scorePercentiles" : {
+                "0.0" : 115.65875864006406,
+                "50.0" : 115.86490000766136,
+                "90.0" : 116.11577002066083,
+                "95.0" : 116.11821444625238,
+                "99.0" : 116.11821444625238,
+                "99.9" : 116.11821444625238,
+                "99.99" : 116.11821444625238,
+                "99.999" : 116.11821444625238,
+                "99.9999" : 116.11821444625238,
+                "100.0" : 116.11821444625238
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    116.00504982556413,
+                    116.05741851951274,
+                    116.09377019033685,
+                    116.11821444625238,
+                    116.04226594897808
+                ],
+                [
+                    115.7247501897586,
+                    115.71814264827505,
+                    115.68160708602262,
+                    115.65875864006406,
+                    115.66635309650343
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.apache.flink.accel.bench.SensorBatch.javaTuned",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 2,
+        "jvm" : "/home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java",
+        "jvmArgs" : [
+            "-Dflink.accel.bridge.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libflinkaccel_bridge.so",
+            "-Dsensor.kernel.lib=/home/oahshtsua/Workspace/flink/benchmark/native-kernel/build/libsensor_kernel.so"
+        ],
+        "jdkVersion" : "17.0.20.1",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.20.1+0",
+        "warmupIterations" : 5,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "batch" : "1024",
+            "k" : "64"
+        },
+        "primaryMetric" : {
+            "score" : 186.25562234453574,
+            "scoreError" : 0.33948843306630444,
+            "scoreConfidence" : [
+                185.91613391146944,
+                186.59511077760203
+            ],
+            "scorePercentiles" : {
+                "0.0" : 185.91496194594723,
+                "50.0" : 186.30085778836528,
+                "90.0" : 186.6329207134038,
+                "95.0" : 186.65328235161013,
+                "99.0" : 186.65328235161013,
+                "99.9" : 186.65328235161013,
+                "99.99" : 186.65328235161013,
+                "99.999" : 186.65328235161013,
+                "99.9999" : 186.65328235161013,
+                "100.0" : 186.65328235161013
+            },
+            "scoreUnit" : "ns/op",
+            "rawData" : [
+                [
+                    186.0705785316537,
+                    186.02327740473868,
+                    185.91496194594723,
+                    186.10387011272152,
+                    186.65328235161013
+                ],
+                [
+                    186.3037835651459,
+                    186.35072728207237,
+                    186.29793201158466,
+                    186.44966596954671,
+                    186.38814427033637
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+

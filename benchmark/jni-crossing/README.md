@@ -142,8 +142,8 @@ different class at each step, so the call site is megamorphic.
 
 Final run 2026-10-21 (by `../run-all.sh`): JDK 17.0.20.1, `gcc -O2`, 2 forks × 5 iterations; raw
 output in `results/jni-crossing.txt`, allocation figures from a separate `-prof gc Marshalling`
-run (`results/marshalling-gc.txt`). The original run (2026-10-08, JDK 21.0.12.1) is kept in
-`results/archive/` and shown alongside for comparison.
+run (`results/marshalling-gc.txt`); both are committed in `../final-run-2026-10-21/jni-crossing/`.
+The original run (2026-10-08, JDK 21.0.12.1) is shown alongside for comparison.
 
 ### The crossing (`JniCrossing`, ns per call)
 

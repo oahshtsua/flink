@@ -155,6 +155,9 @@ A quick smoke run: `COUNT=200000 RUNS=1 KS="1 64" BATCHES="1 1024" ./benchmark/s
 ./benchmark/sensor-bench/report.py > benchmark/sensor-bench/results/sweep-report.md
 ```
 
+Pass a folder to read results from somewhere else, e.g. the committed final run:
+`./benchmark/sensor-bench/report.py benchmark/final-run-2026-10-21/sensor-bench`.
+
 Prints whichever results exist: stage 1 (ns per record and C's speed-up over Java) and stage 2
 (ns per record, and the native speed-up over the fusion prototype, with run-to-run spread).
 

@@ -387,10 +387,11 @@ Java because they do the arithmetic in exactly the same order.
 
 ## 8. Caveats
 
-- All timings are from **one final run on one laptop** (2026-10-21, `benchmark/run-all.sh`; Intel
-  i5-12500H, Java 17), pinned to its fast cores, on AC power at full clock speed. The 4.5 GHz
-  ceiling was logged before every step; AC power and the performance profile were set but the
-  script's check for them printed `?` (fixed since). An earlier run with the clock accidentally capped at
+- All timings are from **one final run on one laptop** (2026-10-21, `benchmark/run-all.sh`; raw
+  results in `benchmark/final-run-2026-10-21/`; Intel i5-12500H, Java 17), pinned to its fast
+  cores, on AC power at full clock speed. The 4.5 GHz ceiling was logged before every step; AC
+  power and the performance profile were set but the script's check for them printed `?` (fixed
+  since). An earlier run with the clock accidentally capped at
   2.5 GHz was ~1.8× slower everywhere but gave the same ratios, so the comparisons are robust.
 - Stage 2 uses Flink's built-in local mode, not a real cluster.
 - 3 runs per number in stage 2; runs typically agree within ~4%. The worst cell spread 9.3%

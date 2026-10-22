@@ -48,7 +48,8 @@ Runs, in order and on one machine (about 70 minutes; keep it plugged in and idle
 (`jni-crossing/`), both stages of the sensor sweep (`sensor-bench/`) and its report. Before each
 step it logs the CPU's frequency ceiling, power profile and AC state, since a capped ceiling slows
 everything without any error. Each step runs even if an earlier one failed; the log
-(`results/run-all.log`) ends with the list of failed steps.
+(`results/run-all.log`) ends with the list of failed steps. The output of the final run
+(2026-10-21), whose numbers the docs quote, is committed in `final-run-2026-10-21/`.
 
 ## Correctness lives elsewhere
 

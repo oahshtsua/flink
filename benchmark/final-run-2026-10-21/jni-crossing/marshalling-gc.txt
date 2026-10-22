@@ -1,0 +1,1693 @@
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.baselineTouch
+
+# Run progress: 0.00% complete, ETA 00:04:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.099 ns/op
+# Warmup Iteration   2: 1.077 ns/op
+# Warmup Iteration   3: 1.075 ns/op
+Iteration   1: 1.073 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.098 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.099 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.100 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.100 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 3.13% complete, ETA 00:04:13
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.165 ns/op
+# Warmup Iteration   2: 1.057 ns/op
+# Warmup Iteration   3: 1.059 ns/op
+Iteration   1: 1.079 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.083 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.092 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.153 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.151 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.baselineTouch":
+  1.103 ±(99.9%) 0.042 ns/op [Average]
+  (min, avg, max) = (1.073, 1.103, 1.153), stdev = 0.028
+  CI (99.9%): [1.061, 1.145] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouch:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouch:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouch:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.baselineTouchString
+
+# Run progress: 6.25% complete, ETA 00:04:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.529 ns/op
+# Warmup Iteration   2: 1.454 ns/op
+# Warmup Iteration   3: 1.469 ns/op
+Iteration   1: 1.464 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.467 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.470 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.456 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.489 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 9.38% complete, ETA 00:03:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.512 ns/op
+# Warmup Iteration   2: 1.451 ns/op
+# Warmup Iteration   3: 1.444 ns/op
+Iteration   1: 1.467 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.471 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.466 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.472 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.496 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.baselineTouchString":
+  1.472 ±(99.9%) 0.018 ns/op [Average]
+  (min, avg, max) = (1.456, 1.472, 1.496), stdev = 0.012
+  CI (99.9%): [1.454, 1.489] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouchString:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouchString:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.baselineTouchString:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc
+
+# Run progress: 12.50% complete, ETA 00:03:48
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.532 ns/op
+# Warmup Iteration   2: 7.386 ns/op
+# Warmup Iteration   3: 7.482 ns/op
+Iteration   1: 7.488 ns/op
+                 gc.alloc.rate:      4074.346 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   2: 7.429 ns/op
+                 gc.alloc.rate:      4107.062 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            9.000 ms
+
+Iteration   3: 7.482 ns/op
+                 gc.alloc.rate:      4077.958 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   4: 7.341 ns/op
+                 gc.alloc.rate:      4155.912 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            7.000 ms
+
+Iteration   5: 7.417 ns/op
+                 gc.alloc.rate:      4113.688 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            7.000 ms
+
+
+# Run progress: 15.63% complete, ETA 00:03:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.447 ns/op
+# Warmup Iteration   2: 7.784 ns/op
+# Warmup Iteration   3: 7.419 ns/op
+Iteration   1: 7.444 ns/op
+                 gc.alloc.rate:      4098.749 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           11.000 counts
+                 gc.time:            6.000 ms
+
+Iteration   2: 7.331 ns/op
+                 gc.alloc.rate:      4161.530 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            6.000 ms
+
+Iteration   3: 7.386 ns/op
+                 gc.alloc.rate:      4130.751 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   4: 7.423 ns/op
+                 gc.alloc.rate:      4110.317 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           12.000 counts
+                 gc.time:            7.000 ms
+
+Iteration   5: 7.533 ns/op
+                 gc.alloc.rate:      4050.179 MB/sec
+                 gc.alloc.rate.norm: 32.000 B/op
+                 gc.count:           11.000 counts
+                 gc.time:            9.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc":
+  7.427 ±(99.9%) 0.097 ns/op [Average]
+  (min, avg, max) = (7.331, 7.427, 7.533), stdev = 0.064
+  CI (99.9%): [7.331, 7.524] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc:gc.alloc.rate":
+  4108.049 ±(99.9%) 53.288 MB/sec [Average]
+  (min, avg, max) = (4050.179, 4108.049, 4161.530), stdev = 35.247
+  CI (99.9%): [4054.761, 4161.338] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc:gc.alloc.rate.norm":
+  32.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (32.000, 32.000, 32.000), stdev = 0.001
+  CI (99.9%): [32.000, 32.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc:gc.count":
+  118.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (11.000, 11.800, 12.000), stdev = 0.422
+  CI (99.9%): [118.000, 118.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc:gc.time":
+  77.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (6.000, 7.700, 10.000), stdev = 1.337
+  CI (99.9%): [77.000, 77.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedConsume
+
+# Run progress: 18.75% complete, ETA 00:03:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.091 ns/op
+# Warmup Iteration   2: 1.074 ns/op
+# Warmup Iteration   3: 1.020 ns/op
+Iteration   1: 1.021 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.023 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.021 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.022 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.029 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 21.88% complete, ETA 00:03:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.089 ns/op
+# Warmup Iteration   2: 1.020 ns/op
+# Warmup Iteration   3: 1.021 ns/op
+Iteration   1: 1.021 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.018 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.021 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.035 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.021 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedConsume":
+  1.023 ±(99.9%) 0.008 ns/op [Average]
+  (min, avg, max) = (1.018, 1.023, 1.035), stdev = 0.005
+  CI (99.9%): [1.015, 1.031] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedConsume:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedConsume:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedConsume:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedReuse
+
+# Run progress: 25.00% complete, ETA 00:03:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.257 ns/op
+# Warmup Iteration   2: 1.338 ns/op
+# Warmup Iteration   3: 1.287 ns/op
+Iteration   1: 1.319 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.285 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.285 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.282 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.292 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 28.13% complete, ETA 00:03:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.233 ns/op
+# Warmup Iteration   2: 1.316 ns/op
+# Warmup Iteration   3: 1.285 ns/op
+Iteration   1: 1.279 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.279 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.284 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.280 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.282 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedReuse":
+  1.287 ±(99.9%) 0.018 ns/op [Average]
+  (min, avg, max) = (1.279, 1.287, 1.319), stdev = 0.012
+  CI (99.9%): [1.268, 1.305] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedReuse:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedReuse:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeFixedReuse:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeStringAlloc
+
+# Run progress: 31.25% complete, ETA 00:02:59
+# Fork: 1 of 2
+# Warmup Iteration   1: 18.615 ns/op
+# Warmup Iteration   2: 14.600 ns/op
+# Warmup Iteration   3: 14.526 ns/op
+Iteration   1: 15.166 ns/op
+                 gc.alloc.rate:      8549.708 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           21.000 counts
+                 gc.time:            13.000 ms
+
+Iteration   2: 15.021 ns/op
+                 gc.alloc.rate:      8632.538 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           22.000 counts
+                 gc.time:            14.000 ms
+
+Iteration   3: 15.098 ns/op
+                 gc.alloc.rate:      8588.336 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           21.000 counts
+                 gc.time:            16.000 ms
+
+Iteration   4: 15.321 ns/op
+                 gc.alloc.rate:      8463.861 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           21.000 counts
+                 gc.time:            14.000 ms
+
+Iteration   5: 15.163 ns/op
+                 gc.alloc.rate:      8551.744 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            15.000 ms
+
+
+# Run progress: 34.38% complete, ETA 00:02:51
+# Fork: 2 of 2
+# Warmup Iteration   1: 18.444 ns/op
+# Warmup Iteration   2: 14.610 ns/op
+# Warmup Iteration   3: 14.758 ns/op
+Iteration   1: 15.274 ns/op
+                 gc.alloc.rate:      8489.745 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           23.000 counts
+                 gc.time:            16.000 ms
+
+Iteration   2: 15.331 ns/op
+                 gc.alloc.rate:      8458.192 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           24.000 counts
+                 gc.time:            16.000 ms
+
+Iteration   3: 15.321 ns/op
+                 gc.alloc.rate:      8462.819 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           23.000 counts
+                 gc.time:            14.000 ms
+
+Iteration   4: 14.953 ns/op
+                 gc.alloc.rate:      8671.915 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           24.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   5: 15.073 ns/op
+                 gc.alloc.rate:      8602.673 MB/sec
+                 gc.alloc.rate.norm: 136.000 B/op
+                 gc.count:           24.000 counts
+                 gc.time:            15.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc":
+  15.172 ±(99.9%) 0.205 ns/op [Average]
+  (min, avg, max) = (14.953, 15.172, 15.331), stdev = 0.136
+  CI (99.9%): [14.967, 15.378] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc:gc.alloc.rate":
+  8547.153 ±(99.9%) 115.933 MB/sec [Average]
+  (min, avg, max) = (8458.192, 8547.153, 8671.915), stdev = 76.682
+  CI (99.9%): [8431.220, 8663.086] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc:gc.alloc.rate.norm":
+  136.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (136.000, 136.000, 136.000), stdev = 0.001
+  CI (99.9%): [136.000, 136.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc:gc.count":
+  223.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (20.000, 22.300, 24.000), stdev = 1.494
+  CI (99.9%): [223.000, 223.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc:gc.time":
+  145.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (12.000, 14.500, 16.000), stdev = 1.354
+  CI (99.9%): [145.000, 145.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeFixedDirect
+
+# Run progress: 37.50% complete, ETA 00:02:43
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.491 ns/op
+# Warmup Iteration   2: 1.415 ns/op
+# Warmup Iteration   3: 1.928 ns/op
+Iteration   1: 1.911 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.902 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.917 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.913 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.909 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 40.63% complete, ETA 00:02:35
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.449 ns/op
+# Warmup Iteration   2: 1.402 ns/op
+# Warmup Iteration   3: 1.909 ns/op
+Iteration   1: 1.900 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.910 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.901 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.904 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.910 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeFixedDirect":
+  1.908 ±(99.9%) 0.008 ns/op [Average]
+  (min, avg, max) = (1.900, 1.908, 1.917), stdev = 0.006
+  CI (99.9%): [1.899, 1.916] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedDirect:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedDirect:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedDirect:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray
+
+# Run progress: 43.75% complete, ETA 00:02:27
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.282 ns/op
+# Warmup Iteration   2: 1.242 ns/op
+# Warmup Iteration   3: 1.583 ns/op
+Iteration   1: 1.581 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.459 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.469 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.481 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.460 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 46.88% complete, ETA 00:02:19
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.191 ns/op
+# Warmup Iteration   2: 1.199 ns/op
+# Warmup Iteration   3: 1.447 ns/op
+Iteration   1: 1.449 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 1.501 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 1.447 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 1.450 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 1.474 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray":
+  1.477 ±(99.9%) 0.061 ns/op [Average]
+  (min, avg, max) = (1.447, 1.477, 1.581), stdev = 0.040
+  CI (99.9%): [1.416, 1.538] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeLongArray
+
+# Run progress: 50.00% complete, ETA 00:02:10
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.097 ns/op
+# Warmup Iteration   2: 0.095 ns/op
+# Warmup Iteration   3: 0.094 ns/op
+Iteration   1: 0.095 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 0.095 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 53.13% complete, ETA 00:02:02
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.097 ns/op
+# Warmup Iteration   2: 0.095 ns/op
+# Warmup Iteration   3: 0.094 ns/op
+Iteration   1: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 0.094 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 0.095 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 0.095 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeLongArray":
+  0.095 ±(99.9%) 0.001 ns/op [Average]
+  (min, avg, max) = (0.094, 0.095, 0.095), stdev = 0.001
+  CI (99.9%): [0.094, 0.095] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongArray:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongArray:gc.alloc.rate.norm":
+  ≈ 10⁻⁶ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongArray:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeLongDirect
+
+# Run progress: 56.25% complete, ETA 00:01:54
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.132 ns/op
+# Warmup Iteration   2: 0.124 ns/op
+# Warmup Iteration   3: 0.123 ns/op
+Iteration   1: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 0.124 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 0.124 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 59.38% complete, ETA 00:01:46
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.136 ns/op
+# Warmup Iteration   2: 0.124 ns/op
+# Warmup Iteration   3: 0.123 ns/op
+Iteration   1: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 0.123 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁶ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeLongDirect":
+  0.123 ±(99.9%) 0.001 ns/op [Average]
+  (min, avg, max) = (0.123, 0.123, 0.124), stdev = 0.001
+  CI (99.9%): [0.123, 0.124] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongDirect:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongDirect:gc.alloc.rate.norm":
+  ≈ 10⁻⁶ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeLongDirect:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringEncoder
+
+# Run progress: 62.50% complete, ETA 00:01:38
+# Fork: 1 of 2
+# Warmup Iteration   1: 58.811 ns/op
+# Warmup Iteration   2: 50.465 ns/op
+# Warmup Iteration   3: 48.951 ns/op
+Iteration   1: 49.404 ns/op
+                 gc.alloc.rate:      1080.742 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            4.000 ms
+
+Iteration   2: 49.083 ns/op
+                 gc.alloc.rate:      1087.304 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            5.000 ms
+
+Iteration   3: 49.965 ns/op
+                 gc.alloc.rate:      1068.564 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            4.000 ms
+
+Iteration   4: 50.377 ns/op
+                 gc.alloc.rate:      1059.951 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            3.000 ms
+
+Iteration   5: 50.139 ns/op
+                 gc.alloc.rate:      1065.007 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            3.000 ms
+
+
+# Run progress: 65.63% complete, ETA 00:01:29
+# Fork: 2 of 2
+# Warmup Iteration   1: 61.141 ns/op
+# Warmup Iteration   2: 52.259 ns/op
+# Warmup Iteration   3: 50.877 ns/op
+Iteration   1: 51.079 ns/op
+                 gc.alloc.rate:      1045.300 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           5.000 counts
+                 gc.time:            4.000 ms
+
+Iteration   2: 51.075 ns/op
+                 gc.alloc.rate:      1045.401 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            5.000 ms
+
+Iteration   3: 52.310 ns/op
+                 gc.alloc.rate:      1020.729 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            5.000 ms
+
+Iteration   4: 50.954 ns/op
+                 gc.alloc.rate:      1047.807 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            5.000 ms
+
+Iteration   5: 50.505 ns/op
+                 gc.alloc.rate:      1057.236 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           6.000 counts
+                 gc.time:            4.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder":
+  50.489 ±(99.9%) 1.406 ns/op [Average]
+  (min, avg, max) = (49.083, 50.489, 52.310), stdev = 0.930
+  CI (99.9%): [49.083, 51.895] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder:gc.alloc.rate":
+  1057.804 ±(99.9%) 29.184 MB/sec [Average]
+  (min, avg, max) = (1020.729, 1057.804, 1087.304), stdev = 19.304
+  CI (99.9%): [1028.620, 1086.988] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder:gc.alloc.rate.norm":
+  56.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (56.000, 56.000, 56.000), stdev = 0.001
+  CI (99.9%): [56.000, 56.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder:gc.count":
+  59.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (5.000, 5.900, 6.000), stdev = 0.316
+  CI (99.9%): [59.000, 59.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder:gc.time":
+  42.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (3.000, 4.200, 5.000), stdev = 0.789
+  CI (99.9%): [42.000, 42.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes
+
+# Run progress: 68.75% complete, ETA 00:01:21
+# Fork: 1 of 2
+# Warmup Iteration   1: 10.758 ns/op
+# Warmup Iteration   2: 8.897 ns/op
+# Warmup Iteration   3: 8.803 ns/op
+Iteration   1: 8.537 ns/op
+                 gc.alloc.rate:      6253.765 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           19.000 counts
+                 gc.time:            11.000 ms
+
+Iteration   2: 8.541 ns/op
+                 gc.alloc.rate:      6251.441 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   3: 8.542 ns/op
+                 gc.alloc.rate:      6250.673 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   4: 8.613 ns/op
+                 gc.alloc.rate:      6198.889 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           19.000 counts
+                 gc.time:            11.000 ms
+
+Iteration   5: 8.745 ns/op
+                 gc.alloc.rate:      6106.058 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            9.000 ms
+
+
+# Run progress: 71.88% complete, ETA 00:01:13
+# Fork: 2 of 2
+# Warmup Iteration   1: 10.831 ns/op
+# Warmup Iteration   2: 8.650 ns/op
+# Warmup Iteration   3: 8.436 ns/op
+Iteration   1: 8.534 ns/op
+                 gc.alloc.rate:      6256.054 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   2: 8.458 ns/op
+                 gc.alloc.rate:      6312.757 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           19.000 counts
+                 gc.time:            13.000 ms
+
+Iteration   3: 8.382 ns/op
+                 gc.alloc.rate:      6369.585 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           19.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   4: 8.369 ns/op
+                 gc.alloc.rate:      6379.966 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   5: 8.331 ns/op
+                 gc.alloc.rate:      6409.222 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            12.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes":
+  8.505 ±(99.9%) 0.189 ns/op [Average]
+  (min, avg, max) = (8.331, 8.505, 8.745), stdev = 0.125
+  CI (99.9%): [8.316, 8.694] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes:gc.alloc.rate":
+  6278.841 ±(99.9%) 138.517 MB/sec [Average]
+  (min, avg, max) = (6106.058, 6278.841, 6409.222), stdev = 91.620
+  CI (99.9%): [6140.324, 6417.358] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes:gc.alloc.rate.norm":
+  56.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (56.000, 56.000, 56.000), stdev = 0.001
+  CI (99.9%): [56.000, 56.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes:gc.count":
+  196.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (19.000, 19.600, 20.000), stdev = 0.516
+  CI (99.9%): [196.000, 196.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes:gc.time":
+  112.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (9.000, 11.200, 13.000), stdev = 1.229
+  CI (99.9%): [112.000, 112.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode
+
+# Run progress: 75.00% complete, ETA 00:01:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 33.417 ns/op
+# Warmup Iteration   2: 27.018 ns/op
+# Warmup Iteration   3: 27.179 ns/op
+Iteration   1: 27.047 ns/op
+                 gc.alloc.rate:      5076.184 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           18.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   2: 28.189 ns/op
+                 gc.alloc.rate:      4870.766 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   3: 28.333 ns/op
+                 gc.alloc.rate:      4846.070 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   4: 28.298 ns/op
+                 gc.alloc.rate:      4852.265 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   5: 28.917 ns/op
+                 gc.alloc.rate:      4748.008 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            11.000 ms
+
+
+# Run progress: 78.13% complete, ETA 00:00:57
+# Fork: 2 of 2
+# Warmup Iteration   1: 36.435 ns/op
+# Warmup Iteration   2: 29.778 ns/op
+# Warmup Iteration   3: 29.869 ns/op
+Iteration   1: 28.361 ns/op
+                 gc.alloc.rate:      4840.694 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            9.000 ms
+
+Iteration   2: 29.020 ns/op
+                 gc.alloc.rate:      4731.349 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            11.000 ms
+
+Iteration   3: 28.678 ns/op
+                 gc.alloc.rate:      4787.308 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            7.000 ms
+
+Iteration   4: 29.121 ns/op
+                 gc.alloc.rate:      4714.997 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   5: 28.745 ns/op
+                 gc.alloc.rate:      4776.466 MB/sec
+                 gc.alloc.rate.norm: 144.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            9.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode":
+  28.471 ±(99.9%) 0.903 ns/op [Average]
+  (min, avg, max) = (27.047, 28.471, 29.121), stdev = 0.597
+  CI (99.9%): [27.568, 29.373] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode:gc.alloc.rate":
+  4824.411 ±(99.9%) 157.111 MB/sec [Average]
+  (min, avg, max) = (4714.997, 4824.411, 5076.184), stdev = 103.919
+  CI (99.9%): [4667.300, 4981.522] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode:gc.alloc.rate.norm":
+  144.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (144.000, 144.000, 144.000), stdev = 0.001
+  CI (99.9%): [144.000, 144.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode:gc.count":
+  166.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (16.000, 16.600, 18.000), stdev = 0.699
+  CI (99.9%): [166.000, 166.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode:gc.time":
+  93.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (7.000, 9.300, 12.000), stdev = 1.636
+  CI (99.9%): [93.000, 93.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringPojo
+
+# Run progress: 81.25% complete, ETA 00:00:49
+# Fork: 1 of 2
+# Warmup Iteration   1: 11.484 ns/op
+# Warmup Iteration   2: 9.938 ns/op
+# Warmup Iteration   3: 10.140 ns/op
+Iteration   1: 10.124 ns/op
+                 gc.alloc.rate:      5273.611 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            8.000 ms
+
+Iteration   2: 10.112 ns/op
+                 gc.alloc.rate:      5280.730 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   3: 10.076 ns/op
+                 gc.alloc.rate:      5299.190 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   4: 10.169 ns/op
+                 gc.alloc.rate:      5250.264 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            13.000 ms
+
+Iteration   5: 10.271 ns/op
+                 gc.alloc.rate:      5198.941 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           16.000 counts
+                 gc.time:            10.000 ms
+
+
+# Run progress: 84.38% complete, ETA 00:00:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 12.387 ns/op
+# Warmup Iteration   2: 9.851 ns/op
+# Warmup Iteration   3: 10.232 ns/op
+Iteration   1: 10.308 ns/op
+                 gc.alloc.rate:      5179.391 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            11.000 ms
+
+Iteration   2: 10.307 ns/op
+                 gc.alloc.rate:      5180.187 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            14.000 ms
+
+Iteration   3: 9.938 ns/op
+                 gc.alloc.rate:      5372.957 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   4: 10.052 ns/op
+                 gc.alloc.rate:      5311.554 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   5: 10.099 ns/op
+                 gc.alloc.rate:      5287.129 MB/sec
+                 gc.alloc.rate.norm: 56.000 B/op
+                 gc.count:           17.000 counts
+                 gc.time:            12.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo":
+  10.146 ±(99.9%) 0.181 ns/op [Average]
+  (min, avg, max) = (9.938, 10.146, 10.308), stdev = 0.120
+  CI (99.9%): [9.964, 10.327] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo:gc.alloc.rate":
+  5263.395 ±(99.9%) 94.118 MB/sec [Average]
+  (min, avg, max) = (5179.391, 5263.395, 5372.957), stdev = 62.253
+  CI (99.9%): [5169.277, 5357.514] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo:gc.alloc.rate.norm":
+  56.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (56.000, 56.000, 56.000), stdev = 0.001
+  CI (99.9%): [56.000, 56.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo:gc.count":
+  167.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (16.000, 16.700, 17.000), stdev = 0.483
+  CI (99.9%): [167.000, 167.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo:gc.time":
+  112.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (8.000, 11.200, 14.000), stdev = 1.751
+  CI (99.9%): [112.000, 112.000] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.roundTripFixed
+
+# Run progress: 87.50% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 2.782 ns/op
+# Warmup Iteration   2: 2.564 ns/op
+# Warmup Iteration   3: 3.378 ns/op
+Iteration   1: 3.403 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 3.391 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 3.387 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 3.390 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 3.391 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+# Run progress: 90.63% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 2.893 ns/op
+# Warmup Iteration   2: 2.558 ns/op
+# Warmup Iteration   3: 3.404 ns/op
+Iteration   1: 3.402 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   2: 3.402 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   3: 3.406 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   4: 3.407 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+Iteration   5: 3.407 ns/op
+                 gc.alloc.rate:      0.006 MB/sec
+                 gc.alloc.rate.norm: ≈ 10⁻⁵ B/op
+                 gc.count:           ≈ 0 counts
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.roundTripFixed":
+  3.398 ±(99.9%) 0.012 ns/op [Average]
+  (min, avg, max) = (3.387, 3.398, 3.407), stdev = 0.008
+  CI (99.9%): [3.387, 3.410] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripFixed:gc.alloc.rate":
+  0.006 ±(99.9%) 0.001 MB/sec [Average]
+  (min, avg, max) = (0.006, 0.006, 0.006), stdev = 0.001
+  CI (99.9%): [0.006, 0.006] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripFixed:gc.alloc.rate.norm":
+  ≈ 10⁻⁵ B/op
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripFixed:gc.count":
+  ≈ 0 counts
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.roundTripStringPojo
+
+# Run progress: 93.75% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 30.479 ns/op
+# Warmup Iteration   2: 25.329 ns/op
+# Warmup Iteration   3: 25.205 ns/op
+Iteration   1: 25.349 ns/op
+                 gc.alloc.rate:      7222.055 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           21.000 counts
+                 gc.time:            13.000 ms
+
+Iteration   2: 25.810 ns/op
+                 gc.alloc.rate:      7093.045 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            12.000 ms
+
+Iteration   3: 25.689 ns/op
+                 gc.alloc.rate:      7125.549 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           21.000 counts
+                 gc.time:            14.000 ms
+
+Iteration   4: 25.641 ns/op
+                 gc.alloc.rate:      7139.966 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            11.000 ms
+
+Iteration   5: 26.645 ns/op
+                 gc.alloc.rate:      6869.802 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           20.000 counts
+                 gc.time:            15.000 ms
+
+
+# Run progress: 96.88% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 31.214 ns/op
+# Warmup Iteration   2: 25.355 ns/op
+# Warmup Iteration   3: 25.203 ns/op
+Iteration   1: 25.347 ns/op
+                 gc.alloc.rate:      7222.242 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           23.000 counts
+                 gc.time:            16.000 ms
+
+Iteration   2: 25.772 ns/op
+                 gc.alloc.rate:      7103.007 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           22.000 counts
+                 gc.time:            10.000 ms
+
+Iteration   3: 25.777 ns/op
+                 gc.alloc.rate:      7102.322 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           22.000 counts
+                 gc.time:            15.000 ms
+
+Iteration   4: 25.448 ns/op
+                 gc.alloc.rate:      7192.877 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           22.000 counts
+                 gc.time:            15.000 ms
+
+Iteration   5: 25.580 ns/op
+                 gc.alloc.rate:      7156.664 MB/sec
+                 gc.alloc.rate.norm: 192.000 B/op
+                 gc.count:           22.000 counts
+                 gc.time:            13.000 ms
+
+
+
+Result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo":
+  25.706 ±(99.9%) 0.562 ns/op [Average]
+  (min, avg, max) = (25.347, 25.706, 26.645), stdev = 0.372
+  CI (99.9%): [25.143, 26.268] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo:gc.alloc.rate":
+  7122.753 ±(99.9%) 152.694 MB/sec [Average]
+  (min, avg, max) = (6869.802, 7122.753, 7222.242), stdev = 100.997
+  CI (99.9%): [6970.059, 7275.447] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo:gc.alloc.rate.norm":
+  192.000 ±(99.9%) 0.001 B/op [Average]
+  (min, avg, max) = (192.000, 192.000, 192.000), stdev = 0.001
+  CI (99.9%): [192.000, 192.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo:gc.count":
+  213.000 ±(99.9%) 0.001 counts [Sum]
+  (min, avg, max) = (20.000, 21.300, 23.000), stdev = 1.059
+  CI (99.9%): [213.000, 213.000] (assumes normal distribution)
+
+Secondary result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo:gc.time":
+  134.000 ±(99.9%) 0.001 ms [Sum]
+  (min, avg, max) = (10.000, 13.400, 16.000), stdev = 1.955
+  CI (99.9%): [134.000, 134.000] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:04:21
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                                   Mode  Cnt     Score     Error   Units
+Marshalling.baselineTouch                                   avgt   10     1.103 ±   0.042   ns/op
+Marshalling.baselineTouch:gc.alloc.rate                     avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.baselineTouch:gc.alloc.rate.norm                avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.baselineTouch:gc.count                          avgt   10       ≈ 0            counts
+Marshalling.baselineTouchString                             avgt   10     1.472 ±   0.018   ns/op
+Marshalling.baselineTouchString:gc.alloc.rate               avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.baselineTouchString:gc.alloc.rate.norm          avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.baselineTouchString:gc.count                    avgt   10       ≈ 0            counts
+Marshalling.decodeFixedAlloc                                avgt   10     7.427 ±   0.097   ns/op
+Marshalling.decodeFixedAlloc:gc.alloc.rate                  avgt   10  4108.049 ±  53.288  MB/sec
+Marshalling.decodeFixedAlloc:gc.alloc.rate.norm             avgt   10    32.000 ±   0.001    B/op
+Marshalling.decodeFixedAlloc:gc.count                       avgt   10   118.000            counts
+Marshalling.decodeFixedAlloc:gc.time                        avgt   10    77.000                ms
+Marshalling.decodeFixedConsume                              avgt   10     1.023 ±   0.008   ns/op
+Marshalling.decodeFixedConsume:gc.alloc.rate                avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.decodeFixedConsume:gc.alloc.rate.norm           avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.decodeFixedConsume:gc.count                     avgt   10       ≈ 0            counts
+Marshalling.decodeFixedReuse                                avgt   10     1.287 ±   0.018   ns/op
+Marshalling.decodeFixedReuse:gc.alloc.rate                  avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.decodeFixedReuse:gc.alloc.rate.norm             avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.decodeFixedReuse:gc.count                       avgt   10       ≈ 0            counts
+Marshalling.decodeStringAlloc                               avgt   10    15.172 ±   0.205   ns/op
+Marshalling.decodeStringAlloc:gc.alloc.rate                 avgt   10  8547.153 ± 115.933  MB/sec
+Marshalling.decodeStringAlloc:gc.alloc.rate.norm            avgt   10   136.000 ±   0.001    B/op
+Marshalling.decodeStringAlloc:gc.count                      avgt   10   223.000            counts
+Marshalling.decodeStringAlloc:gc.time                       avgt   10   145.000                ms
+Marshalling.encodeFixedDirect                               avgt   10     1.908 ±   0.008   ns/op
+Marshalling.encodeFixedDirect:gc.alloc.rate                 avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.encodeFixedDirect:gc.alloc.rate.norm            avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.encodeFixedDirect:gc.count                      avgt   10       ≈ 0            counts
+Marshalling.encodeFixedLongArray                            avgt   10     1.477 ±   0.061   ns/op
+Marshalling.encodeFixedLongArray:gc.alloc.rate              avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.encodeFixedLongArray:gc.alloc.rate.norm         avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.encodeFixedLongArray:gc.count                   avgt   10       ≈ 0            counts
+Marshalling.encodeLongArray                                 avgt   10     0.095 ±   0.001   ns/op
+Marshalling.encodeLongArray:gc.alloc.rate                   avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.encodeLongArray:gc.alloc.rate.norm              avgt   10    ≈ 10⁻⁶              B/op
+Marshalling.encodeLongArray:gc.count                        avgt   10       ≈ 0            counts
+Marshalling.encodeLongDirect                                avgt   10     0.123 ±   0.001   ns/op
+Marshalling.encodeLongDirect:gc.alloc.rate                  avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.encodeLongDirect:gc.alloc.rate.norm             avgt   10    ≈ 10⁻⁶              B/op
+Marshalling.encodeLongDirect:gc.count                       avgt   10       ≈ 0            counts
+Marshalling.encodeStringEncoder                             avgt   10    50.489 ±   1.406   ns/op
+Marshalling.encodeStringEncoder:gc.alloc.rate               avgt   10  1057.804 ±  29.184  MB/sec
+Marshalling.encodeStringEncoder:gc.alloc.rate.norm          avgt   10    56.000 ±   0.001    B/op
+Marshalling.encodeStringEncoder:gc.count                    avgt   10    59.000            counts
+Marshalling.encodeStringEncoder:gc.time                     avgt   10    42.000                ms
+Marshalling.encodeStringGetBytes                            avgt   10     8.505 ±   0.189   ns/op
+Marshalling.encodeStringGetBytes:gc.alloc.rate              avgt   10  6278.841 ± 138.517  MB/sec
+Marshalling.encodeStringGetBytes:gc.alloc.rate.norm         avgt   10    56.000 ±   0.001    B/op
+Marshalling.encodeStringGetBytes:gc.count                   avgt   10   196.000            counts
+Marshalling.encodeStringGetBytes:gc.time                    avgt   10   112.000                ms
+Marshalling.encodeStringGetBytesUnicode                     avgt   10    28.471 ±   0.903   ns/op
+Marshalling.encodeStringGetBytesUnicode:gc.alloc.rate       avgt   10  4824.411 ± 157.111  MB/sec
+Marshalling.encodeStringGetBytesUnicode:gc.alloc.rate.norm  avgt   10   144.000 ±   0.001    B/op
+Marshalling.encodeStringGetBytesUnicode:gc.count            avgt   10   166.000            counts
+Marshalling.encodeStringGetBytesUnicode:gc.time             avgt   10    93.000                ms
+Marshalling.encodeStringPojo                                avgt   10    10.146 ±   0.181   ns/op
+Marshalling.encodeStringPojo:gc.alloc.rate                  avgt   10  5263.395 ±  94.118  MB/sec
+Marshalling.encodeStringPojo:gc.alloc.rate.norm             avgt   10    56.000 ±   0.001    B/op
+Marshalling.encodeStringPojo:gc.count                       avgt   10   167.000            counts
+Marshalling.encodeStringPojo:gc.time                        avgt   10   112.000                ms
+Marshalling.roundTripFixed                                  avgt   10     3.398 ±   0.012   ns/op
+Marshalling.roundTripFixed:gc.alloc.rate                    avgt   10     0.006 ±   0.001  MB/sec
+Marshalling.roundTripFixed:gc.alloc.rate.norm               avgt   10    ≈ 10⁻⁵              B/op
+Marshalling.roundTripFixed:gc.count                         avgt   10       ≈ 0            counts
+Marshalling.roundTripStringPojo                             avgt   10    25.706 ±   0.562   ns/op
+Marshalling.roundTripStringPojo:gc.alloc.rate               avgt   10  7122.753 ± 152.694  MB/sec
+Marshalling.roundTripStringPojo:gc.alloc.rate.norm          avgt   10   192.000 ±   0.001    B/op
+Marshalling.roundTripStringPojo:gc.count                    avgt   10   213.000            counts
+Marshalling.roundTripStringPojo:gc.time                     avgt   10   134.000                ms
+
+Benchmark result is saved to /home/oahshtsua/Workspace/flink/benchmark/jni-crossing/results/jni-crossing.json

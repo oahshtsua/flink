@@ -1,0 +1,1845 @@
+using JDK: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec
+=== compiling native (gcc -O2) ===
+=== compiling java (javac 17.0.20.1) ===
+=== running ===
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 1)
+
+# Run progress: 0.00% complete, ETA 00:11:28
+# Fork: 1 of 2
+# Warmup Iteration   1: 40.188 ns/op
+# Warmup Iteration   2: 40.110 ns/op
+# Warmup Iteration   3: 40.035 ns/op
+Iteration   1: 39.885 ns/op
+Iteration   2: 39.972 ns/op
+Iteration   3: 39.883 ns/op
+Iteration   4: 39.897 ns/op
+Iteration   5: 39.932 ns/op
+
+# Run progress: 1.16% complete, ETA 00:11:34
+# Fork: 2 of 2
+# Warmup Iteration   1: 40.258 ns/op
+# Warmup Iteration   2: 39.897 ns/op
+# Warmup Iteration   3: 39.767 ns/op
+Iteration   1: 39.764 ns/op
+Iteration   2: 39.710 ns/op
+Iteration   3: 39.667 ns/op
+Iteration   4: 39.785 ns/op
+Iteration   5: 39.778 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.827 ±(99.9%) 0.152 ns/op [Average]
+  (min, avg, max) = (39.667, 39.827, 39.972), stdev = 0.100
+  CI (99.9%): [39.675, 39.979] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 16)
+
+# Run progress: 2.33% complete, ETA 00:11:24
+# Fork: 1 of 2
+# Warmup Iteration   1: 40.562 ns/op
+# Warmup Iteration   2: 40.173 ns/op
+# Warmup Iteration   3: 40.040 ns/op
+Iteration   1: 39.723 ns/op
+Iteration   2: 39.676 ns/op
+Iteration   3: 39.711 ns/op
+Iteration   4: 39.600 ns/op
+Iteration   5: 39.617 ns/op
+
+# Run progress: 3.49% complete, ETA 00:11:16
+# Fork: 2 of 2
+# Warmup Iteration   1: 39.978 ns/op
+# Warmup Iteration   2: 39.731 ns/op
+# Warmup Iteration   3: 39.619 ns/op
+Iteration   1: 39.639 ns/op
+Iteration   2: 39.623 ns/op
+Iteration   3: 39.637 ns/op
+Iteration   4: 39.664 ns/op
+Iteration   5: 39.712 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.660 ±(99.9%) 0.066 ns/op [Average]
+  (min, avg, max) = (39.600, 39.660, 39.723), stdev = 0.044
+  CI (99.9%): [39.594, 39.727] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 64)
+
+# Run progress: 4.65% complete, ETA 00:11:08
+# Fork: 1 of 2
+# Warmup Iteration   1: 39.905 ns/op
+# Warmup Iteration   2: 39.735 ns/op
+# Warmup Iteration   3: 39.596 ns/op
+Iteration   1: 39.577 ns/op
+Iteration   2: 39.592 ns/op
+Iteration   3: 39.716 ns/op
+Iteration   4: 39.608 ns/op
+Iteration   5: 39.631 ns/op
+
+# Run progress: 5.81% complete, ETA 00:10:59
+# Fork: 2 of 2
+# Warmup Iteration   1: 39.952 ns/op
+# Warmup Iteration   2: 39.693 ns/op
+# Warmup Iteration   3: 39.601 ns/op
+Iteration   1: 39.972 ns/op
+Iteration   2: 39.963 ns/op
+Iteration   3: 39.969 ns/op
+Iteration   4: 39.935 ns/op
+Iteration   5: 39.946 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.791 ±(99.9%) 0.271 ns/op [Average]
+  (min, avg, max) = (39.577, 39.791, 39.972), stdev = 0.179
+  CI (99.9%): [39.520, 40.062] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 256)
+
+# Run progress: 6.98% complete, ETA 00:10:51
+# Fork: 1 of 2
+# Warmup Iteration   1: 40.051 ns/op
+# Warmup Iteration   2: 39.694 ns/op
+# Warmup Iteration   3: 39.622 ns/op
+Iteration   1: 39.638 ns/op
+Iteration   2: 39.608 ns/op
+Iteration   3: 39.592 ns/op
+Iteration   4: 39.630 ns/op
+Iteration   5: 39.602 ns/op
+
+# Run progress: 8.14% complete, ETA 00:10:43
+# Fork: 2 of 2
+# Warmup Iteration   1: 39.978 ns/op
+# Warmup Iteration   2: 39.782 ns/op
+# Warmup Iteration   3: 39.606 ns/op
+Iteration   1: 39.624 ns/op
+Iteration   2: 39.604 ns/op
+Iteration   3: 39.582 ns/op
+Iteration   4: 39.590 ns/op
+Iteration   5: 39.642 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.611 ±(99.9%) 0.032 ns/op [Average]
+  (min, avg, max) = (39.582, 39.611, 39.642), stdev = 0.021
+  CI (99.9%): [39.579, 39.643] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 1024)
+
+# Run progress: 9.30% complete, ETA 00:10:34
+# Fork: 1 of 2
+# Warmup Iteration   1: 40.017 ns/op
+# Warmup Iteration   2: 39.733 ns/op
+# Warmup Iteration   3: 39.635 ns/op
+Iteration   1: 39.660 ns/op
+Iteration   2: 39.652 ns/op
+Iteration   3: 39.630 ns/op
+Iteration   4: 39.591 ns/op
+Iteration   5: 39.592 ns/op
+
+# Run progress: 10.47% complete, ETA 00:10:26
+# Fork: 2 of 2
+# Warmup Iteration   1: 39.935 ns/op
+# Warmup Iteration   2: 39.734 ns/op
+# Warmup Iteration   3: 39.600 ns/op
+Iteration   1: 39.602 ns/op
+Iteration   2: 39.653 ns/op
+Iteration   3: 39.620 ns/op
+Iteration   4: 39.625 ns/op
+Iteration   5: 39.637 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.626 ±(99.9%) 0.038 ns/op [Average]
+  (min, avg, max) = (39.591, 39.626, 39.660), stdev = 0.025
+  CI (99.9%): [39.588, 39.664] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical
+# Parameters: (batch = 4096)
+
+# Run progress: 11.63% complete, ETA 00:10:18
+# Fork: 1 of 2
+# Warmup Iteration   1: 39.972 ns/op
+# Warmup Iteration   2: 39.708 ns/op
+# Warmup Iteration   3: 39.610 ns/op
+Iteration   1: 39.619 ns/op
+Iteration   2: 39.593 ns/op
+Iteration   3: 39.640 ns/op
+Iteration   4: 39.599 ns/op
+Iteration   5: 39.623 ns/op
+
+# Run progress: 12.79% complete, ETA 00:10:10
+# Fork: 2 of 2
+# Warmup Iteration   1: 40.084 ns/op
+# Warmup Iteration   2: 39.729 ns/op
+# Warmup Iteration   3: 39.618 ns/op
+Iteration   1: 39.636 ns/op
+Iteration   2: 39.622 ns/op
+Iteration   3: 39.603 ns/op
+Iteration   4: 39.607 ns/op
+Iteration   5: 39.828 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayCritical":
+  39.637 ±(99.9%) 0.104 ns/op [Average]
+  (min, avg, max) = (39.593, 39.637, 39.828), stdev = 0.069
+  CI (99.9%): [39.533, 39.741] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 1)
+
+# Run progress: 13.95% complete, ETA 00:10:01
+# Fork: 1 of 2
+# Warmup Iteration   1: 28.509 ns/op
+# Warmup Iteration   2: 28.187 ns/op
+# Warmup Iteration   3: 28.235 ns/op
+Iteration   1: 28.449 ns/op
+Iteration   2: 28.445 ns/op
+Iteration   3: 28.394 ns/op
+Iteration   4: 28.393 ns/op
+Iteration   5: 28.398 ns/op
+
+# Run progress: 15.12% complete, ETA 00:09:53
+# Fork: 2 of 2
+# Warmup Iteration   1: 28.539 ns/op
+# Warmup Iteration   2: 28.199 ns/op
+# Warmup Iteration   3: 28.193 ns/op
+Iteration   1: 28.193 ns/op
+Iteration   2: 28.197 ns/op
+Iteration   3: 28.161 ns/op
+Iteration   4: 28.185 ns/op
+Iteration   5: 28.202 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  28.302 ±(99.9%) 0.185 ns/op [Average]
+  (min, avg, max) = (28.161, 28.302, 28.449), stdev = 0.122
+  CI (99.9%): [28.117, 28.486] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 16)
+
+# Run progress: 16.28% complete, ETA 00:09:45
+# Fork: 1 of 2
+# Warmup Iteration   1: 29.785 ns/op
+# Warmup Iteration   2: 29.431 ns/op
+# Warmup Iteration   3: 29.343 ns/op
+Iteration   1: 29.366 ns/op
+Iteration   2: 29.369 ns/op
+Iteration   3: 29.376 ns/op
+Iteration   4: 29.367 ns/op
+Iteration   5: 29.362 ns/op
+
+# Run progress: 17.44% complete, ETA 00:09:37
+# Fork: 2 of 2
+# Warmup Iteration   1: 29.853 ns/op
+# Warmup Iteration   2: 29.479 ns/op
+# Warmup Iteration   3: 29.386 ns/op
+Iteration   1: 29.397 ns/op
+Iteration   2: 29.400 ns/op
+Iteration   3: 29.390 ns/op
+Iteration   4: 29.389 ns/op
+Iteration   5: 29.388 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  29.380 ±(99.9%) 0.021 ns/op [Average]
+  (min, avg, max) = (29.362, 29.380, 29.400), stdev = 0.014
+  CI (99.9%): [29.359, 29.402] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 64)
+
+# Run progress: 18.60% complete, ETA 00:09:29
+# Fork: 1 of 2
+# Warmup Iteration   1: 35.050 ns/op
+# Warmup Iteration   2: 34.593 ns/op
+# Warmup Iteration   3: 34.617 ns/op
+Iteration   1: 34.609 ns/op
+Iteration   2: 34.616 ns/op
+Iteration   3: 34.641 ns/op
+Iteration   4: 34.609 ns/op
+Iteration   5: 34.618 ns/op
+
+# Run progress: 19.77% complete, ETA 00:09:21
+# Fork: 2 of 2
+# Warmup Iteration   1: 34.981 ns/op
+# Warmup Iteration   2: 34.631 ns/op
+# Warmup Iteration   3: 34.717 ns/op
+Iteration   1: 34.607 ns/op
+Iteration   2: 34.634 ns/op
+Iteration   3: 34.627 ns/op
+Iteration   4: 34.609 ns/op
+Iteration   5: 34.610 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  34.618 ±(99.9%) 0.018 ns/op [Average]
+  (min, avg, max) = (34.607, 34.618, 34.641), stdev = 0.012
+  CI (99.9%): [34.600, 34.636] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 256)
+
+# Run progress: 20.93% complete, ETA 00:09:13
+# Fork: 1 of 2
+# Warmup Iteration   1: 57.314 ns/op
+# Warmup Iteration   2: 56.910 ns/op
+# Warmup Iteration   3: 56.935 ns/op
+Iteration   1: 57.027 ns/op
+Iteration   2: 57.431 ns/op
+Iteration   3: 57.358 ns/op
+Iteration   4: 57.085 ns/op
+Iteration   5: 57.069 ns/op
+
+# Run progress: 22.09% complete, ETA 00:09:04
+# Fork: 2 of 2
+# Warmup Iteration   1: 57.320 ns/op
+# Warmup Iteration   2: 57.190 ns/op
+# Warmup Iteration   3: 56.928 ns/op
+Iteration   1: 56.890 ns/op
+Iteration   2: 56.954 ns/op
+Iteration   3: 56.964 ns/op
+Iteration   4: 57.002 ns/op
+Iteration   5: 56.838 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  57.062 ±(99.9%) 0.290 ns/op [Average]
+  (min, avg, max) = (56.838, 57.062, 57.431), stdev = 0.192
+  CI (99.9%): [56.772, 57.352] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 1024)
+
+# Run progress: 23.26% complete, ETA 00:08:56
+# Fork: 1 of 2
+# Warmup Iteration   1: 144.332 ns/op
+# Warmup Iteration   2: 143.064 ns/op
+# Warmup Iteration   3: 143.063 ns/op
+Iteration   1: 143.131 ns/op
+Iteration   2: 143.044 ns/op
+Iteration   3: 143.145 ns/op
+Iteration   4: 143.102 ns/op
+Iteration   5: 143.091 ns/op
+
+# Run progress: 24.42% complete, ETA 00:08:48
+# Fork: 2 of 2
+# Warmup Iteration   1: 143.633 ns/op
+# Warmup Iteration   2: 143.585 ns/op
+# Warmup Iteration   3: 143.040 ns/op
+Iteration   1: 143.017 ns/op
+Iteration   2: 143.349 ns/op
+Iteration   3: 142.956 ns/op
+Iteration   4: 142.991 ns/op
+Iteration   5: 142.956 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  143.078 ±(99.9%) 0.177 ns/op [Average]
+  (min, avg, max) = (142.956, 143.078, 143.349), stdev = 0.117
+  CI (99.9%): [142.901, 143.256] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion
+# Parameters: (batch = 4096)
+
+# Run progress: 25.58% complete, ETA 00:08:40
+# Fork: 1 of 2
+# Warmup Iteration   1: 745.224 ns/op
+# Warmup Iteration   2: 741.084 ns/op
+# Warmup Iteration   3: 739.274 ns/op
+Iteration   1: 739.453 ns/op
+Iteration   2: 739.550 ns/op
+Iteration   3: 739.850 ns/op
+Iteration   4: 740.297 ns/op
+Iteration   5: 739.864 ns/op
+
+# Run progress: 26.74% complete, ETA 00:08:32
+# Fork: 2 of 2
+# Warmup Iteration   1: 745.680 ns/op
+# Warmup Iteration   2: 741.033 ns/op
+# Warmup Iteration   3: 739.717 ns/op
+Iteration   1: 740.041 ns/op
+Iteration   2: 740.213 ns/op
+Iteration   3: 740.370 ns/op
+Iteration   4: 740.154 ns/op
+Iteration   5: 739.476 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniArrayRegion":
+  739.927 ±(99.9%) 0.519 ns/op [Average]
+  (min, avg, max) = (739.453, 739.927, 740.370), stdev = 0.343
+  CI (99.9%): [739.408, 740.445] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 1)
+
+# Run progress: 27.91% complete, ETA 00:08:24
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.952 ns/op
+# Warmup Iteration   2: 7.150 ns/op
+# Warmup Iteration   3: 6.916 ns/op
+Iteration   1: 6.918 ns/op
+Iteration   2: 6.916 ns/op
+Iteration   3: 6.920 ns/op
+Iteration   4: 6.917 ns/op
+Iteration   5: 6.919 ns/op
+
+# Run progress: 29.07% complete, ETA 00:08:16
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.950 ns/op
+# Warmup Iteration   2: 7.152 ns/op
+# Warmup Iteration   3: 6.922 ns/op
+Iteration   1: 6.920 ns/op
+Iteration   2: 6.917 ns/op
+Iteration   3: 6.917 ns/op
+Iteration   4: 6.919 ns/op
+Iteration   5: 6.922 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.919 ±(99.9%) 0.003 ns/op [Average]
+  (min, avg, max) = (6.916, 6.919, 6.922), stdev = 0.002
+  CI (99.9%): [6.916, 6.921] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 16)
+
+# Run progress: 30.23% complete, ETA 00:08:07
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.953 ns/op
+# Warmup Iteration   2: 7.150 ns/op
+# Warmup Iteration   3: 6.916 ns/op
+Iteration   1: 6.921 ns/op
+Iteration   2: 6.917 ns/op
+Iteration   3: 6.915 ns/op
+Iteration   4: 6.920 ns/op
+Iteration   5: 6.924 ns/op
+
+# Run progress: 31.40% complete, ETA 00:07:59
+# Fork: 2 of 2
+# Warmup Iteration   1: 7.075 ns/op
+# Warmup Iteration   2: 7.708 ns/op
+# Warmup Iteration   3: 7.224 ns/op
+Iteration   1: 6.933 ns/op
+Iteration   2: 6.927 ns/op
+Iteration   3: 6.942 ns/op
+Iteration   4: 6.952 ns/op
+Iteration   5: 7.027 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.938 ±(99.9%) 0.051 ns/op [Average]
+  (min, avg, max) = (6.915, 6.938, 7.027), stdev = 0.034
+  CI (99.9%): [6.887, 6.989] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 64)
+
+# Run progress: 32.56% complete, ETA 00:07:51
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.996 ns/op
+# Warmup Iteration   2: 7.180 ns/op
+# Warmup Iteration   3: 6.965 ns/op
+Iteration   1: 6.934 ns/op
+Iteration   2: 6.944 ns/op
+Iteration   3: 6.931 ns/op
+Iteration   4: 6.925 ns/op
+Iteration   5: 6.924 ns/op
+
+# Run progress: 33.72% complete, ETA 00:07:43
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.955 ns/op
+# Warmup Iteration   2: 7.194 ns/op
+# Warmup Iteration   3: 6.947 ns/op
+Iteration   1: 6.921 ns/op
+Iteration   2: 6.929 ns/op
+Iteration   3: 6.919 ns/op
+Iteration   4: 6.969 ns/op
+Iteration   5: 6.975 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.937 ±(99.9%) 0.030 ns/op [Average]
+  (min, avg, max) = (6.919, 6.937, 6.975), stdev = 0.020
+  CI (99.9%): [6.907, 6.967] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 256)
+
+# Run progress: 34.88% complete, ETA 00:07:35
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.957 ns/op
+# Warmup Iteration   2: 7.154 ns/op
+# Warmup Iteration   3: 6.920 ns/op
+Iteration   1: 6.923 ns/op
+Iteration   2: 6.918 ns/op
+Iteration   3: 6.919 ns/op
+Iteration   4: 6.916 ns/op
+Iteration   5: 6.929 ns/op
+
+# Run progress: 36.05% complete, ETA 00:07:27
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.952 ns/op
+# Warmup Iteration   2: 7.147 ns/op
+# Warmup Iteration   3: 6.919 ns/op
+Iteration   1: 6.915 ns/op
+Iteration   2: 6.915 ns/op
+Iteration   3: 6.917 ns/op
+Iteration   4: 6.917 ns/op
+Iteration   5: 6.916 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.918 ±(99.9%) 0.006 ns/op [Average]
+  (min, avg, max) = (6.915, 6.918, 6.929), stdev = 0.004
+  CI (99.9%): [6.912, 6.925] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 1024)
+
+# Run progress: 37.21% complete, ETA 00:07:19
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.941 ns/op
+# Warmup Iteration   2: 7.148 ns/op
+# Warmup Iteration   3: 6.915 ns/op
+Iteration   1: 6.916 ns/op
+Iteration   2: 6.916 ns/op
+Iteration   3: 6.915 ns/op
+Iteration   4: 6.915 ns/op
+Iteration   5: 6.918 ns/op
+
+# Run progress: 38.37% complete, ETA 00:07:10
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.944 ns/op
+# Warmup Iteration   2: 7.156 ns/op
+# Warmup Iteration   3: 6.925 ns/op
+Iteration   1: 6.920 ns/op
+Iteration   2: 6.915 ns/op
+Iteration   3: 6.917 ns/op
+Iteration   4: 6.920 ns/op
+Iteration   5: 6.919 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.917 ±(99.9%) 0.003 ns/op [Average]
+  (min, avg, max) = (6.915, 6.917, 6.920), stdev = 0.002
+  CI (99.9%): [6.914, 6.920] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop
+# Parameters: (batch = 4096)
+
+# Run progress: 39.53% complete, ETA 00:07:02
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.956 ns/op
+# Warmup Iteration   2: 7.180 ns/op
+# Warmup Iteration   3: 6.921 ns/op
+Iteration   1: 6.927 ns/op
+Iteration   2: 6.922 ns/op
+Iteration   3: 6.921 ns/op
+Iteration   4: 6.923 ns/op
+Iteration   5: 6.924 ns/op
+
+# Run progress: 40.70% complete, ETA 00:06:54
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.947 ns/op
+# Warmup Iteration   2: 7.154 ns/op
+# Warmup Iteration   3: 6.916 ns/op
+Iteration   1: 6.921 ns/op
+Iteration   2: 6.932 ns/op
+Iteration   3: 6.925 ns/op
+Iteration   4: 6.921 ns/op
+Iteration   5: 6.917 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniBatchCrossing.jniBatchNoop":
+  6.923 ±(99.9%) 0.006 ns/op [Average]
+  (min, avg, max) = (6.917, 6.923, 6.932), stdev = 0.004
+  CI (99.9%): [6.917, 6.929] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.baselineEmpty
+
+# Run progress: 41.86% complete, ETA 00:06:46
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.310 ns/op
+# Warmup Iteration   2: 0.351 ns/op
+# Warmup Iteration   3: 0.303 ns/op
+Iteration   1: 0.316 ns/op
+Iteration   2: 0.316 ns/op
+Iteration   3: 0.306 ns/op
+Iteration   4: 0.306 ns/op
+Iteration   5: 0.306 ns/op
+
+# Run progress: 43.02% complete, ETA 00:06:38
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.325 ns/op
+# Warmup Iteration   2: 0.345 ns/op
+# Warmup Iteration   3: 0.303 ns/op
+Iteration   1: 0.302 ns/op
+Iteration   2: 0.302 ns/op
+Iteration   3: 0.303 ns/op
+Iteration   4: 0.317 ns/op
+Iteration   5: 0.303 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.baselineEmpty":
+  0.308 ±(99.9%) 0.010 ns/op [Average]
+  (min, avg, max) = (0.302, 0.308, 0.317), stdev = 0.006
+  CI (99.9%): [0.298, 0.317] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.javaMegamorphicCall
+
+# Run progress: 44.19% complete, ETA 00:06:30
+# Fork: 1 of 2
+# Warmup Iteration   1: 7.784 ns/op
+# Warmup Iteration   2: 7.952 ns/op
+# Warmup Iteration   3: 7.479 ns/op
+Iteration   1: 6.771 ns/op
+Iteration   2: 6.715 ns/op
+Iteration   3: 6.748 ns/op
+Iteration   4: 6.771 ns/op
+Iteration   5: 6.798 ns/op
+
+# Run progress: 45.35% complete, ETA 00:06:22
+# Fork: 2 of 2
+# Warmup Iteration   1: 8.269 ns/op
+# Warmup Iteration   2: 8.333 ns/op
+# Warmup Iteration   3: 7.995 ns/op
+Iteration   1: 7.257 ns/op
+Iteration   2: 7.045 ns/op
+Iteration   3: 7.070 ns/op
+Iteration   4: 6.957 ns/op
+Iteration   5: 6.966 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.javaMegamorphicCall":
+  6.910 ±(99.9%) 0.269 ns/op [Average]
+  (min, avg, max) = (6.715, 6.910, 7.257), stdev = 0.178
+  CI (99.9%): [6.641, 7.179] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.javaMonomorphicCall
+
+# Run progress: 46.51% complete, ETA 00:06:13
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.450 ns/op
+# Warmup Iteration   2: 0.449 ns/op
+# Warmup Iteration   3: 0.447 ns/op
+Iteration   1: 0.451 ns/op
+Iteration   2: 0.448 ns/op
+Iteration   3: 0.448 ns/op
+Iteration   4: 0.448 ns/op
+Iteration   5: 0.448 ns/op
+
+# Run progress: 47.67% complete, ETA 00:06:05
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.453 ns/op
+# Warmup Iteration   2: 0.450 ns/op
+# Warmup Iteration   3: 0.448 ns/op
+Iteration   1: 0.449 ns/op
+Iteration   2: 0.447 ns/op
+Iteration   3: 0.454 ns/op
+Iteration   4: 0.451 ns/op
+Iteration   5: 0.451 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.javaMonomorphicCall":
+  0.449 ±(99.9%) 0.003 ns/op [Average]
+  (min, avg, max) = (0.447, 0.449, 0.454), stdev = 0.002
+  CI (99.9%): [0.446, 0.453] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniDirectBufAddr
+
+# Run progress: 48.84% complete, ETA 00:05:57
+# Fork: 1 of 2
+# Warmup Iteration   1: 23.666 ns/op
+# Warmup Iteration   2: 23.759 ns/op
+# Warmup Iteration   3: 23.526 ns/op
+Iteration   1: 23.516 ns/op
+Iteration   2: 23.530 ns/op
+Iteration   3: 23.486 ns/op
+Iteration   4: 23.529 ns/op
+Iteration   5: 23.500 ns/op
+
+# Run progress: 50.00% complete, ETA 00:05:49
+# Fork: 2 of 2
+# Warmup Iteration   1: 23.673 ns/op
+# Warmup Iteration   2: 23.717 ns/op
+# Warmup Iteration   3: 23.487 ns/op
+Iteration   1: 23.534 ns/op
+Iteration   2: 23.495 ns/op
+Iteration   3: 23.531 ns/op
+Iteration   4: 23.497 ns/op
+Iteration   5: 23.502 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniDirectBufAddr":
+  23.512 ±(99.9%) 0.027 ns/op [Average]
+  (min, avg, max) = (23.486, 23.512, 23.534), stdev = 0.018
+  CI (99.9%): [23.485, 23.539] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniLong
+
+# Run progress: 51.16% complete, ETA 00:05:41
+# Fork: 1 of 2
+# Warmup Iteration   1: 7.164 ns/op
+# Warmup Iteration   2: 6.925 ns/op
+# Warmup Iteration   3: 6.698 ns/op
+Iteration   1: 6.693 ns/op
+Iteration   2: 6.693 ns/op
+Iteration   3: 6.692 ns/op
+Iteration   4: 6.692 ns/op
+Iteration   5: 6.695 ns/op
+
+# Run progress: 52.33% complete, ETA 00:05:33
+# Fork: 2 of 2
+# Warmup Iteration   1: 7.166 ns/op
+# Warmup Iteration   2: 6.925 ns/op
+# Warmup Iteration   3: 6.697 ns/op
+Iteration   1: 6.693 ns/op
+Iteration   2: 6.693 ns/op
+Iteration   3: 6.700 ns/op
+Iteration   4: 6.698 ns/op
+Iteration   5: 6.692 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniLong":
+  6.694 ±(99.9%) 0.004 ns/op [Average]
+  (min, avg, max) = (6.692, 6.694, 6.700), stdev = 0.003
+  CI (99.9%): [6.690, 6.698] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniLong3
+
+# Run progress: 53.49% complete, ETA 00:05:25
+# Fork: 1 of 2
+# Warmup Iteration   1: 7.185 ns/op
+# Warmup Iteration   2: 6.930 ns/op
+# Warmup Iteration   3: 6.695 ns/op
+Iteration   1: 6.691 ns/op
+Iteration   2: 6.696 ns/op
+Iteration   3: 6.692 ns/op
+Iteration   4: 6.695 ns/op
+Iteration   5: 6.694 ns/op
+
+# Run progress: 54.65% complete, ETA 00:05:17
+# Fork: 2 of 2
+# Warmup Iteration   1: 7.174 ns/op
+# Warmup Iteration   2: 6.924 ns/op
+# Warmup Iteration   3: 6.698 ns/op
+Iteration   1: 6.694 ns/op
+Iteration   2: 6.763 ns/op
+Iteration   3: 6.753 ns/op
+Iteration   4: 6.752 ns/op
+Iteration   5: 6.753 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniLong3":
+  6.718 ±(99.9%) 0.048 ns/op [Average]
+  (min, avg, max) = (6.691, 6.718, 6.763), stdev = 0.032
+  CI (99.9%): [6.670, 6.767] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniPojo
+
+# Run progress: 55.81% complete, ETA 00:05:08
+# Fork: 1 of 2
+# Warmup Iteration   1: 7.613 ns/op
+# Warmup Iteration   2: 7.597 ns/op
+# Warmup Iteration   3: 7.588 ns/op
+Iteration   1: 7.587 ns/op
+Iteration   2: 7.588 ns/op
+Iteration   3: 7.585 ns/op
+Iteration   4: 7.584 ns/op
+Iteration   5: 7.588 ns/op
+
+# Run progress: 56.98% complete, ETA 00:05:00
+# Fork: 2 of 2
+# Warmup Iteration   1: 7.638 ns/op
+# Warmup Iteration   2: 8.335 ns/op
+# Warmup Iteration   3: 8.328 ns/op
+Iteration   1: 8.328 ns/op
+Iteration   2: 8.327 ns/op
+Iteration   3: 8.327 ns/op
+Iteration   4: 8.337 ns/op
+Iteration   5: 8.327 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniPojo":
+  7.958 ±(99.9%) 0.592 ns/op [Average]
+  (min, avg, max) = (7.584, 7.958, 8.337), stdev = 0.391
+  CI (99.9%): [7.366, 8.549] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniString
+
+# Run progress: 58.14% complete, ETA 00:04:52
+# Fork: 1 of 2
+# Warmup Iteration   1: 52.624 ns/op
+# Warmup Iteration   2: 52.522 ns/op
+# Warmup Iteration   3: 52.494 ns/op
+Iteration   1: 52.413 ns/op
+Iteration   2: 52.655 ns/op
+Iteration   3: 52.642 ns/op
+Iteration   4: 52.430 ns/op
+Iteration   5: 52.385 ns/op
+
+# Run progress: 59.30% complete, ETA 00:04:44
+# Fork: 2 of 2
+# Warmup Iteration   1: 52.378 ns/op
+# Warmup Iteration   2: 52.370 ns/op
+# Warmup Iteration   3: 52.387 ns/op
+Iteration   1: 52.443 ns/op
+Iteration   2: 52.458 ns/op
+Iteration   3: 52.396 ns/op
+Iteration   4: 52.414 ns/op
+Iteration   5: 52.401 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniString":
+  52.464 ±(99.9%) 0.151 ns/op [Average]
+  (min, avg, max) = (52.385, 52.464, 52.655), stdev = 0.100
+  CI (99.9%): [52.313, 52.614] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.JniCrossing.jniVoid
+
+# Run progress: 60.47% complete, ETA 00:04:36
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.939 ns/op
+# Warmup Iteration   2: 6.924 ns/op
+# Warmup Iteration   3: 6.701 ns/op
+Iteration   1: 6.699 ns/op
+Iteration   2: 6.701 ns/op
+Iteration   3: 6.698 ns/op
+Iteration   4: 6.699 ns/op
+Iteration   5: 6.698 ns/op
+
+# Run progress: 61.63% complete, ETA 00:04:28
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.960 ns/op
+# Warmup Iteration   2: 6.925 ns/op
+# Warmup Iteration   3: 6.702 ns/op
+Iteration   1: 6.696 ns/op
+Iteration   2: 6.697 ns/op
+Iteration   3: 6.697 ns/op
+Iteration   4: 6.697 ns/op
+Iteration   5: 6.700 ns/op
+
+
+Result "org.apache.flink.accel.bench.JniCrossing.jniVoid":
+  6.698 ±(99.9%) 0.002 ns/op [Average]
+  (min, avg, max) = (6.696, 6.698, 6.701), stdev = 0.001
+  CI (99.9%): [6.696, 6.700] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.baselineTouch
+
+# Run progress: 62.79% complete, ETA 00:04:20
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.215 ns/op
+# Warmup Iteration   2: 1.082 ns/op
+# Warmup Iteration   3: 1.082 ns/op
+Iteration   1: 1.082 ns/op
+Iteration   2: 1.082 ns/op
+Iteration   3: 1.082 ns/op
+Iteration   4: 1.082 ns/op
+Iteration   5: 1.083 ns/op
+
+# Run progress: 63.95% complete, ETA 00:04:12
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.223 ns/op
+# Warmup Iteration   2: 1.058 ns/op
+# Warmup Iteration   3: 1.068 ns/op
+Iteration   1: 1.053 ns/op
+Iteration   2: 1.068 ns/op
+Iteration   3: 1.069 ns/op
+Iteration   4: 1.059 ns/op
+Iteration   5: 1.062 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.baselineTouch":
+  1.072 ±(99.9%) 0.017 ns/op [Average]
+  (min, avg, max) = (1.053, 1.072, 1.083), stdev = 0.011
+  CI (99.9%): [1.055, 1.089] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.baselineTouchString
+
+# Run progress: 65.12% complete, ETA 00:04:03
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.510 ns/op
+# Warmup Iteration   2: 1.460 ns/op
+# Warmup Iteration   3: 1.468 ns/op
+Iteration   1: 1.470 ns/op
+Iteration   2: 1.469 ns/op
+Iteration   3: 1.458 ns/op
+Iteration   4: 1.472 ns/op
+Iteration   5: 1.471 ns/op
+
+# Run progress: 66.28% complete, ETA 00:03:55
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.517 ns/op
+# Warmup Iteration   2: 1.433 ns/op
+# Warmup Iteration   3: 1.436 ns/op
+Iteration   1: 1.428 ns/op
+Iteration   2: 1.412 ns/op
+Iteration   3: 1.425 ns/op
+Iteration   4: 1.457 ns/op
+Iteration   5: 1.463 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.baselineTouchString":
+  1.453 ±(99.9%) 0.034 ns/op [Average]
+  (min, avg, max) = (1.412, 1.453, 1.472), stdev = 0.022
+  CI (99.9%): [1.419, 1.486] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc
+
+# Run progress: 67.44% complete, ETA 00:03:47
+# Fork: 1 of 2
+# Warmup Iteration   1: 6.089 ns/op
+# Warmup Iteration   2: 7.215 ns/op
+# Warmup Iteration   3: 7.274 ns/op
+Iteration   1: 7.278 ns/op
+Iteration   2: 7.275 ns/op
+Iteration   3: 7.244 ns/op
+Iteration   4: 7.258 ns/op
+Iteration   5: 7.277 ns/op
+
+# Run progress: 68.60% complete, ETA 00:03:39
+# Fork: 2 of 2
+# Warmup Iteration   1: 6.113 ns/op
+# Warmup Iteration   2: 7.093 ns/op
+# Warmup Iteration   3: 7.235 ns/op
+Iteration   1: 7.279 ns/op
+Iteration   2: 7.240 ns/op
+Iteration   3: 7.232 ns/op
+Iteration   4: 7.244 ns/op
+Iteration   5: 7.207 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedAlloc":
+  7.253 ±(99.9%) 0.037 ns/op [Average]
+  (min, avg, max) = (7.207, 7.253, 7.279), stdev = 0.024
+  CI (99.9%): [7.217, 7.290] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedConsume
+
+# Run progress: 69.77% complete, ETA 00:03:31
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.074 ns/op
+# Warmup Iteration   2: 1.010 ns/op
+# Warmup Iteration   3: 1.012 ns/op
+Iteration   1: 1.012 ns/op
+Iteration   2: 1.013 ns/op
+Iteration   3: 1.013 ns/op
+Iteration   4: 1.013 ns/op
+Iteration   5: 1.012 ns/op
+
+# Run progress: 70.93% complete, ETA 00:03:23
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.077 ns/op
+# Warmup Iteration   2: 1.009 ns/op
+# Warmup Iteration   3: 1.011 ns/op
+Iteration   1: 1.011 ns/op
+Iteration   2: 1.011 ns/op
+Iteration   3: 1.011 ns/op
+Iteration   4: 1.012 ns/op
+Iteration   5: 1.011 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedConsume":
+  1.012 ±(99.9%) 0.001 ns/op [Average]
+  (min, avg, max) = (1.011, 1.012, 1.013), stdev = 0.001
+  CI (99.9%): [1.011, 1.013] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeFixedReuse
+
+# Run progress: 72.09% complete, ETA 00:03:15
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.220 ns/op
+# Warmup Iteration   2: 1.290 ns/op
+# Warmup Iteration   3: 1.272 ns/op
+Iteration   1: 1.272 ns/op
+Iteration   2: 1.272 ns/op
+Iteration   3: 1.272 ns/op
+Iteration   4: 1.273 ns/op
+Iteration   5: 1.272 ns/op
+
+# Run progress: 73.26% complete, ETA 00:03:07
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.226 ns/op
+# Warmup Iteration   2: 1.195 ns/op
+# Warmup Iteration   3: 1.265 ns/op
+Iteration   1: 1.266 ns/op
+Iteration   2: 1.267 ns/op
+Iteration   3: 1.267 ns/op
+Iteration   4: 1.267 ns/op
+Iteration   5: 1.267 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeFixedReuse":
+  1.270 ±(99.9%) 0.004 ns/op [Average]
+  (min, avg, max) = (1.266, 1.270, 1.273), stdev = 0.003
+  CI (99.9%): [1.265, 1.274] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.decodeStringAlloc
+
+# Run progress: 74.42% complete, ETA 00:02:58
+# Fork: 1 of 2
+# Warmup Iteration   1: 19.101 ns/op
+# Warmup Iteration   2: 13.993 ns/op
+# Warmup Iteration   3: 13.912 ns/op
+Iteration   1: 14.468 ns/op
+Iteration   2: 14.495 ns/op
+Iteration   3: 14.457 ns/op
+Iteration   4: 14.652 ns/op
+Iteration   5: 14.994 ns/op
+
+# Run progress: 75.58% complete, ETA 00:02:50
+# Fork: 2 of 2
+# Warmup Iteration   1: 20.300 ns/op
+# Warmup Iteration   2: 14.549 ns/op
+# Warmup Iteration   3: 14.111 ns/op
+Iteration   1: 14.945 ns/op
+Iteration   2: 14.886 ns/op
+Iteration   3: 15.358 ns/op
+Iteration   4: 14.808 ns/op
+Iteration   5: 14.794 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.decodeStringAlloc":
+  14.786 ±(99.9%) 0.427 ns/op [Average]
+  (min, avg, max) = (14.457, 14.786, 15.358), stdev = 0.283
+  CI (99.9%): [14.359, 15.213] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeFixedDirect
+
+# Run progress: 76.74% complete, ETA 00:02:42
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.462 ns/op
+# Warmup Iteration   2: 1.380 ns/op
+# Warmup Iteration   3: 1.902 ns/op
+Iteration   1: 1.909 ns/op
+Iteration   2: 1.906 ns/op
+Iteration   3: 1.913 ns/op
+Iteration   4: 1.919 ns/op
+Iteration   5: 1.920 ns/op
+
+# Run progress: 77.91% complete, ETA 00:02:34
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.425 ns/op
+# Warmup Iteration   2: 1.363 ns/op
+# Warmup Iteration   3: 1.871 ns/op
+Iteration   1: 1.872 ns/op
+Iteration   2: 1.872 ns/op
+Iteration   3: 1.870 ns/op
+Iteration   4: 1.873 ns/op
+Iteration   5: 1.871 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeFixedDirect":
+  1.893 ±(99.9%) 0.034 ns/op [Average]
+  (min, avg, max) = (1.870, 1.893, 1.920), stdev = 0.023
+  CI (99.9%): [1.858, 1.927] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray
+
+# Run progress: 79.07% complete, ETA 00:02:26
+# Fork: 1 of 2
+# Warmup Iteration   1: 1.297 ns/op
+# Warmup Iteration   2: 1.198 ns/op
+# Warmup Iteration   3: 1.440 ns/op
+Iteration   1: 1.435 ns/op
+Iteration   2: 1.433 ns/op
+Iteration   3: 1.437 ns/op
+Iteration   4: 1.439 ns/op
+Iteration   5: 1.516 ns/op
+
+# Run progress: 80.23% complete, ETA 00:02:18
+# Fork: 2 of 2
+# Warmup Iteration   1: 1.275 ns/op
+# Warmup Iteration   2: 1.163 ns/op
+# Warmup Iteration   3: 1.436 ns/op
+Iteration   1: 1.465 ns/op
+Iteration   2: 1.472 ns/op
+Iteration   3: 1.460 ns/op
+Iteration   4: 1.481 ns/op
+Iteration   5: 1.479 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeFixedLongArray":
+  1.462 ±(99.9%) 0.040 ns/op [Average]
+  (min, avg, max) = (1.433, 1.462, 1.516), stdev = 0.027
+  CI (99.9%): [1.422, 1.502] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeLongArray
+
+# Run progress: 81.40% complete, ETA 00:02:10
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.053 ns/op
+# Warmup Iteration   2: 0.057 ns/op
+# Warmup Iteration   3: 0.052 ns/op
+Iteration   1: 0.052 ns/op
+Iteration   2: 0.053 ns/op
+Iteration   3: 0.052 ns/op
+Iteration   4: 0.052 ns/op
+Iteration   5: 0.052 ns/op
+
+# Run progress: 82.56% complete, ETA 00:02:02
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.096 ns/op
+# Warmup Iteration   2: 0.094 ns/op
+# Warmup Iteration   3: 0.094 ns/op
+Iteration   1: 0.094 ns/op
+Iteration   2: 0.094 ns/op
+Iteration   3: 0.094 ns/op
+Iteration   4: 0.093 ns/op
+Iteration   5: 0.093 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeLongArray":
+  0.073 ±(99.9%) 0.033 ns/op [Average]
+  (min, avg, max) = (0.052, 0.073, 0.094), stdev = 0.022
+  CI (99.9%): [0.040, 0.106] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeLongDirect
+
+# Run progress: 83.72% complete, ETA 00:01:53
+# Fork: 1 of 2
+# Warmup Iteration   1: 0.169 ns/op
+# Warmup Iteration   2: 0.138 ns/op
+# Warmup Iteration   3: 0.122 ns/op
+Iteration   1: 0.122 ns/op
+Iteration   2: 0.122 ns/op
+Iteration   3: 0.122 ns/op
+Iteration   4: 0.122 ns/op
+Iteration   5: 0.122 ns/op
+
+# Run progress: 84.88% complete, ETA 00:01:45
+# Fork: 2 of 2
+# Warmup Iteration   1: 0.130 ns/op
+# Warmup Iteration   2: 0.122 ns/op
+# Warmup Iteration   3: 0.122 ns/op
+Iteration   1: 0.122 ns/op
+Iteration   2: 0.122 ns/op
+Iteration   3: 0.122 ns/op
+Iteration   4: 0.122 ns/op
+Iteration   5: 0.122 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeLongDirect":
+  0.122 ±(99.9%) 0.001 ns/op [Average]
+  (min, avg, max) = (0.122, 0.122, 0.122), stdev = 0.001
+  CI (99.9%): [0.122, 0.122] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringEncoder
+
+# Run progress: 86.05% complete, ETA 00:01:37
+# Fork: 1 of 2
+# Warmup Iteration   1: 56.098 ns/op
+# Warmup Iteration   2: 51.471 ns/op
+# Warmup Iteration   3: 50.699 ns/op
+Iteration   1: 51.189 ns/op
+Iteration   2: 50.738 ns/op
+Iteration   3: 50.933 ns/op
+Iteration   4: 51.230 ns/op
+Iteration   5: 51.036 ns/op
+
+# Run progress: 87.21% complete, ETA 00:01:29
+# Fork: 2 of 2
+# Warmup Iteration   1: 55.380 ns/op
+# Warmup Iteration   2: 48.924 ns/op
+# Warmup Iteration   3: 49.218 ns/op
+Iteration   1: 49.141 ns/op
+Iteration   2: 48.696 ns/op
+Iteration   3: 48.724 ns/op
+Iteration   4: 49.236 ns/op
+Iteration   5: 49.168 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringEncoder":
+  50.009 ±(99.9%) 1.653 ns/op [Average]
+  (min, avg, max) = (48.696, 50.009, 51.230), stdev = 1.093
+  CI (99.9%): [48.356, 51.662] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes
+
+# Run progress: 88.37% complete, ETA 00:01:21
+# Fork: 1 of 2
+# Warmup Iteration   1: 11.105 ns/op
+# Warmup Iteration   2: 8.400 ns/op
+# Warmup Iteration   3: 8.234 ns/op
+Iteration   1: 8.139 ns/op
+Iteration   2: 8.163 ns/op
+Iteration   3: 8.126 ns/op
+Iteration   4: 8.159 ns/op
+Iteration   5: 8.092 ns/op
+
+# Run progress: 89.53% complete, ETA 00:01:13
+# Fork: 2 of 2
+# Warmup Iteration   1: 10.639 ns/op
+# Warmup Iteration   2: 8.164 ns/op
+# Warmup Iteration   3: 8.034 ns/op
+Iteration   1: 8.035 ns/op
+Iteration   2: 8.044 ns/op
+Iteration   3: 8.097 ns/op
+Iteration   4: 8.147 ns/op
+Iteration   5: 8.090 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytes":
+  8.109 ±(99.9%) 0.068 ns/op [Average]
+  (min, avg, max) = (8.035, 8.109, 8.163), stdev = 0.045
+  CI (99.9%): [8.041, 8.177] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode
+
+# Run progress: 90.70% complete, ETA 00:01:05
+# Fork: 1 of 2
+# Warmup Iteration   1: 36.748 ns/op
+# Warmup Iteration   2: 28.821 ns/op
+# Warmup Iteration   3: 29.404 ns/op
+Iteration   1: 28.434 ns/op
+Iteration   2: 27.785 ns/op
+Iteration   3: 28.349 ns/op
+Iteration   4: 28.117 ns/op
+Iteration   5: 27.956 ns/op
+
+# Run progress: 91.86% complete, ETA 00:00:56
+# Fork: 2 of 2
+# Warmup Iteration   1: 34.239 ns/op
+# Warmup Iteration   2: 29.240 ns/op
+# Warmup Iteration   3: 29.232 ns/op
+Iteration   1: 28.617 ns/op
+Iteration   2: 27.945 ns/op
+Iteration   3: 28.112 ns/op
+Iteration   4: 28.274 ns/op
+Iteration   5: 28.373 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringGetBytesUnicode":
+  28.196 ±(99.9%) 0.390 ns/op [Average]
+  (min, avg, max) = (27.785, 28.196, 28.617), stdev = 0.258
+  CI (99.9%): [27.806, 28.586] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.encodeStringPojo
+
+# Run progress: 93.02% complete, ETA 00:00:48
+# Fork: 1 of 2
+# Warmup Iteration   1: 12.750 ns/op
+# Warmup Iteration   2: 9.732 ns/op
+# Warmup Iteration   3: 10.234 ns/op
+Iteration   1: 10.184 ns/op
+Iteration   2: 10.039 ns/op
+Iteration   3: 9.818 ns/op
+Iteration   4: 10.319 ns/op
+Iteration   5: 10.094 ns/op
+
+# Run progress: 94.19% complete, ETA 00:00:40
+# Fork: 2 of 2
+# Warmup Iteration   1: 11.577 ns/op
+# Warmup Iteration   2: 10.035 ns/op
+# Warmup Iteration   3: 10.020 ns/op
+Iteration   1: 10.002 ns/op
+Iteration   2: 10.036 ns/op
+Iteration   3: 9.943 ns/op
+Iteration   4: 9.879 ns/op
+Iteration   5: 9.724 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.encodeStringPojo":
+  10.004 ±(99.9%) 0.264 ns/op [Average]
+  (min, avg, max) = (9.724, 10.004, 10.319), stdev = 0.175
+  CI (99.9%): [9.740, 10.268] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.roundTripFixed
+
+# Run progress: 95.35% complete, ETA 00:00:32
+# Fork: 1 of 2
+# Warmup Iteration   1: 2.787 ns/op
+# Warmup Iteration   2: 2.564 ns/op
+# Warmup Iteration   3: 3.403 ns/op
+Iteration   1: 3.405 ns/op
+Iteration   2: 3.403 ns/op
+Iteration   3: 3.405 ns/op
+Iteration   4: 3.405 ns/op
+Iteration   5: 3.401 ns/op
+
+# Run progress: 96.51% complete, ETA 00:00:24
+# Fork: 2 of 2
+# Warmup Iteration   1: 2.780 ns/op
+# Warmup Iteration   2: 2.573 ns/op
+# Warmup Iteration   3: 3.397 ns/op
+Iteration   1: 3.443 ns/op
+Iteration   2: 3.392 ns/op
+Iteration   3: 3.404 ns/op
+Iteration   4: 3.400 ns/op
+Iteration   5: 3.428 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.roundTripFixed":
+  3.409 ±(99.9%) 0.023 ns/op [Average]
+  (min, avg, max) = (3.392, 3.409, 3.443), stdev = 0.015
+  CI (99.9%): [3.386, 3.432] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 17.0.20.1, OpenJDK 64-Bit Server VM, 17.0.20.1+0
+# VM invoker: /home/linuxbrew/.linuxbrew/Cellar/openjdk@17/17.0.20.1/libexec/bin/java
+# VM options: -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so -Djnicrossing.lib=/home/oahshtsua/Workspace/flink/benchmark/jni-crossing/build/libjnicrossing.so
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 3 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: org.apache.flink.accel.bench.Marshalling.roundTripStringPojo
+
+# Run progress: 97.67% complete, ETA 00:00:16
+# Fork: 1 of 2
+# Warmup Iteration   1: 30.775 ns/op
+# Warmup Iteration   2: 24.663 ns/op
+# Warmup Iteration   3: 25.036 ns/op
+Iteration   1: 26.173 ns/op
+Iteration   2: 25.635 ns/op
+Iteration   3: 24.721 ns/op
+Iteration   4: 25.003 ns/op
+Iteration   5: 25.414 ns/op
+
+# Run progress: 98.84% complete, ETA 00:00:08
+# Fork: 2 of 2
+# Warmup Iteration   1: 31.421 ns/op
+# Warmup Iteration   2: 24.459 ns/op
+# Warmup Iteration   3: 24.625 ns/op
+Iteration   1: 24.907 ns/op
+Iteration   2: 25.053 ns/op
+Iteration   3: 25.158 ns/op
+Iteration   4: 24.753 ns/op
+Iteration   5: 25.281 ns/op
+
+
+Result "org.apache.flink.accel.bench.Marshalling.roundTripStringPojo":
+  25.210 ±(99.9%) 0.670 ns/op [Average]
+  (min, avg, max) = (24.721, 25.210, 26.173), stdev = 0.443
+  CI (99.9%): [24.540, 25.879] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:11:39
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                (batch)  Mode  Cnt    Score    Error  Units
+JniBatchCrossing.jniArrayCritical              1  avgt   10   39.827 ±  0.152  ns/op
+JniBatchCrossing.jniArrayCritical             16  avgt   10   39.660 ±  0.066  ns/op
+JniBatchCrossing.jniArrayCritical             64  avgt   10   39.791 ±  0.271  ns/op
+JniBatchCrossing.jniArrayCritical            256  avgt   10   39.611 ±  0.032  ns/op
+JniBatchCrossing.jniArrayCritical           1024  avgt   10   39.626 ±  0.038  ns/op
+JniBatchCrossing.jniArrayCritical           4096  avgt   10   39.637 ±  0.104  ns/op
+JniBatchCrossing.jniArrayRegion                1  avgt   10   28.302 ±  0.185  ns/op
+JniBatchCrossing.jniArrayRegion               16  avgt   10   29.380 ±  0.021  ns/op
+JniBatchCrossing.jniArrayRegion               64  avgt   10   34.618 ±  0.018  ns/op
+JniBatchCrossing.jniArrayRegion              256  avgt   10   57.062 ±  0.290  ns/op
+JniBatchCrossing.jniArrayRegion             1024  avgt   10  143.078 ±  0.177  ns/op
+JniBatchCrossing.jniArrayRegion             4096  avgt   10  739.927 ±  0.519  ns/op
+JniBatchCrossing.jniBatchNoop                  1  avgt   10    6.919 ±  0.003  ns/op
+JniBatchCrossing.jniBatchNoop                 16  avgt   10    6.938 ±  0.051  ns/op
+JniBatchCrossing.jniBatchNoop                 64  avgt   10    6.937 ±  0.030  ns/op
+JniBatchCrossing.jniBatchNoop                256  avgt   10    6.918 ±  0.006  ns/op
+JniBatchCrossing.jniBatchNoop               1024  avgt   10    6.917 ±  0.003  ns/op
+JniBatchCrossing.jniBatchNoop               4096  avgt   10    6.923 ±  0.006  ns/op
+JniCrossing.baselineEmpty                    N/A  avgt   10    0.308 ±  0.010  ns/op
+JniCrossing.javaMegamorphicCall              N/A  avgt   10    6.910 ±  0.269  ns/op
+JniCrossing.javaMonomorphicCall              N/A  avgt   10    0.449 ±  0.003  ns/op
+JniCrossing.jniDirectBufAddr                 N/A  avgt   10   23.512 ±  0.027  ns/op
+JniCrossing.jniLong                          N/A  avgt   10    6.694 ±  0.004  ns/op
+JniCrossing.jniLong3                         N/A  avgt   10    6.718 ±  0.048  ns/op
+JniCrossing.jniPojo                          N/A  avgt   10    7.958 ±  0.592  ns/op
+JniCrossing.jniString                        N/A  avgt   10   52.464 ±  0.151  ns/op
+JniCrossing.jniVoid                          N/A  avgt   10    6.698 ±  0.002  ns/op
+Marshalling.baselineTouch                    N/A  avgt   10    1.072 ±  0.017  ns/op
+Marshalling.baselineTouchString              N/A  avgt   10    1.453 ±  0.034  ns/op
+Marshalling.decodeFixedAlloc                 N/A  avgt   10    7.253 ±  0.037  ns/op
+Marshalling.decodeFixedConsume               N/A  avgt   10    1.012 ±  0.001  ns/op
+Marshalling.decodeFixedReuse                 N/A  avgt   10    1.270 ±  0.004  ns/op
+Marshalling.decodeStringAlloc                N/A  avgt   10   14.786 ±  0.427  ns/op
+Marshalling.encodeFixedDirect                N/A  avgt   10    1.893 ±  0.034  ns/op
+Marshalling.encodeFixedLongArray             N/A  avgt   10    1.462 ±  0.040  ns/op
+Marshalling.encodeLongArray                  N/A  avgt   10    0.073 ±  0.033  ns/op
+Marshalling.encodeLongDirect                 N/A  avgt   10    0.122 ±  0.001  ns/op
+Marshalling.encodeStringEncoder              N/A  avgt   10   50.009 ±  1.653  ns/op
+Marshalling.encodeStringGetBytes             N/A  avgt   10    8.109 ±  0.068  ns/op
+Marshalling.encodeStringGetBytesUnicode      N/A  avgt   10   28.196 ±  0.390  ns/op
+Marshalling.encodeStringPojo                 N/A  avgt   10   10.004 ±  0.264  ns/op
+Marshalling.roundTripFixed                   N/A  avgt   10    3.409 ±  0.023  ns/op
+Marshalling.roundTripStringPojo              N/A  avgt   10   25.210 ±  0.670  ns/op
+
+Benchmark result is saved to /home/oahshtsua/Workspace/flink/benchmark/jni-crossing/results/jni-crossing.json
