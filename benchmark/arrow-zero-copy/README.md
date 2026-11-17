@@ -1,10 +1,16 @@
 # Arrow zero-copy: the sensor job with Arrow batches as records
 
-The sensor job from `../sensor-bench/`, with the copying between Java objects and the C kernel
-removed. Instead of `SensorReading` objects, the stream carries **Arrow record batches**. The
-source writes readings straight into Arrow columns. The operator hands the kernel the columns'
-addresses through the Arrow C Data Interface. The kernel writes its results straight into Arrow
-columns and returns a selection vector of the survivors. Nothing is copied in or out.
+The sensor job from `../sensor-bench/`, with **Arrow record batches** as the stream's records
+instead of `SensorReading` objects. The source writes readings straight into Arrow columns. Then
+one of three engines does the four steps, each writing its results into Arrow columns and
+returning a selection vector of the survivors:
+
+- **`native`**: the operator hands a C kernel the columns' addresses through the Arrow C Data
+  Interface. Nothing is copied in or out.
+- **`java`**: one Java function runs all four steps over the batch. It is the Java twin of the C
+  kernel.
+- **`java-steps`**: the four steps stay four separate Java functions, `map -> filter -> map ->
+  filter`. Each takes and returns a whole batch.
 
 Why, what was found, and what's next: `docs/arrow-zero-copy-experiment.md`.
 
@@ -14,13 +20,15 @@ Why, what was found, and what's next: `docs/arrow-zero-copy-experiment.md`.
 |---|---|
 | `job/.../ArrowBatch.java` | The stream record: an Arrow `VectorSchemaRoot` plus an optional selection vector. Its type information's serializer throws if Flink ever copies or serializes a batch |
 | `job/.../ArrowMemory.java` | The shared Arrow root allocator, and a helper to mark every row valid |
+| `job/.../ResultColumns.java` | The result columns a step owns and appends to the batches it passes on |
 | `job/.../ArrowNativeOperator.java` | Generic operator: export the batch (no copy), call the kernel through `NativeBridge`, emit input columns + result columns + selection vector. Checks on the first batch that the export really shared the buffers |
 | `job/.../SensorArrow.java` | The sensor job's Arrow schema, generation straight into columns, and reading a row back for the checksum |
-| `job/.../SensorScoringArrowJob.java` | The job: batch source → `ArrowNativeOperator` → sink (discard or checksum) |
+| `job/.../SensorArrowScoring.java` | The four steps in Java over Arrow columns: as one function (`scoreFused`), and as separate steps |
+| `job/.../SensorScoringArrowJob.java` | The job: batch source → engine → sink (discard or checksum). The Java engines are plain `RichMapFunction`s on `ArrowBatch` |
 | `../native-kernel/kernels/sensor_arrow_kernel.c` | `sensor_score_arrow`: `sensor_score`'s arithmetic, reading and writing Arrow columns in place |
 | `src/.../ArrowExport.java` | JMH: the export's cost per batch, and generation's cost per row |
 | `run.sh` | Fetches Arrow Java, builds, then `check`, `sweep` and/or `bench` |
-| `report.py` | Turns `results/sweep.csv` into Markdown tables |
+| `report.py` | Turns `results/sweep.csv` into Markdown tables. `results/step1/` keeps the first sweep (C only) |
 
 The job classes are in a separate source tree from `../job/` because they need Arrow Java to
 compile. `../sensor-bench/minicluster-sweep.sh` compiles `../job/` alone, without Arrow.
@@ -37,10 +45,10 @@ Arrow Java 19.0.0 and its dependencies are downloaded into `deps/` on the first 
 ./benchmark/arrow-zero-copy/report.py > benchmark/arrow-zero-copy/results/sweep-report.md
 ```
 
-`check` runs the Arrow job at k = 1, 16 and 64, with 1, 7 and 1024 rows per batch. 7 leaves a
-partial last batch. Each run must:
+`check` runs every engine at k = 1, 16 and 64, with 1, 7 and 1024 rows per batch. 7 leaves a
+partial last batch. Each run must print the same `CHECKSUM` line as `SensorScoringReference`. A
+`native` run must also:
 
-- print the same `CHECKSUM` line as `SensorScoringReference`;
 - report in its `ARROW_NATIVE` line that the kernel saw every record;
 - report that the zero-copy check compared at least one buffer (`zeroCopyBuffers` > 0).
 
@@ -53,10 +61,10 @@ java --add-opens=java.base/java.nio=ALL-UNNAMED -Darrow.enable_unsafe_memory_acc
      -Dflink.accel.bridge.lib=$PWD/native-kernel/build/libflinkaccel_bridge.so \
      -Dsensor.kernel.lib=$PWD/native-kernel/build/libsensor_arrow_kernel.so \
      -cp "arrow-zero-copy/build/classes:native-kernel/build/flink-accel-bridge.jar:build/vanilla/flink/lib/*:arrow-zero-copy/deps/*" \
-     org.apache.flink.demo.SensorScoringArrowJob 2000000 16 checksum 1024
+     org.apache.flink.demo.SensorScoringArrowJob 2000000 16 checksum 1024 native
 ```
 
-Arguments: `[records] [k] [discard|checksum] [batchSize]`.
+Arguments: `[records] [k] [discard|checksum] [batchSize] [native|java|java-steps]`.
 
 - `--add-opens` lets Arrow's memory module read direct buffers' addresses on JDK 17.
 - `arrow.enable_unsafe_memory_access` turns off `ArrowBuf`'s bounds check on every access.
@@ -70,7 +78,8 @@ These are deliberate, for this first step:
   returns. The serializer guard turns any other use into an immediate failure, not wrong output.
 - **No per-row event time.** A batch is one Flink record with one timestamp. The `ts` column is
   data, not Flink's record timestamp. The source attaches no timestamps or watermarks.
-- **Dense input only.** `ArrowNativeOperator` rejects a batch that already carries a selection
-  vector. A second filtering operator downstream would need to accept one.
+- **Dense input only, for the one-function engines.** `ArrowNativeOperator` and the `java`
+  engine reject a batch that already carries a selection vector. The `java-steps` functions
+  accept one, since every step after the first filter needs to.
 - **On a cluster,** Arrow Java belongs in `flink/lib/` next to the bridge. `arrow-c-data` loads its
   own JNI library, so it has the same one-classloader limit as `NativeBridge`.

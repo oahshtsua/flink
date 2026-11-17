@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
-# Arrow zero-copy experiment: the sensor job with Arrow batches as records and a kernel that
-# reads and writes Arrow columns in place (SensorScoringArrowJob), against the copying native
-# operator (SensorScoringNativeJob) and the hand-tuned Java filter (SensorScoringJob tuned).
+# Arrow zero-copy experiment: the sensor job with Arrow batches as records (SensorScoringArrowJob),
+# the work done by a C kernel reading and writing the columns in place, by one Java batch function,
+# or by four Java batch steps - against the copying native operator (SensorScoringNativeJob) and
+# the hand-tuned Java filter (SensorScoringJob tuned).
 #
 #   ./benchmark/arrow-zero-copy/run.sh check    # correctness only (~1 min)
-#   ./benchmark/arrow-zero-copy/run.sh sweep    # timing sweep in a local MiniCluster (~20 min)
+#   ./benchmark/arrow-zero-copy/run.sh sweep    # timing sweep in a local MiniCluster (~40 min)
 #   ./benchmark/arrow-zero-copy/run.sh bench    # JMH: export cost per batch, fill cost per row (~3 min)
 #   ./benchmark/arrow-zero-copy/run.sh          # check, then sweep, then bench
 #
-# check: at k = 1, 16, 64 and batch sizes 1, 7 (partial last batch) and 1024, the Arrow job must
-# print the reference's CHECKSUM line, its kernel must have seen every record, and its zero-copy
-# check must have compared at least one buffer.
+# check: at k = 1, 16, 64 and batch sizes 1, 7 (partial last batch) and 1024, every Arrow engine
+# must print the reference's CHECKSUM line; for the C engine, its kernel must also have seen every
+# record and its zero-copy check must have compared at least one buffer.
 #
 # sweep: like sensor-bench/minicluster-sweep.sh - interleaved runs, NET_RUNTIME_MS per run - for
-# tuned Java, native and Arrow at every batch size. Output: results/sweep.csv; summarize with
-# report.py.
+# tuned Java, and native, Arrow + C, Arrow + Java and Arrow + Java steps at every batch size.
+# Output: results/sweep.csv; summarize with report.py.
 #
 # bench: src/.../ArrowExport.java, pinned to CPU 2 (a P-core). Output: results/arrow-export.{txt,json}.
 #
@@ -81,21 +82,25 @@ ARROW_JOB=(--add-opens=java.base/java.nio=ALL-UNNAMED -Darrow.enable_unsafe_memo
     -cp "$CLASSES:$NK/flink-accel-bridge.jar:$FLINK_LIB/*:$DEPS/*" org.apache.flink.demo.SensorScoringArrowJob)
 
 check() {
-    local ok=0 k b ref out stats
+    local ok=0 k b e ref out stats verdict
     for k in 1 16 64; do
         ref=$(java -cp "$CLASSES" org.apache.flink.demo.SensorScoringReference $CHECK_COUNT $k | grep CHECKSUM)
-        echo "k=$k reference         $ref"
-        for b in 1 7 1024; do
-            out=$(java "${ARROW_JOB[@]}" $CHECK_COUNT $k checksum $b 2>&1)
-            stats=$(grep ARROW_NATIVE <<<"$out" || true)
-            out=$(grep CHECKSUM <<<"$out" || true)
-            if [ "$out" = "$ref" ] && grep -q " rows=$CHECK_COUNT " <<<"$stats" \
-                && ! grep -q "zeroCopyBuffers=0" <<<"$stats" && [ -n "$stats" ]; then
+        echo "k=$k reference                    $ref"
+        for e in native java java-steps; do
+            for b in 1 7 1024; do
+                out=$(java "${ARROW_JOB[@]}" $CHECK_COUNT $k checksum $b $e 2>&1)
+                stats=$(grep ARROW_NATIVE <<<"$out" || true)
+                out=$(grep CHECKSUM <<<"$out" || true)
                 verdict=MATCH
-            else
-                verdict=MISMATCH; ok=1
-            fi
-            printf 'k=%s %-17s %s %s\n    %s\n' $k "arrow batch=$b" "$out" $verdict "$stats"
+                [ "$out" = "$ref" ] || verdict=MISMATCH
+                if [ "$e" = native ] && { ! grep -q " rows=$CHECK_COUNT " <<<"$stats" \
+                    || grep -q "zeroCopyBuffers=0" <<<"$stats"; }; then
+                    verdict="MISMATCH (kernel did not see every record, or no zero-copy check)"
+                fi
+                [ "$verdict" = MATCH ] || ok=1
+                printf 'k=%s %-28s %s %s\n' $k "arrow $e batch=$b" "$out" "$verdict"
+                [ -z "$stats" ] || printf '    %s\n' "$stats"
+            done
         done
     done
     return $ok
@@ -125,8 +130,12 @@ sweep() {
             for b in $BATCHES; do
                 ms=$(timed "${NATIVE_JOB[@]}" "$COUNT" "$k" discard "$b")
                 echo "native,$k,$b,$run,$COUNT,$ms" | tee -a "$out"
-                ms=$(timed "${ARROW_JOB[@]}" "$COUNT" "$k" discard "$b")
+                ms=$(timed "${ARROW_JOB[@]}" "$COUNT" "$k" discard "$b" native)
                 echo "arrow,$k,$b,$run,$COUNT,$ms" | tee -a "$out"
+                ms=$(timed "${ARROW_JOB[@]}" "$COUNT" "$k" discard "$b" java)
+                echo "arrow-java,$k,$b,$run,$COUNT,$ms" | tee -a "$out"
+                ms=$(timed "${ARROW_JOB[@]}" "$COUNT" "$k" discard "$b" java-steps)
+                echo "arrow-steps,$k,$b,$run,$COUNT,$ms" | tee -a "$out"
             done
         done
     done

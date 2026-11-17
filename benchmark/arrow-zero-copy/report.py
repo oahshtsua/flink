@@ -3,7 +3,8 @@
 
     ./benchmark/arrow-zero-copy/report.py [results-dir] > benchmark/arrow-zero-copy/results/sweep-report.md
 
-Reads sweep.csv (run.sh sweep) from results-dir (default results/ next to this script).
+Reads sweep.csv (run.sh sweep) from results-dir (default results/ next to this script). Variants
+missing from the file (e.g. the Java engines in the step 1 sweep) are left out.
 """
 
 import csv
@@ -13,6 +14,14 @@ from collections import defaultdict
 from pathlib import Path
 
 RESULTS = Path(__file__).resolve().parent / "results"
+
+# variant in sweep.csv -> label, in table order
+VARIANTS = {
+    "native": "copying native (idea 4)",
+    "arrow": "Arrow + C",
+    "arrow-java": "Arrow + Java, one function",
+    "arrow-steps": "Arrow + Java, four steps",
+}
 
 
 def table(header: list[str], rows: list[list[str]]) -> str:
@@ -30,7 +39,8 @@ def main() -> None:
     med = {key: statistics.median(v) for key, v in runs.items()}
     spread = {key: (max(v) - min(v)) / statistics.median(v) for key, v in runs.items() if len(v) > 1}
     ks = sorted({k for _, k, _ in med})
-    batches = sorted({int(b) for v, _, b in med if v == "arrow"})
+    batches = sorted({int(b) for _, _, b in med if b})
+    variants = [v for v in VARIANTS if any(key[0] == v for key in med)]
     n_runs = max(len(v) for v in runs.values())
 
     def get(variant: str, k: int, b: int | None = None) -> float | None:
@@ -42,23 +52,31 @@ def main() -> None:
     def ratio(fast: float | None, slow: float | None) -> str:
         return "—" if fast is None or slow is None else f"{slow / fast:.2f}×"
 
-    print("## Arrow zero-copy vs copying native operator (local MiniCluster, whole job)\n")
-    print(f"ns per record, median of {n_runs} runs. Includes the data generation.\n")
-    header = ["k", "tuned Java"] + [f"native B={b}" for b in batches] + [f"arrow B={b}" for b in batches]
-    rows = [[str(k), fmt(get("tuned", k))]
-            + [fmt(get("native", k, b)) for b in batches]
-            + [fmt(get("arrow", k, b)) for b in batches] for k in ks]
-    print(table(header, rows))
-
-    print("\n**Arrow speed-up over the copying native operator at the same batch size** (>1 = Arrow faster):\n")
-    rows = [[str(k)] + [ratio(get("arrow", k, b), get("native", k, b)) for b in batches] for k in ks]
-    print(table(["k"] + [f"B={b}" for b in batches], rows))
+    k_header = [f"k={k}" for k in ks]
+    print("## Inside Flink (local MiniCluster, whole job)\n")
+    print(f"ns per record, median of {n_runs} runs. Includes the data generation. B = readings per"
+          " batch.\n")
+    rows = [["tuned Java (one record at a time)", ""] + [fmt(get("tuned", k)) for k in ks]]
+    for v in variants:
+        rows += [[VARIANTS[v], str(b)] + [fmt(get(v, k, b)) for k in ks] for b in batches]
+    print(table(["variant", "B"] + k_header, rows))
 
     print("\n**Speed-up over tuned Java** (>1 = faster than tuned Java):\n")
-    rows = [[str(k)]
-            + [ratio(get("native", k, b), get("tuned", k)) for b in batches]
-            + [ratio(get("arrow", k, b), get("tuned", k)) for b in batches] for k in ks]
-    print(table(["k"] + [f"native B={b}" for b in batches] + [f"arrow B={b}" for b in batches], rows))
+    rows = []
+    for v in variants:
+        rows += [[VARIANTS[v], str(b)] + [ratio(get(v, k, b), get("tuned", k)) for k in ks]
+                 for b in batches]
+    print(table(["variant", "B"] + k_header, rows))
+
+    if "arrow" in variants:
+        print("\n**Against Arrow + C at the same B** (>1 = faster than Arrow + C):\n")
+        rows = []
+        for v in variants:
+            if v == "arrow":
+                continue
+            rows += [[VARIANTS[v], str(b)] + [ratio(get(v, k, b), get("arrow", k, b)) for k in ks]
+                     for b in batches]
+        print(table(["variant", "B"] + k_header, rows))
 
     if spread:
         typical = statistics.median(spread.values())

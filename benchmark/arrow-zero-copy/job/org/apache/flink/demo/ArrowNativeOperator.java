@@ -17,7 +17,6 @@ import org.apache.arrow.vector.types.pojo.Schema;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,13 +62,11 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
     private transient ByteBuffer params;
     private transient long paramsAddress;
     private transient ArrowArray exported;
-    private transient List<FieldVector> results;
+    private transient ResultColumns results;
     private transient ArrowBuf resultTable;
     private transient ArrowBuf selection;
-    private transient int capacity;
 
     private transient VectorSchemaRoot lastInput;
-    private transient VectorSchemaRoot outputRoot;
     private transient ArrowBatch outputBatch;
     /** Data buffers the zero-copy check compared on the first batch; 0 until it has run. */
     private transient int zeroCopyBuffers;
@@ -109,10 +106,7 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
         paramsAddress = NativeBridge.address(params);
 
         exported = ArrowArray.allocateNew(allocator);
-        results = new ArrayList<>();
-        for (Field field : resultFields()) {
-            results.add(field.createVector(allocator));
-        }
+        results = new ResultColumns(allocator, resultFields());
         resultTable = allocator.buffer((long) results.size() * Long.BYTES);
         outputBatch = new ArrowBatch();
         LOG.info(
@@ -132,9 +126,16 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
         final VectorSchemaRoot in = batch.root();
         final int n = in.getRowCount();
         if (in != lastInput) {
-            adoptInput(in);
+            checkSchema(in);
+            lastInput = in;
         }
-        ensureCapacity(n);
+        if (results.ensureCapacity(n)) {
+            // The buffers moved, so the kernel's address table is rewritten.
+            for (int c = 0; c < results.size(); c++) {
+                resultTable.setLong((long) c * Long.BYTES, results.data(c).memoryAddress());
+            }
+        }
+        selection = ArrowMemory.grow(allocator, selection, (long) n * Integer.BYTES);
 
         Data.exportVectorSchemaRoot(allocator, in, null, exported);
         final int kept;
@@ -161,12 +162,11 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
         rows += n;
         survivors += kept;
 
-        outputRoot.setRowCount(n);
-        output.collect(element.replace(outputBatch.set(outputRoot, selection, kept)));
+        output.collect(
+                element.replace(outputBatch.set(results.appendTo(in), selection, kept)));
     }
 
-    /** Checks a new input root's schema and builds the output root around its vectors. */
-    private void adoptInput(VectorSchemaRoot in) {
+    private void checkSchema(VectorSchemaRoot in) {
         if (!in.getSchema().equals(inputSchema())) {
             throw new IllegalArgumentException(
                     "Kernel "
@@ -176,31 +176,6 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
                             + ", got "
                             + in.getSchema());
         }
-        final List<FieldVector> vectors = new ArrayList<>(in.getFieldVectors());
-        vectors.addAll(results);
-        outputRoot = new VectorSchemaRoot(vectors);
-        lastInput = in;
-    }
-
-    /** Grows the result vectors and selection vector to hold {@code n} rows. */
-    private void ensureCapacity(int n) {
-        if (n <= capacity) {
-            return;
-        }
-        if (selection != null) {
-            selection.close();
-        }
-        selection = allocator.buffer((long) n * Integer.BYTES);
-        for (int c = 0; c < results.size(); c++) {
-            final FieldVector vector = results.get(c);
-            vector.clear();
-            vector.setInitialCapacity(n);
-            vector.allocateNew();
-            ArrowMemory.markAllValid(vector);
-            // Reallocation moves the buffers, so the kernel's address table is rewritten too.
-            resultTable.setLong((long) c * Long.BYTES, vector.getDataBuffer().memoryAddress());
-        }
-        capacity = n;
     }
 
     private int verifyZeroCopy(VectorSchemaRoot in) {
@@ -263,9 +238,7 @@ public abstract class ArrowNativeOperator extends AbstractStreamOperator<ArrowBa
                     survivors,
                     zeroCopyBuffers);
             if (results != null) {
-                // Not outputRoot.close(): that would also close the input's vectors, which belong
-                // to the upstream producer.
-                results.forEach(FieldVector::close);
+                results.close();
             }
             if (selection != null) {
                 selection.close();

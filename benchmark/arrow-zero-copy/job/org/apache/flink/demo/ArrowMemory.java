@@ -33,4 +33,18 @@ public final class ArrowMemory {
             markAllValid(child);
         }
     }
+
+    /**
+     * {@code buffer} if it holds at least {@code bytes}, otherwise a new buffer of that size from
+     * {@code allocator} ({@code buffer}, if any, is closed). Contents are not kept.
+     */
+    public static ArrowBuf grow(BufferAllocator allocator, ArrowBuf buffer, long bytes) {
+        if (buffer != null && buffer.capacity() >= bytes) {
+            return buffer;
+        }
+        if (buffer != null) {
+            buffer.close();
+        }
+        return allocator.buffer(bytes);
+    }
 }

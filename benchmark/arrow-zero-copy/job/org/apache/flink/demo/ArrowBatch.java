@@ -53,6 +53,11 @@ public final class ArrowBatch {
         return selection != null;
     }
 
+    /** The int32 row indices of the selected rows, or {@code null} if all rows are selected. */
+    public ArrowBuf selection() {
+        return selection;
+    }
+
     /** Number of rows in the stream. */
     public int selectedCount() {
         return selected;
