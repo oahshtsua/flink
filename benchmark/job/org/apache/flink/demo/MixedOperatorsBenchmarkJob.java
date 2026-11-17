@@ -42,7 +42,7 @@ public class MixedOperatorsBenchmarkJob {
         env.execute("Mixed Operators Benchmark (" + count + " records)");
     }
 
-    private static class DuplicateShifted implements FlatMapFunction<Long, Long> {
+    static class DuplicateShifted implements FlatMapFunction<Long, Long> {
         private static final long serialVersionUID = 1L;
 
         private final long shift;

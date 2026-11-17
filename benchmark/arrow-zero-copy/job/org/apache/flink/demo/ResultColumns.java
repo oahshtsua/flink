@@ -24,6 +24,7 @@ public final class ResultColumns implements AutoCloseable {
 
     private VectorSchemaRoot lastInput;
     private VectorSchemaRoot output;
+    private VectorSchemaRoot alone;
 
     public ResultColumns(BufferAllocator allocator, List<Field> fields) {
         for (Field field : fields) {
@@ -71,6 +72,18 @@ public final class ResultColumns implements AutoCloseable {
         }
         output.setRowCount(in.getRowCount());
         return output;
+    }
+
+    /**
+     * Just these columns, with {@code rowCount} rows: for a step whose output replaces its input
+     * rather than extending it. Built once.
+     */
+    public VectorSchemaRoot alone(int rowCount) {
+        if (alone == null) {
+            alone = new VectorSchemaRoot(vectors);
+        }
+        alone.setRowCount(rowCount);
+        return alone;
     }
 
     /**

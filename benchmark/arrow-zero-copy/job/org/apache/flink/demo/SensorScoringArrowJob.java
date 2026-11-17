@@ -3,7 +3,6 @@ package org.apache.flink.demo;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.OpenContext;
-import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 import org.apache.flink.api.connector.sink2.WriterInitContext;
@@ -223,42 +222,8 @@ public class SensorScoringArrowJob {
                 .getDataBuffer();
     }
 
-    /**
-     * Base for the Java batch functions: an allocator, and a selection buffer if the function
-     * produces one. Everything they allocate is reused for every batch.
-     */
-    abstract static class BatchFunction extends RichMapFunction<ArrowBatch, ArrowBatch> {
-        private static final long serialVersionUID = 1L;
-
-        protected transient BufferAllocator allocator;
-        protected transient ArrowBatch out;
-        private transient ArrowBuf selection;
-
-        @Override
-        public void open(OpenContext openContext) {
-            allocator = ArrowMemory.newChild(getClass().getSimpleName());
-            out = new ArrowBatch();
-        }
-
-        /** This function's own selection buffer, grown to hold {@code n} row indices. */
-        protected ArrowBuf selection(int n) {
-            selection = ArrowMemory.grow(allocator, selection, (long) n * Integer.BYTES);
-            return selection;
-        }
-
-        @Override
-        public void close() {
-            if (selection != null) {
-                selection.close();
-            }
-            if (allocator != null) {
-                allocator.close();
-            }
-        }
-    }
-
     /** All four steps as one Java function over the batch: the Java twin of the C kernel. */
-    static class ScoreFusedBatch extends BatchFunction {
+    static class ScoreFusedBatch extends ArrowBatchFunction {
         private static final long serialVersionUID = 1L;
 
         private final double[] profiles;
@@ -309,7 +274,7 @@ public class SensorScoringArrowJob {
     }
 
     /** Step 1 (map): appends mean, stddev and max columns. */
-    static class StatsStep extends BatchFunction {
+    static class StatsStep extends ArrowBatchFunction {
         private static final long serialVersionUID = 1L;
 
         private transient ResultColumns results;
@@ -344,7 +309,7 @@ public class SensorScoringArrowJob {
     }
 
     /** Step 3 (map): appends the score column, from the samples and step 1's mean and stddev. */
-    static class ScoreStep extends BatchFunction {
+    static class ScoreStep extends ArrowBatchFunction {
         private static final long serialVersionUID = 1L;
 
         private final double[] profiles;
@@ -394,7 +359,7 @@ public class SensorScoringArrowJob {
      * Steps 2 and 4 (filter): keeps the selected rows whose {@code column} is at least {@code
      * threshold}. Touches no column: the batch goes on with a smaller selection vector.
      */
-    static class AtLeastStep extends BatchFunction {
+    static class AtLeastStep extends ArrowBatchFunction {
         private static final long serialVersionUID = 1L;
 
         private final String column;

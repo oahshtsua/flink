@@ -12,6 +12,13 @@ returning a selection vector of the survivors:
 - **`java-steps`**: the four steps stay four separate Java functions, `map -> filter -> map ->
   filter`. Each takes and returns a whole batch.
 
+**Whole jobs** (`MapFilterArrowJob`, `run.sh jobs-check` / `jobs-sweep`): the two fusion
+benchmark jobs from `../job/`, `simple` (`map -> filter`) and `mixed` (`flatMap -> map -> filter ->
+map`), with every user function rewritten to take and return Arrow batches, on stock Flink.
+Compared with the original jobs on stock Flink and on the fusion build, and with the original
+functions wrapped, unchanged, in a generic per-row batch adapter. The sweep also reruns the sensor
+job's `java-steps` engine against the original sensor job on both builds.
+
 Why, what was found, and what's next: `docs/arrow-zero-copy-experiment.md`.
 
 ## Files
@@ -24,6 +31,10 @@ Why, what was found, and what's next: `docs/arrow-zero-copy-experiment.md`.
 | `job/.../ArrowNativeOperator.java` | Generic operator: export the batch (no copy), call the kernel through `NativeBridge`, emit input columns + result columns + selection vector. Checks on the first batch that the export really shared the buffers |
 | `job/.../SensorArrow.java` | The sensor job's Arrow schema, generation straight into columns, and reading a row back for the checksum |
 | `job/.../SensorArrowScoring.java` | The four steps in Java over Arrow columns: as one function (`scoreFused`), and as separate steps |
+| `job/.../ArrowBatchFunction.java` | Base for user functions that take and return a whole `ArrowBatch` (a `RichMapFunction` to Flink) |
+| `job/.../MapFilterArrowJob.java` | The `simple` and `mixed` jobs: `rows` (the original), `arrow` (functions rewritten for batches) or `arrow-wrapped` (original functions in per-row adapters) |
+| `log4j-fusion.properties` | Logging for the whole-job runs: errors, plus the fusion build's "Fusing chained run" lines |
+| `jobs-report.py` | Turns `results/jobs/sweep.csv` into Markdown tables |
 | `job/.../SensorScoringArrowJob.java` | The job: batch source → engine → sink (discard or checksum). The Java engines are plain `RichMapFunction`s on `ArrowBatch` |
 | `../native-kernel/kernels/sensor_arrow_kernel.c` | `sensor_score_arrow`: `sensor_score`'s arithmetic, reading and writing Arrow columns in place |
 | `src/.../ArrowExport.java` | JMH: the export's cost per batch, and generation's cost per row |
@@ -35,7 +46,8 @@ compile. `../sensor-bench/minicluster-sweep.sh` compiles `../job/` alone, withou
 
 ## Running
 
-Needs `../build/vanilla/flink` (the stock distribution `benchmark.py` stages), a JDK 17 and gcc.
+Needs `../build/vanilla/flink` (the stock distribution `benchmark.py` stages), a JDK 17 and gcc;
+the whole-job modes also need `../build/fused/flink` (the fusion build).
 Arrow Java 19.0.0 and its dependencies are downloaded into `deps/` on the first run.
 
 ```bash
@@ -43,7 +55,17 @@ Arrow Java 19.0.0 and its dependencies are downloaded into `deps/` on the first 
 ./benchmark/arrow-zero-copy/run.sh sweep   # timing, ~20 min; leave the machine idle and plugged in
 ./benchmark/arrow-zero-copy/run.sh bench   # JMH, ~3 min
 ./benchmark/arrow-zero-copy/report.py > benchmark/arrow-zero-copy/results/sweep-report.md
+
+./benchmark/arrow-zero-copy/run.sh jobs-check          # whole jobs: correctness, ~2 min
+RUNS=5 ./benchmark/arrow-zero-copy/run.sh jobs-sweep   # whole jobs: timing, ~17 min
+./benchmark/arrow-zero-copy/jobs-report.py > benchmark/arrow-zero-copy/results/jobs/sweep-report.md
 ```
+
+`jobs-check` runs `simple` and `mixed` with every engine (1, 7 and 1024 rows per batch for the
+Arrow ones) and on the fusion build; each must print the stock `rows` run's `CHECKSUM` line (a
+count and an order-sensitive hash of every value reaching the sink), and the fusion build must
+log that it fused 2 (`simple`) or 3 (`mixed`) operators. It also checks the sensor job on the
+fusion build (4 operators fused, reference checksum).
 
 `check` runs every engine at k = 1, 16 and 64, with 1, 7 and 1024 rows per batch. 7 leaves a
 partial last batch. Each run must print the same `CHECKSUM` line as `SensorScoringReference`. A
@@ -65,6 +87,8 @@ java --add-opens=java.base/java.nio=ALL-UNNAMED -Darrow.enable_unsafe_memory_acc
 ```
 
 Arguments: `[records] [k] [discard|checksum] [batchSize] [native|java|java-steps]`.
+`MapFilterArrowJob` takes `[simple|mixed] [records] [rows|arrow|arrow-wrapped] [discard|checksum]
+[batchSize]`.
 
 - `--add-opens` lets Arrow's memory module read direct buffers' addresses on JDK 17.
 - `arrow.enable_unsafe_memory_access` turns off `ArrowBuf`'s bounds check on every access.
