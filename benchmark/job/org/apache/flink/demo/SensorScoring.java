@@ -257,17 +257,17 @@ public final class SensorScoring {
         return z ^ (z >>> 31);
     }
 
-    private static long rand(long seed, int stream) {
+    static long rand(long seed, int stream) {
         return mix64(seed + stream * GOLDEN_GAMMA);
     }
 
     /** Uniform in [0, 1). */
-    private static double unit(long bits) {
+    static double unit(long bits) {
         return (bits >>> 11) * 0x1.0p-53;
     }
 
     /** Uniform in [-1, 1). */
-    private static double signedUnit(long bits) {
+    static double signedUnit(long bits) {
         return 2.0 * unit(bits) - 1.0;
     }
 }

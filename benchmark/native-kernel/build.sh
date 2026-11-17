@@ -4,6 +4,7 @@
 #   libflinkaccel_bridge.so   JNI side of org.apache.flink.accel.NativeBridge
 #   flink-accel-bridge.jar    NativeBridge.class - goes in flink/lib/ next to the .so
 #   libsensor_kernel.so       sensor_score(): the whole sensor chain as one C function
+#   libsensor_arrow_kernel.so sensor_score_arrow(): the same, reading/writing Arrow columns in place
 #
 #   ./benchmark/native-kernel/build.sh
 #
@@ -42,5 +43,9 @@ rm -rf "$BUILD/bridge-classes"
 echo "=== kernel: libsensor_kernel.so ==="
 gcc -O3 -march=native -ffp-contract=off -fno-math-errno -fPIC -shared -Wall -Wextra \
     -o "$BUILD/libsensor_kernel.so" "$HERE/kernels/sensor_kernel.c" -lm
+
+echo "=== kernel: libsensor_arrow_kernel.so ==="
+gcc -O3 -march=native -ffp-contract=off -fno-math-errno -fPIC -shared -Wall -Wextra \
+    -o "$BUILD/libsensor_arrow_kernel.so" "$HERE/kernels/sensor_arrow_kernel.c" -lm
 
 ls -l "$BUILD"/*.so "$BUILD"/*.jar
