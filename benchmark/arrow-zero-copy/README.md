@@ -19,7 +19,7 @@ Compared with the original jobs on stock Flink and on the fusion build, and with
 functions wrapped, unchanged, in a generic per-row batch adapter. The sweep also reruns the sensor
 job's `java-steps` engine against the original sensor job on both builds.
 
-Why, what was found, and what's next: `docs/arrow-zero-copy-experiment.md`.
+What was found, step by step: `docs/experiments-report.md`.
 
 ## Files
 
