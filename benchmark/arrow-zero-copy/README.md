@@ -67,6 +67,9 @@ count and an order-sensitive hash of every value reaching the sink), and the fus
 log that it fused 2 (`simple`) or 3 (`mixed`) operators. It also checks the sensor job on the
 fusion build (4 operators fused, reference checksum).
 
+Output goes to `results/`, which is gitignored. The results of the 2026-11-17 runs (steps 1–3)
+are kept in `../arrow-run-2026-11-17/`.
+
 `check` runs every engine at k = 1, 16 and 64, with 1, 7 and 1024 rows per batch. 7 leaves a
 partial last batch. Each run must print the same `CHECKSUM` line as `SensorScoringReference`. A
 `native` run must also:
